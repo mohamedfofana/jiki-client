@@ -1,0 +1,43 @@
+<div id="sprint">
+
+  <div class="card">
+    <div class="card-header">
+      <a class="card-link" data-toggle="collapse" href="#collapseSprint">
+        <jiki-page-title title="Sprint in Progress"></jiki-page-title>
+      </a>
+    </div>
+    <div id="collapseSprint" class="collapse show" data-parent="#sprint" *ngIf="inProgressSprintStories">
+      <div class="card-body">
+        <div class="box-container-dd">
+          <span class="h4" matBadge="{{inProgressSprintStories.length}}" matBadgeColor="accent" matBadgeSize="small" matBadgeOverlap="false">{{sprint.title}}</span>
+          <!--<div
+            cdkDropList
+            #inProgressList="cdkDropList"
+            [cdkDropListData]="inProgressSprintStories"
+            [cdkDropListConnectedTo]="[doneList]"
+            class="item-box-list-dd"
+            (cdkDropListDropped)="drop($event)">
+            <div class="item-box-dd" *ngFor="let story of inProgressSprintStories" cdkDrag>
+              <jiki-item-story-backlog [story]='story'></jiki-item-story-backlog>
+            </div>
+          </div>
+          <br>
+          <br>-->
+      <!--   <span class="h4" matBadge="{{backlogStories.length}}" matBadgeColor="accent" matBadgeSize="small" matBadgeOverlap="false">Backlog</span>
+          <div
+            cdkDropList
+            #doneList="cdkDropList"
+            [cdkDropListData]="backlogStories"
+            [cdkDropListConnectedTo]="[inProgressList]"
+            class="item-box-list-dd"
+            (cdkDropListDropped)="drop($event)">
+            <div class="item-box-dd" *ngFor="let story of backlogStories" cdkDrag>
+              <jiki-item-story-backlog [story]='story'></jiki-item-story-backlog>
+            </div>
+          </div>-->
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

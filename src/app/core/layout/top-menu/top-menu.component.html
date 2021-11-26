@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg navbar-top fixed-top navbar-inner ">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand" href="#">Jiki</a>
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0 navbar-nav-top">
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Board
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Current</a>
+                <a class="dropdown-item" href="#">All</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="btn btn-primary active" [routerLink]="['/project/create']" routerLinkActive="router-link-active" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Create Project
+              </a>
+            </li>
+      </ul>
+    </div>
+    <form class="form-horizontal right search-form" [formGroup]="searchForm" role="form" (keyup.enter)="onSubmit()">
+        <div class="input-group">
+          <input type="text" class="form-control search-input"  aria-describedby="addon-wrapping" formControlName="searchText" size="30" placeholder="Rechercher">
+          <span class="input-group-btn form-control-feedback">
+              <mat-icon class="icon_search">search</mat-icon>
+          </span>
+      </div>
+    </form>
+    <ul class="navbar-nav mr-auto ml-4 mt-2 mt-lg-0 navbar-nav-top">
+      <li class="nav-item" *ngIf="!isLoggedIn" routerLinkActive="active" (click)="login()"><a style="cursor: pointer;margin-left: 1em;">Login</a></li>
+      <li class="nav-item dropdown" *ngIf="isLoggedIn">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <mat-icon>account_circle</mat-icon>
+        </a>
+        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown" >
+          <a routerLink="" class="dropdown-item" >Profile</a>
+          <a routerLink="" class="dropdown-item" (click)="logout()">Logout</a>
+        </div>
+      </li>
+    </ul>
+  </nav>

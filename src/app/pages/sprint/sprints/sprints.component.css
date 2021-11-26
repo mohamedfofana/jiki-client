@@ -1,0 +1,14 @@
+.sprints-row{
+  margin-bottom: 2em;
+}
+.mat-form-field {
+  width: 100%;
+}
+/* // Material  */
+mat-form-field.mat-form-field {
+  font-size: 16px;
+}
+
+:host /deep/ .mat-chip-list-wrapper {
+  display: contents;
+}

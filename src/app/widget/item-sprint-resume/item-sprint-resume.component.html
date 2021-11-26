@@ -1,0 +1,14 @@
+<mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+    {{sprint.title}}
+    </mat-panel-title>
+    <mat-panel-description>
+    <mat-chip-list>
+      <mat-chip [ngStyle]="{'backgroundColor': sprint.iconStatusColor, 'color':'white'}">{{sprint.status}}</mat-chip>
+    </mat-chip-list>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <jiki-item-story-preview *ngFor="let story of filteredStories" [story]='story'></jiki-item-story-preview>
+</mat-expansion-panel>
+<br>

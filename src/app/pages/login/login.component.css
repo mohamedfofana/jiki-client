@@ -1,0 +1,22 @@
+.login-form input[type='text'],
+.login-form input[type='email'],
+.login-form input[type='password'] {
+    width:100%;
+}
+
+.login-form .ng-invalid {
+  border-left: 5px solid #a94442;
+}
+
+.login-form .ng-valid {
+  border-left: 5px solid #42A948;
+}
+.login-container{
+  border-radius:1em;
+  padding: 1em 2em;
+  width: 50%;
+}
+
+.statusRow{
+  margin-top: 2%;
+}

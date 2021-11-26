@@ -1,0 +1,14 @@
+.footer {
+	height: auto;
+	position: relative;
+    width: 100%;
+    margin-top: 20px;
+    /* box-shadow: 0 4px 12px 0 rgba(0,0,0,.05)!important; */
+
+}
+.footer p {
+	margin: 0;
+}
+.page-footer{
+  background:#ffffff;
+}

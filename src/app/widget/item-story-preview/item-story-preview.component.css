@@ -1,0 +1,18 @@
+
+.item-story-preview{
+  box-shadow: 0px 0px 1px 0px #DADADA;
+  background-color: #fff;
+  height: auto;
+  border-radius: 1px;
+  transition: .3s linear all;
+  border: 1px solid #DADADA;
+}
+.item-story-status {
+  background-color:green;
+  color:white;
+  border-radius: 10%;
+}
+.avatar-circle-sprints {
+  margin-top: 0.6rem !important;
+  padding: 0;
+}

@@ -1,1 +1,91 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+	font-family: "Josefin Slab","Helvetica Neue",Helvetica,Arial,sans-serif;
+	background-color: white;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	background-size: cover;
+	-o-background-size: cover;
+    font-size: 16px;
+    color: rgba(0,0,0,.54)!important;
+    fill: rgba(0,0,0,.54)!important;
+}
+.page-title{
+  color: #000!important;
+  font-weight: 400;
+}
+a,
+a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+a:hover {
+    color: #4db7fe;
+    text-decoration: none;
+}
+
+.blue-color-global {
+  color: #4db7fe;;
+}
+.blue-global-background-color {
+  background-color: #4db7fe;;
+}
+
+.svg-inline--fa.fa-search.fa-w-16.fa-lg {
+  color: #4db7fe;
+}
+
+.mat-body, .mat-body-1, .mat-typography {
+  font: inherit;
+  letter-spacing: inherit;
+}
+.avatar-circle {
+  padding: 0.2em;
+  color: white;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+}
+.avatar-circle-small{
+  font-size: 0.8rem;
+  width: 18px;
+  height: 18px;
+}
+.avatar-circle-big{
+  font-size: 1.2rem;
+  width: 30px;
+  height: 30px;
+}
+.avatar-background-color-reporter{
+  background-color: #2f3b59;
+}
+.avatar-background-color-assigned{
+  background-color: rgb(230, 197, 10);
+}
+/* Icon */
+.story-type-bug{
+  color: rgb(197, 38, 38);
+}
+.story-type-user-story{
+  color: lime;
+}
+/* // Material  */
+mat-form-field.mat-form-field {
+  font-size: 16px;
+}
+
+.mat-chip-list-wrapper {
+  display: contents;
+}
+
+.filter-row{
+  margin-bottom: 2em;
+}
+
+.item-spacer {
+  flex: 1 1 auto;
+}

@@ -1,0 +1,8 @@
+<ul id="myUL" class="list-group">
+  <li class="list-group-item"><span #titleEl (click)="toggle()">{{sprint.title}}</span>
+    <ul class="nested" [ngClass]="{'active': isActive}">
+      <li>Story 1</li>
+      <li>Story 2 </li>
+    </ul>
+  </li>
+</ul>

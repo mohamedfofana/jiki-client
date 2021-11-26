@@ -1,0 +1,34 @@
+  <nav id="sidebar" class="float-left">
+      <div class="sidebar-header p-3">
+          <div id="sidebarCollapse" (click)="openClose()" class="btn btn-dark" >
+            <mat-icon>{{openCloseIcon}}</mat-icon>
+          </div>
+        </div>
+      <ul class="list-group components pt-0">
+        <li id="board" class="list-group-item d-flex align-items-center">
+          <span class="badge bg-dark badge-pill ml-3 mr-3"> <mat-icon>dashboard</mat-icon></span>
+         <div style="margin-left: 1em;">
+           <a id="a_board" routerLink='board'>
+            Board
+          </a>
+        </div>
+        </li>
+        <li id="backlog" class="list-group-item d-flex align-items-center">
+          <span class="badge bg-dark badge-pill ml-3 mr-3"> <mat-icon>wrap_text</mat-icon></span>
+          <div style="margin-left: 1em;">
+            <a id="a_backlog" routerLink='backlog'>
+            Backlog
+          </a>
+        </div>
+        </li>
+          <li id="sprints" class="list-group-item d-flex align-items-center">
+            <span class="badge bg-dark badge-pill ml-3 mr-3">  <mat-icon>directions_run</mat-icon></span>
+            <div style="margin-left: 1em;">
+              <a id="a_sprints" routerLink='sprints'>
+              Sprints
+            </a>
+          </div>
+          </li>
+      </ul>
+
+  </nav>

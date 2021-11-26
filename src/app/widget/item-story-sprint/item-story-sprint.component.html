@@ -1,0 +1,28 @@
+<div class="card preview-story shadow rounded">
+  <div class="card-body">
+
+    <div class="card-title mb-2">
+      <a [routerLink]="['/story/', story.id]" routerLinkActive="router-link-active">{{story.longtitle}}</a>
+      <div class="avatar-circle avatar-circle-big avatar-background-color-assigned float-right" *ngIf="story.assignedUser">
+        <span class="initials">
+          {{story.assignedUser.firstname[0].toUpperCase()}}
+        </span>
+      </div>
+    </div>
+
+    <p class="card-text mb-4 mr-4">{{story.description}}</p>
+  </div>
+
+  <div class="card-footer p-0">
+    <mat-icon [ngStyle]="{'color': story.iconTypeColor}">{{story.iconType}}</mat-icon>
+    <div class="avatar-circle avatar-circle-small avatar-background-color-reporter m-1 float-left" >
+      <span class="initials">
+        {{story.reporter.firstname[0].toUpperCase()}}
+      </span>
+    </div>
+    <div class="float-right m-1">
+      {{story.title}}
+    </div>
+  </div>
+
+</div>
