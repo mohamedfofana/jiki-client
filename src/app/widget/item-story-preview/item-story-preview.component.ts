@@ -31,4 +31,6 @@ export class ItemStoryPreviewComponent implements OnInit{
   getTypeColorConfigKey(){
     return this._appConfigService.getProperty("cdk.story.type." + this.story.type+".icon_color");
   }
+
+
 }

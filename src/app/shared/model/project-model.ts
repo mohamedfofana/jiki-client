@@ -8,4 +8,7 @@ export interface IProject{
   creation_date:Date;
   endDate:Date;
   updateDate:Date;
+  // icon
+  iconStatus:string;
+  iconStatusColor:string;
 }

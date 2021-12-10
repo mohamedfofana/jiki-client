@@ -3,9 +3,15 @@ import { WidgetModule } from './../../widget/widget.module';
 import { MyMaterialModule } from './../material/material-module';
 import { NgModule } from '@angular/core';
 import { BacklogRoutingModule } from './backlog-routing.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [BacklogRoutingModule.components],
-  imports: [WidgetModule, BacklogRoutingModule, MyMaterialModule, CommonModule]
+  imports: [
+    ReactiveFormsModule,
+    WidgetModule,
+    BacklogRoutingModule,
+    MyMaterialModule,
+    CommonModule   ]
 })
 export class BacklogModule { }

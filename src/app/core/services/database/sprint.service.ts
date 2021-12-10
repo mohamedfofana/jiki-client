@@ -25,6 +25,11 @@ export class SprintService {
           .pipe(catchError(this._appConfigService.handleError));
     }
 
+    getSprintsByProjectId(id:number): Observable<ISprint[]> {
+      return this.http.get<ISprint[]>(this.appConfig.apiEndpoint + this.sprintUrl + '/project/' + id)
+          .pipe(catchError(this._appConfigService.handleError));
+    }
+
     getCurrentSprint(): Observable<ISprint[]> {
       return this.http.get<ISprint[]>(this.appConfig.apiEndpoint + this.sprintUrl + '/current')
           .pipe(catchError(this._appConfigService.handleError));

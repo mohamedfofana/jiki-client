@@ -6,7 +6,6 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./item-page-title.component.css']
 })
 export class ItemPageTitleComponent implements OnInit {
-  @Input() item:any;
   @Input() title:string;
   constructor() { }
 

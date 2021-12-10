@@ -25,6 +25,7 @@ import { ModalModule } from './modal/modal.module';
 import { OverlayModule } from './overlay/overlay.module';
 import { AppConfigModule } from './config/app-config.module';
 import { SprintService } from './services/database/sprint.service';
+import { BacklogService } from './services/database/backlog.service';
 
 
 @NgModule({
@@ -49,7 +50,7 @@ import { SprintService } from './services/database/sprint.service';
     CoreStatics.components
 ],
 
-  providers: [ StoryService,StorageService, UserService,
+  providers: [ BacklogService, StoryService,StorageService, UserService,
                SorterService, FilterService, DataService,
                TrackByService, DialogService, AuthService,
                EventBusService, SprintService,LoggerService,

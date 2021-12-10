@@ -12,6 +12,11 @@ import { StoryService } from './../../../core/services/database/story.service';
 import { IStory } from './../../../shared/model/story-model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AbstractOnDestroy } from '../../abstract.ondestroy';
+import { IUser } from 'src/app/shared/model/user-model';
+import { AppConfigService } from 'src/app/core/services/local/appconfig-service';
+import { UserService } from 'src/app/core/services/database/user.service';
+import { FormControl } from '@angular/forms';
+import { StoryStatusEnum } from 'src/app/shared/enum/story-status.enum';
 
 @Component({
   selector: 'app-backlogs',
@@ -19,101 +24,104 @@ import { AbstractOnDestroy } from '../../abstract.ondestroy';
   styleUrls: ['./backlogs.component.css']
 })
 export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
-    inProgressSprintStories: IStory[];
-    165: IStory[];
-    sprint:ISprint;
-    projectId:number;
-    backlogId:number;
-    backlog:IBacklog;
+  sprints: ISprint[];
+  projects: IProject[];
+  stories: IStory[];
+  filterText:string;
+  filterAssignee:IUser[];
+  filterReporter:IUser[];
+  filterStatus:string[];
+  selectedAssignee:IUser[]=[];
+  selectedReporter:IUser[]=[];
+  selectedStatus:string[]=[];
 
-    constructor(private _storyService: StoryService,
-       private _sprintService: SprintService,
-      private _storageService: StorageService,
-      private _loggerService: LoggerService,
-      private _projectService: ProjectService
-      ) {
-        super();
-      }
+  selectReporterFormControl =  new FormControl([]);
+  selectAssigneeFormControl = new FormControl([]);
+  selectStatusFormControl = new FormControl([]);
 
-      ngOnInit() {
-      this.projectId = this._storageService.getUser().project.id;
-      // this.backlogId = this._storageService.getUser().project.backlog.id;
-      let subscriptionSprint = this._sprintService.getCurrentSprintByProjectId(this.projectId)
-    .subscribe((sprint: ISprint) => {
-      if(sprint){
-        this.sprint = sprint;
-        console.log(this.sprint.id);
-        console.log(this.projectId);
-        let subscription = this._storyService.getStoriesBySprint( this.sprint.id)
-      .subscribe((stories: IStory[]) => {
-        if(stories){
-          console.log(stories);
-          this.inProgressSprintStories = stories;
-          this.setBacklog();
-        }
-      /*  let subscriptionBacklog = this._storyService.getStoriesByBacklog(this.backlogId)
-        .subscribe((stories: IStory[]) => {
-          if(stories){
-            this.backlogStories = stories;
-            this.setBacklog();
-          }
-        });
-        this.subscriptions.push(subscriptionBacklog);
-        */
-      });
-      this.subscriptions.push(subscription);
-      }
-    });
-    this.subscriptions.push(subscriptionSprint);
+  assigneeList: IUser[];
+  reporterList: IUser[];
+
+  statusList: string[] = [
+    StoryStatusEnum.TODO,
+    StoryStatusEnum.IN_PROGRESS,
+    StoryStatusEnum.DONE,
+    StoryStatusEnum.BLOCKED
+  ];
+  constructor(private _appConfigService: AppConfigService,
+    private _sprintService: SprintService,
+    private _projectService: ProjectService,
+    private _storyService: StoryService,
+    private _userService: UserService,
+    private _storageService: StorageService,
+    private _loggerService: LoggerService) {
+      super();
     }
 
-     drop(event: CdkDragDrop<IStory[]>) {
-      if (event.previousContainer === event.container) {
-        this._loggerService.log("no dropping");
-        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      } else {
-        this._loggerService.log("dropping");
-        this._loggerService.log(event.previousContainer);
-        this._loggerService.log(event.container);
-        let story = <IStory> event.previousContainer.data[event.previousIndex];
-        let listName = event.container.id;
-        transferArrayItem(event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex);
-
-          this.updateStory(story, listName);
-
-        }
-      }
-
-      setBacklog(){
-        let subscription = this._projectService.getProjectById(this.projectId)
-        .subscribe((project: IProject) => {
-          this.backlog = project.backlog;
+  ngOnInit() {
+    let subscriptionProjects = this._projectService.getProjects()
+    .subscribe((projects: IProject[]) => {
+      if(projects){
+        this.projects = projects.sort((s1, s2)=> s1.name>s2.name? -1:1);
+        this.projects.forEach(project=> {
+          project.iconStatus = this.getStatusConfigKey(project);
+          project.iconStatusColor = this.getStatusColorConfigKey(project);
         });
-        this.subscriptions.push(subscription);
+        this._loggerService.log(projects)
       }
-
-      updateStory(story:IStory, listName: string){
-        if (listName.match("cdk-drop-list-0")){
-          story.backlog = null;
-          story.sprint = this.sprint;
-        }
-        if (listName.match("cdk-drop-list-1")){
-          story.backlog = this.backlog;
-          story.sprint = null;
-        }
-        this._loggerService.log(story);
-        this.updateSprintAndBacklog(story);
+    });
+    let subscriptionUser = this._userService.getUsers()
+    .subscribe((users: IUser[]) => {
+      if(users){
+        this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);
+        this.reporterList = this.assigneeList;
       }
+    });
+    this.subscriptions.push(subscriptionProjects);
+    this.subscriptions.push(subscriptionUser);
+  }
 
-      updateSprintAndBacklog(story:IStory){
-        let subscription = this._storyService.updateSprintAndBacklog(story).subscribe(
-          response =>{
-            this._loggerService.log("updated : "  +response);
-          }
-          );
-          this.subscriptions.push(subscription);
-        }
+  filterTextChanged(event: any) {
+    let value = event.target.value;
+    this.filterText = value;
+  }
+
+  filterStatusChanged(event: any) {
+    let value = event.value;
+    if (value){
+      this.filterStatus = value;
+    }
+  }
+
+  filterAssigneeChanged(event: any) {
+    this.filterAssignee = this.selectAssigneeFormControl.value as IUser[];;
+  }
+
+  filterReporterChanged(event: any) {
+       this.filterReporter = this.selectReporterFormControl.value as IUser[];;
+  }
+
+  onReporterRemoved(reporter: IUser) {
+    const reporters = this.selectReporterFormControl.value as IUser[];
+    this.filterReporter = reporters.filter(r => r.id != reporter.id);
+    this.selectReporterFormControl.setValue(this.filterReporter);
+  }
+
+  onAssigneeRemoved(assignee: IUser) {
+    const assignees = this.selectAssigneeFormControl.value as IUser[];
+    this.filterAssignee = assignees.filter(r => r.id != assignee.id);
+    this.selectAssigneeFormControl.setValue(this.filterAssignee);
+  }
+
+  onStatusRemoved(status: string) {
+    const statuses = this.selectStatusFormControl.value as string[];
+    this.filterStatus = statuses.filter(st => st !== status);
+    this.selectStatusFormControl.setValue(this.filterStatus);
+  }
+  getStatusConfigKey(project:IProject){
+    return this._appConfigService.getProperty("cdk.sprint.status." + project.status +".icon");
+  }
+  getStatusColorConfigKey(project:IProject){
+    return this._appConfigService.getProperty("cdk.sprint.status." + project.status +".icon.color");
+  }
       }

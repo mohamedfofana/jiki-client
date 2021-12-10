@@ -28,6 +28,7 @@ export class ItemSprintResumeComponent extends AbstractOnDestroy implements OnIn
   }
 
   ngOnInit(): void {
+    console.log(this.sprint.id)
     let subscription = this._storyService.getStoriesBySprint(this.sprint.id)
       .subscribe((stories: IStory[]) => {
         if (stories) {

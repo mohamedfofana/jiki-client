@@ -20,6 +20,11 @@ export class StoryService {
             .pipe(catchError(this._appConfigService.handleError));
     }
 
+    getStoriesOnBacklogsByProjectId(projectId:number): Observable<IStory[]> {
+      return this.http.get<IStory[]>(this.appConfig.apiEndpoint + this.storyUrl + '/backlogs/project/'+projectId)
+          .pipe(catchError(this._appConfigService.handleError));
+    }
+
     getStoriesByReporterId(reporterId:number): Observable<IStory[]> {
       return this.http.get<IStory[]>(this.appConfig.apiEndpoint + this.storyUrl + '/user/'+reporterId)
           .pipe(catchError(this._appConfigService.handleError));

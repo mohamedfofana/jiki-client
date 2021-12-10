@@ -3,8 +3,8 @@
      <jiki-page-title title="Sprints"></jiki-page-title>
   </div>
   <div class="filter-row">
-    <mat-toolbar style="background: white">
-      <div class=" col-sm">
+    <mat-toolbar class="ps-0" style="background: white">
+      <div class=" col-sm ps-0">
         <mat-form-field appearance="legacy" [style.width.px]="300">
           <mat-label>Search</mat-label>
           <input matInput  (keyup)="filterTextChanged($event)"/>
@@ -33,6 +33,7 @@
           </mat-select>
         </mat-form-field>
       </div>
+      <span class="item-spacer"></span>
       <div class="col-sm">
         <mat-form-field >
           <mat-label>Assigned To</mat-label>
@@ -54,6 +55,7 @@
           </mat-select>
         </mat-form-field>
       </div>
+      <span class="item-spacer"></span>
       <div class="col-sm">
         <mat-form-field>
           <mat-label>Status</mat-label>

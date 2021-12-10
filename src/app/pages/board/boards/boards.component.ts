@@ -48,6 +48,7 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
     .subscribe((sprint: ISprint) => {
       if(sprint){
         this.currentSprint = sprint;
+        console.log(this.currentSprint);
         let subscription = this._storyService.getStoriesBySprint(sprint.id)
         .subscribe((stories: IStory[]) => {
           this.stories = stories;

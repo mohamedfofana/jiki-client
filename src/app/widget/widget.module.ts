@@ -3,9 +3,10 @@ import { RouterModule } from '@angular/router';
 import { WidgetStatics } from './widget-statics';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  imports: [CommonModule, RouterModule, MyMaterialModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, MyMaterialModule],
   exports: [ WidgetStatics.components],
   declarations: [ WidgetStatics.components ]
 })

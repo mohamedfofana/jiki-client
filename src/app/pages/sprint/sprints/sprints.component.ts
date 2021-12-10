@@ -8,6 +8,7 @@ import { LoggerService } from './../../../core/services/utils/logger.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../abstract.ondestroy';
 import { FormControl, Validators } from '@angular/forms';
+import { StorageService } from 'src/app/core/services/local/storage.service';
 
 @Component({
   selector: 'jiki-sprints',
@@ -40,12 +41,14 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
   constructor(private _appConfigService: AppConfigService,
     private _sprintService: SprintService,
     private _userService: UserService,
+    private _storageService: StorageService,
     private _loggerService: LoggerService) {
       super();
     }
 
   ngOnInit() {
-    let subscriptionSprint = this._sprintService.getSprints()
+    let projectId = this._storageService.getUser().project.id;
+    let subscriptionSprint = this._sprintService.getSprintsByProjectId(projectId)
     .subscribe((sprints: ISprint[]) => {
       if(sprints){
         this.sprints = sprints.sort((s1, s2)=> s1.startDate>s2.startDate? -1:1);
