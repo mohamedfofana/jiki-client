@@ -15,28 +15,26 @@ export class SprintService {
       private _appConfigService: AppConfigService,
       @Inject(APP_CONFIG) private appConfig: AppConfig) { }
 
-    getSprints(): Observable<ISprint[]> {
-        return this.http.get<ISprint[]>(this.appConfig.apiEndpoint + this.sprintUrl + '/all')
-            .pipe(catchError(this._appConfigService.handleError));
-    }
-
-    getCurrentSprintByProjectId(id:number): Observable<ISprint> {
+   /*
+     Return current sprint of a project
+    */
+    getCurrentByProjectId(id:number): Observable<ISprint> {
       return this.http.get<ISprint>(this.appConfig.apiEndpoint + this.sprintUrl + '/current/project/' + id)
           .pipe(catchError(this._appConfigService.handleError));
     }
 
+  /*
+	 * find sprints by project
+	 */
     getSprintsByProjectId(id:number): Observable<ISprint[]> {
       return this.http.get<ISprint[]>(this.appConfig.apiEndpoint + this.sprintUrl + '/project/' + id)
           .pipe(catchError(this._appConfigService.handleError));
     }
-
+  /*
+	 * find sprint by status = RUNNING
+	 */
     getCurrentSprint(): Observable<ISprint[]> {
       return this.http.get<ISprint[]>(this.appConfig.apiEndpoint + this.sprintUrl + '/current')
-          .pipe(catchError(this._appConfigService.handleError));
-    }
-
-    getSprintById(id:number): Observable<ISprint> {
-      return this.http.get<ISprint>(this.appConfig.apiEndpoint + this.sprintUrl + '/' + id)
           .pipe(catchError(this._appConfigService.handleError));
     }
 

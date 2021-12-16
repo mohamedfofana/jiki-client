@@ -24,6 +24,7 @@ import { StoryStatusEnum } from 'src/app/shared/enum/story-status.enum';
   styleUrls: ['./backlogs.component.css']
 })
 export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
+  currentSprint: ISprint;
   sprints: ISprint[];
   projects: IProject[];
   stories: IStory[];
@@ -59,6 +60,14 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
     }
 
   ngOnInit() {
+    let projectId = this._storageService.getUser().project.id;
+    let subscriptionSprint = this._sprintService.getCurrentByProjectId(projectId)
+    .subscribe((sprint: ISprint) => {
+      if(sprint){
+        this.currentSprint = sprint;
+      }
+    });
+    this.subscriptions.push(subscriptionSprint);
     let subscriptionProjects = this._projectService.getProjects()
     .subscribe((projects: IProject[]) => {
       if(projects){
@@ -67,7 +76,6 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
           project.iconStatus = this.getStatusConfigKey(project);
           project.iconStatusColor = this.getStatusColorConfigKey(project);
         });
-        this._loggerService.log(projects)
       }
     });
     let subscriptionUser = this._userService.getUsers()

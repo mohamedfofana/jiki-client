@@ -37,7 +37,6 @@ export class AuthService {
                     this.userAuthChanged(response.status);
                     if (response.status){
                         this._storageService.login(response.user, response.token);
-                        this._loggerService.log(response.user);
                     }
                     return response.status;
                 }),

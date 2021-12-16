@@ -1,4 +1,4 @@
-<div class="m-0">
+<div class="m-0 p-3">
   <div class="filter-row">
      <jiki-page-title title="Backlogs"></jiki-page-title>
   </div>
@@ -79,16 +79,19 @@
       </div>
     </mat-toolbar>
   </div>
+  <hr>
   <div class="sprints-row">
     <div class="m-0">
     <jiki-item-project-resume
       *ngFor="let project of projects"
       [projects]="projects"
       [project]="project"
+      [currentSprint]="currentSprint"
       [filterText]="filterText"
       [filterAssignee]="filterAssignee"
       [filterReporter]="filterReporter"
       [filterStatus]="filterStatus"
+      [isBacklog]=false
     ></jiki-item-project-resume>
     </div>
   </div>

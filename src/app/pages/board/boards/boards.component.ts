@@ -12,6 +12,7 @@ import { IStory } from './../../../shared/model/story-model';
 import { StoryService } from './../../../core/services/database/story.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../abstract.ondestroy';
+import { IProject } from 'src/app/shared/model/project-model';
 
 @Component({
   selector: 'jiki-boards',
@@ -19,7 +20,10 @@ import { AbstractOnDestroy } from '../../abstract.ondestroy';
   styleUrls: ['./boards.component.css']
 })
 export class BoardsComponent extends AbstractOnDestroy implements OnInit {
+  boardTitle: string;
   currentSprint: ISprint;
+  project: IProject;
+  projects: IProject[]=[];
   stories: IStory[];
   todoStories: IStory[];
   inProgressStories: IStory[];
@@ -43,12 +47,14 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
     }
 
   ngOnInit() {
-    let projectId = this._storageService.getUser().project.id;
-    let subscriptionSprint = this._sprintService.getCurrentSprintByProjectId(projectId)
+    this.project = <IProject> this._storageService.getUser().project;
+    let projectId = this.project.id;
+    this.projects.push(this.project);
+    let subscriptionSprint = this._sprintService.getCurrentByProjectId(projectId)
     .subscribe((sprint: ISprint) => {
       if(sprint){
         this.currentSprint = sprint;
-        console.log(this.currentSprint);
+        this.boardTitle = sprint.project.name + ' - ' + sprint.title;
         let subscription = this._storyService.getStoriesBySprint(sprint.id)
         .subscribe((stories: IStory[]) => {
           this.stories = stories;
@@ -95,7 +101,7 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
       story.status = newStatus;
       this._storyService.updateStatus(story).subscribe(
         response =>{
-          this._loggerService.log("updated : "  +response);
+          //this._loggerService.log("updated : "  +response);
         }
       );
   }

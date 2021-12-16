@@ -10,7 +10,7 @@
     <div class="p-2 bd-highlight">
      <mat-icon [ngStyle]="{'color': story.iconStatusColor}">{{story.iconStatus}}</mat-icon>
     </div>
-    <div class="bd-highlight avatar-circle avatar-circle-sprints avatar-circle-small avatar-background-color-reporter">
+    <div *ngIf='story.assignedUser' class="bd-highlight avatar-circle avatar-circle-sprints avatar-circle-small avatar-background-color-reporter">
       <span class="initials">
         {{story.assignedUser.firstname[0].toUpperCase()}}
       </span>
