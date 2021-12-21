@@ -97,3 +97,7 @@ mat-form-field.mat-form-field {
   min-height: auto;
   /* width: 100%; */
 }
+.global-padding{
+  padding:1%;
+}
+

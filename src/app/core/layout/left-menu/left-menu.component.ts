@@ -21,6 +21,8 @@ export class LeftMenuComponent implements OnInit {
 
     $('#sidebarCollapse').on('click', function() {
       $('#sidebar').toggleClass('active');
+      // $('.list-group-item').toggleClass('p-1');
+      $('.side-menu-title').toggleClass('display-0');
    });
 
   }
@@ -30,6 +32,7 @@ export class LeftMenuComponent implements OnInit {
        this.openCloseIcon = "keyboard_arrow_right";
     } else {
        this.openCloseIcon = "keyboard_arrow_left";
+
     }
   }
 

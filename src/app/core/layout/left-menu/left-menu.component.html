@@ -4,30 +4,31 @@
             <mat-icon>{{openCloseIcon}}</mat-icon>
           </div>
         </div>
+        <hr class="m-2">
       <ul class="list-group components pt-0">
         <li id="board" class="list-group-item d-flex align-items-center">
-          <span class="badge bg-dark badge-pill ml-3 mr-3"> <mat-icon>dashboard</mat-icon></span>
-         <div style="margin-left: 1em;">
-           <a id="a_board" routerLink='board'>
-            Board
+          <a routerLink='board'>
+            <span class="badge bg-dark badge-pill ml-3 mr-3"> <mat-icon>dashboard</mat-icon></span>
+            <span id="a_board" class="side-menu-title">
+              Board
+            </span>
           </a>
-        </div>
         </li>
         <li id="backlog" class="list-group-item d-flex align-items-center">
+          <a routerLink='backlog'>
           <span class="badge bg-dark badge-pill ml-3 mr-3"> <mat-icon>wrap_text</mat-icon></span>
-          <div style="margin-left: 1em;">
-            <a id="a_backlog" routerLink='backlog'>
+            <span id="a_backlog" class="side-menu-title">
             Backlog
+            </span>
           </a>
-        </div>
         </li>
           <li id="sprints" class="list-group-item d-flex align-items-center">
+            <a id="a_sprints" routerLink='sprints'>
             <span class="badge bg-dark badge-pill ml-3 mr-3">  <mat-icon>directions_run</mat-icon></span>
-            <div style="margin-left: 1em;">
-              <a id="a_sprints" routerLink='sprints'>
+              <span class="side-menu-title">
               Sprints
+              </span>
             </a>
-          </div>
           </li>
       </ul>
 

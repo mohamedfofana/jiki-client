@@ -59,7 +59,7 @@ span {
     min-width: 80px;
     max-width: 80px;
     text-align: center;
-    margin-right:2%
+    margin-right:2%;
 }
 
 
@@ -71,7 +71,7 @@ span {
     text-align: left;
 }
 
-#sidebar.active ul{
+#sidebar.active ul li{
     display: none;
 }
 
@@ -97,7 +97,7 @@ span {
 
 #sidebar ul li a {
     font-size: 1.1em;
-    display: block;
+    /* display: block; */
 }
 
 
@@ -145,8 +145,15 @@ ul ul a {
 .list-group-item {
   border:none;
   /* background-color: #F4F5F7; */
-  padding: 0.75rem 4.25rem;
+  /* padding: 0.75rem 4.25rem; */
   color: #1E382D;
+  width: max-content;
+}
+
+.list-group-item[aria-expanded="true"]{
+  background-color: black !important;
+border-color: #aed248;
+
 }
 /* ---------------------------------------------------
     CONTENT STYLE
@@ -159,3 +166,12 @@ ul ul a {
     transition: all 0.3s;
 }
 
+.badge {
+  font-size: 1em;
+}
+.side-menu-title{
+  margin-left: 1em;
+}
+.display-0{
+  display: none;
+}
