@@ -17,23 +17,18 @@ export class ProjectService {
       @Inject(APP_CONFIG) private appConfig: AppConfig
     ) { }
 
-    create(project:IProject): Observable<IProject>{
-        return this.http.post<IProject>(this.appConfig.apiEndpoint + this.projectUrl + '/create', project)
-              .pipe(catchError(this._appConfigService.handleError));
-    }
-
-    getProjects(): Observable<IProject[]> {
+    findAll(): Observable<IProject[]> {
         return this.http.get<IProject[]>(this.appConfig.apiEndpoint + this.projectUrl + '/all')
             .pipe(catchError(this._appConfigService.handleError));
     }
 
 
-    getCurrentProject(): Observable<IProject[]> {
+    findCurrent(): Observable<IProject[]> {
       return this.http.get<IProject[]>(this.appConfig.apiEndpoint + this.projectUrl + '/current')
           .pipe(catchError(this._appConfigService.handleError));
     }
 
-    getProjectById(id:number): Observable<IProject> {
+    findById(id:number): Observable<IProject> {
       return this.http.get<IProject>(this.appConfig.apiEndpoint + this.projectUrl + '/' + id)
           .pipe(catchError(this._appConfigService.handleError));
     }

@@ -11,7 +11,7 @@ import { StorageService } from './../../../core/services/local/storage.service';
 import { IStory } from './../../../shared/model/story-model';
 import { StoryService } from './../../../core/services/database/story.service';
 import { Component, OnInit } from '@angular/core';
-import { AbstractOnDestroy } from '../../abstract.ondestroy';
+import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { IProject } from 'src/app/shared/model/project-model';
 
 @Component({
@@ -65,7 +65,7 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
         this.subscriptions.push(subscription);
       }
     });
-    let subscriptionUser = this._userService.getUsers()
+    let subscriptionUser = this._userService.findAll()
     .subscribe((users: IUser[]) => {
       if(users){
         this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);

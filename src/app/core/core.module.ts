@@ -26,6 +26,7 @@ import { OverlayModule } from './overlay/overlay.module';
 import { AppConfigModule } from './config/app-config.module';
 import { SprintService } from './services/database/sprint.service';
 import { BacklogService } from './services/database/backlog.service';
+import { TeamService } from './services/database/team.service';
 
 
 @NgModule({
@@ -54,7 +55,7 @@ import { BacklogService } from './services/database/backlog.service';
                SorterService, FilterService, DataService,
                TrackByService, DialogService, AuthService,
                EventBusService, SprintService,LoggerService,
-               ProjectService,AppConfigService,
+               ProjectService,AppConfigService, TeamService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

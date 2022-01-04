@@ -4,25 +4,20 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
       <a class="navbar-brand" href="#">Jiki</a>
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0 navbar-nav-top">
-          <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Board
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Current</a>
-                <a class="dropdown-item" href="#">All</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Something else here</a>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="btn btn-primary active" [routerLink]="['/project/create']" routerLinkActive="router-link-active" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Create Project
-              </a>
-            </li>
-      </ul>
+      <ul class="navbar-nav mr-auto ml-4 mt-2 mt-lg-0 navbar-nav-top">
+        <li class="nav-item dropdown" *ngIf="isLoggedIn">
+           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Admin
+           </a>
+           <div class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown" >
+             <a class="dropdown-item" [routerLink]="['/users']" >Users</a>
+              <!-- <div class="dropdown-divider">Projects</div> -->
+                 <!-- <a class="dropdown-item" href="#">Teams</a> -->
+           </div>
+         </li>
+       </ul>
     </div>
+
     <form class="form-horizontal right search-form" [formGroup]="searchForm" role="form" (keyup.enter)="onSubmit()">
         <div class="input-group">
           <input type="text" class="form-control search-input"  aria-describedby="addon-wrapping" formControlName="searchText" size="30" placeholder="Rechercher">

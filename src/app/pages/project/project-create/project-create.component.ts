@@ -2,7 +2,7 @@ import { LoggerService } from 'src/app/core/services/utils/logger.service';
 import { ProjectStatusEnum } from './../../../shared/enum/project-status.enum';
 import { IProject } from 'src/app/shared/model/project-model';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { AbstractOnDestroy } from 'src/app/pages/abstract.ondestroy';
+import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
 import { ProjectService } from './../../../core/services/database/project.service';
 import { Component, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
@@ -42,13 +42,13 @@ export class ProjectCreateComponent extends AbstractOnDestroy  implements OnInit
 
   }
   createProject(project:IProject){
-    let subscription = this._projectService.create(project)
-    .subscribe((p: IProject) => {
-      if(p){
-        this._loggerService.log(p);
-      }
-    });
-    this.subscriptions.push(subscription);
+    // let subscription = this._projectService.create(project)
+    // .subscribe((p: IProject) => {
+    //   if(p){
+    //     this._loggerService.log(p);
+    //   }
+    // });
+    // this.subscriptions.push(subscription);
   }
 
 }

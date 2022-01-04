@@ -1,5 +1,6 @@
 import { IUser } from './../../../shared/model/user-model';
 import { Injectable } from '@angular/core';
+import { IProject } from 'src/app/shared/model/project-model';
 
 @Injectable()
 export class StorageService {
@@ -20,6 +21,11 @@ export class StorageService {
   getUser():IUser {
     var user = <IUser> JSON.parse(localStorage.getItem('user') || '{}');
     return user;
+  }
+
+  getProject():IProject {
+    var user = this.getUser();
+    return user.project;
   }
   storeItem(key: string, value:string){
     localStorage.setItem(key, value);

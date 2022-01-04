@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/core/services/database/auth.service';
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
 import { LoggerService } from 'src/app/core/services/utils/logger.service';
 import { IUserLogin } from 'src/app/shared/interfaces';
-import { AbstractOnDestroy } from '../abstract.ondestroy';
+import { AbstractOnDestroy } from '../../core/services/abstract.ondestroy';
 
 @Component({
     selector: 'user-login',

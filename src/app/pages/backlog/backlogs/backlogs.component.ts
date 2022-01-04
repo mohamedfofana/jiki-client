@@ -11,7 +11,7 @@ import { StorageService } from './../../../core/services/local/storage.service';
 import { StoryService } from './../../../core/services/database/story.service';
 import { IStory } from './../../../shared/model/story-model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AbstractOnDestroy } from '../../abstract.ondestroy';
+import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { IUser } from 'src/app/shared/model/user-model';
 import { AppConfigService } from 'src/app/core/services/local/appconfig-service';
 import { UserService } from 'src/app/core/services/database/user.service';
@@ -60,7 +60,7 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
     }
 
   ngOnInit() {
-    let projectId = this._storageService.getUser().project.id;
+    let projectId = this._storageService.getProject().id;
     let subscriptionSprint = this._sprintService.getCurrentByProjectId(projectId)
     .subscribe((sprint: ISprint) => {
       if(sprint){
@@ -68,7 +68,7 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
       }
     });
     this.subscriptions.push(subscriptionSprint);
-    let subscriptionProjects = this._projectService.getProjects()
+    let subscriptionProjects = this._projectService.findAll()
     .subscribe((projects: IProject[]) => {
       if(projects){
         this.projects = projects.sort((s1, s2)=> s1.name>s2.name? -1:1);
@@ -78,7 +78,7 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
         });
       }
     });
-    let subscriptionUser = this._userService.getUsers()
+    let subscriptionUser = this._userService.findAll()
     .subscribe((users: IUser[]) => {
       if(users){
         this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);

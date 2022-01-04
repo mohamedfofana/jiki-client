@@ -54,6 +54,14 @@ span {
     transition: all 0.3s;
     /* border-right: 2px solid #E8E7E7; */
     /* border-bottom: 2px solid #E8E7E7; */
+    /* position: fixed; */
+     /* Fixed Sidebar (stay in place on scroll) */
+    /* z-index: 1;  */
+    /* top: 0;  */
+    /* left: 0; */
+    /* background-color: #111; Black */
+    /* overflow-x: hidden;  */
+    /* Disable horizontal scroll */
 }
 #sidebar.active {
     min-width: 80px;

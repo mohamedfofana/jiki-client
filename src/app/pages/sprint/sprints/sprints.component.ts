@@ -6,7 +6,7 @@ import { ISprint } from './../../../shared/model/sprint-model';
 import { AppConfigService } from './../../../core/services/local/appconfig-service';
 import { LoggerService } from './../../../core/services/utils/logger.service';
 import { Component, OnInit } from '@angular/core';
-import { AbstractOnDestroy } from '../../abstract.ondestroy';
+import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { FormControl, Validators } from '@angular/forms';
 import { StorageService } from 'src/app/core/services/local/storage.service';
 
@@ -58,7 +58,7 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
         });
       }
     });
-    let subscriptionUser = this._userService.getUsers()
+    let subscriptionUser = this._userService.findAll()
     .subscribe((users: IUser[]) => {
       if(users){
         this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);

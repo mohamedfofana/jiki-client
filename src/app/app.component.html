@@ -1,10 +1,13 @@
 <jiki-top-menu></jiki-top-menu>
 <div class="container-fluid p-0 pt-2 mt-5">
   <div class="wrapper">
-    <jiki-left-menu class="jiki-shadow-content"></jiki-left-menu>
+    <div class="left-menu jiki-shadow-content">
+      <jiki-left-menu ></jiki-left-menu>
+    </div>
+
     <div id="content" class="global-content jiki-shadow-content">
       <router-outlet></router-outlet>
-  <jiki-growler position="top-right" [timeout]="2000"></jiki-growler>
+      <jiki-growler position="top-right" [timeout]="2000"></jiki-growler>
       <jiki-modal></jiki-modal>
       <jiki-overlay [delay]="300">
           <span class="spinner-grow"></span>&nbsp;&nbsp;&nbsp;Loading ...

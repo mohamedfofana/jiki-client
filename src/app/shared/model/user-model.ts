@@ -4,6 +4,7 @@ export interface IUser{
   id:number;
   team:ITeam;
   project:IProject;
+  email: String;
   firstname:string;
   lastname:string;
   username:string;

@@ -5,7 +5,7 @@ import { StoryService } from './../../core/services/database/story.service';
 import { IStory } from './../../shared/model/story-model';
 import { ISprint } from './../../shared/model/sprint-model';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AbstractOnDestroy } from 'src/app/pages/abstract.ondestroy';
+import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
 
 
 @Component({

@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { IUser } from './model/user-model';
 export interface ICustomer {
     id: number;
@@ -39,11 +40,15 @@ export interface IUserLogin {
     password: string;
 }
 
-export interface IApiResponse {
-    status: boolean;
-    error?: string;
+export interface IResponseType<T> {
+    status: HttpStatusCode;
+    entity: T;
 }
 
+export interface IApiResponse {
+  status: boolean;
+  error?: string;
+}
 export interface IAuthResponse {
     status: boolean;
     token: string;
