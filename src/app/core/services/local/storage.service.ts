@@ -1,6 +1,6 @@
-import { IUser } from './../../../shared/model/user-model';
+import { IUser } from '../../../shared/model/user.model';
 import { Injectable } from '@angular/core';
-import { IProject } from 'src/app/shared/model/project-model';
+import { IProject } from 'src/app/shared/model/project.model';
 
 @Injectable()
 export class StorageService {

@@ -1,5 +1,5 @@
 import { AppConfigService } from './../../core/services/local/appconfig-service';
-import { IStory } from '../../shared/model/story-model';
+import { IStory } from '../../shared/model/story.model';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({

@@ -7,7 +7,7 @@ import { StorageService } from './services/local/storage.service';
 import { StoryService } from './services/database/story.service';
 import { CoreStatics } from './core-statics';
 import { NgModule, SkipSelf, Optional } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { EnsureModuleLoadedOnceGuard } from './ensure-module-loaded-once.guard';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -27,6 +27,8 @@ import { AppConfigModule } from './config/app-config.module';
 import { SprintService } from './services/database/sprint.service';
 import { BacklogService } from './services/database/backlog.service';
 import { TeamService } from './services/database/team.service';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogModule } from './confirm-dialog/confirm-dialog.module';
 
 
 @NgModule({
@@ -39,7 +41,8 @@ import { TeamService } from './services/database/team.service';
     ModalModule,
     MyMaterialModule,
     AppConfigModule,
-    OverlayModule],
+    OverlayModule,
+    ConfirmDialogModule],
 
   exports: [
     RouterModule,
@@ -48,6 +51,7 @@ import { TeamService } from './services/database/team.service';
     GrowlerModule,
     OverlayModule,
     ModalModule,
+    ConfirmDialogModule,
     CoreStatics.components
 ],
 
@@ -55,7 +59,7 @@ import { TeamService } from './services/database/team.service';
                SorterService, FilterService, DataService,
                TrackByService, DialogService, AuthService,
                EventBusService, SprintService,LoggerService,
-               ProjectService,AppConfigService, TeamService,
+               ProjectService,AppConfigService, TeamService, DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

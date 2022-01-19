@@ -1,4 +1,4 @@
-import { ISprint } from './../../shared/model/sprint-model';
+import { ISprint } from '../../shared/model/sprint.model';
 import { Component, Input, ViewChild, ElementRef, OnInit } from '@angular/core';
 
 @Component({

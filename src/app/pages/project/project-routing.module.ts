@@ -1,13 +1,10 @@
-import { ProjectDetailsComponent } from './project-details/project-details.component';
-import { ProjectCreateComponent } from './project-create/project-create.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ProjectUpdateComponent } from './project-update/project-update.component';
+import { ProjectsComponent } from './projects/projects.component';
+import { ProjectAddEditDialogComponent } from './project-add-edit-dialog/project-add-edit-dialog.component';
 
 const routes: Routes = [
-  { path: 'create', component: ProjectCreateComponent },
-  { path: 'details/:id', component: ProjectDetailsComponent },
-  { path: 'update', component: ProjectUpdateComponent }
+  { path: '', component: ProjectsComponent }
 ];
 
 @NgModule({
@@ -16,5 +13,5 @@ const routes: Routes = [
   ]
 })
 export class ProjectRoutingModule {
-  static components = [ProjectCreateComponent,ProjectUpdateComponent, ProjectDetailsComponent];
+  static components = [ProjectsComponent, ProjectAddEditDialogComponent];
 }

@@ -1,5 +1,5 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { IUser } from './model/user-model';
+import { IUser } from './model/user.model';
 export interface ICustomer {
     id: number;
     firstName: string;
@@ -41,8 +41,9 @@ export interface IUserLogin {
 }
 
 export interface IResponseType<T> {
-    status: HttpStatusCode;
+    status: string;
     entity: T;
+    message: string;
 }
 
 export interface IApiResponse {

@@ -20,7 +20,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   searchForm: FormGroup;
   searchText: string;
   isLoggedIn = false;
-  // tslint:disable-next-line: variable-name
+
   constructor(private formBuilder: FormBuilder, private router: Router, private authservice: AuthService,
     private growler: GrowlerService,
     private logger: LoggerService) {

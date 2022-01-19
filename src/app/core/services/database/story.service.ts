@@ -1,4 +1,4 @@
-import { IStory } from './../../../shared/model/story-model';
+import { IStory } from '../../../shared/model/story.model';
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 

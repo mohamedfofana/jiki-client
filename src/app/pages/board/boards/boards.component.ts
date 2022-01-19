@@ -1,18 +1,18 @@
 import { SprintService } from './../../../core/services/database/sprint.service';
-import { ISprint } from './../../../shared/model/sprint-model';
+import { ISprint } from '../../../shared/model/sprint.model';
 import { UserService } from './../../../core/services/database/user.service';
 import { FormControl } from '@angular/forms';
-import { IUser } from './../../../shared/model/user-model';
+import { IUser } from '../../../shared/model/user.model';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AppConfigService } from './../../../core/services/local/appconfig-service';
 import { StoryStatusEnum } from './../../../shared/enum/story-status.enum';
 import { LoggerService } from './../../../core/services/utils/logger.service';
 import { StorageService } from './../../../core/services/local/storage.service';
-import { IStory } from './../../../shared/model/story-model';
+import { IStory } from '../../../shared/model/story.model';
 import { StoryService } from './../../../core/services/database/story.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
-import { IProject } from 'src/app/shared/model/project-model';
+import { IProject } from 'src/app/shared/model/project.model';
 
 @Component({
   selector: 'jiki-boards',

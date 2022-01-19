@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { IAppConfig } from './../../../shared/model/app-config-model';
+import { IAppConfig } from '../../../shared/model/app-config.model';
 import { AppProperties } from './../../config/app-properties.module';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';

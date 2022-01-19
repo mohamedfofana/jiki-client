@@ -2,9 +2,9 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
-import { IUser } from 'src/app/shared/model/user-model';
+import { IUser } from 'src/app/shared/model/user.model';
 import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
 import { AppConfigService } from '../local/appconfig-service';
 import { IApiResponse, IResponseType } from 'src/app/shared/interfaces';
@@ -22,12 +22,22 @@ export class UserService {
     }
 
     register(user: IUser): Observable<IResponseType<IUser>> {
-      return this.http.put<IResponseType<IUser>>(this.appConfig.apiEndpoint + this.userUrl + '/register', user)
-          .pipe(catchError(this._appConfigService.handleError));
+      return this.http.post<IResponseType<IUser>>(this.appConfig.apiEndpoint + this.userUrl + '/register', user)
+      .pipe(
+        map(response => {
+            return response;
+        }),
+        catchError(this._appConfigService.handleError)
+    );
     }
 
     update(user: IUser): Observable<IResponseType<IUser>> {
-      return this.http.patch<IResponseType<IUser>>(this.appConfig.apiEndpoint + this.userUrl + '/update', user)
+      return this.http.put<IResponseType<IUser>>(this.appConfig.apiEndpoint + this.userUrl + '/update', user)
+          .pipe(catchError(this._appConfigService.handleError));
+    }
+
+    delete(id: number): Observable<IResponseType<IUser>> {
+      return this.http.delete<IResponseType<IUser>>(this.appConfig.apiEndpoint + this.userUrl + '/delete/' + id)
           .pipe(catchError(this._appConfigService.handleError));
     }
 

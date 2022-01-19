@@ -1,7 +1,7 @@
 import { StoryStatusEnum } from './../../shared/enum/story-status.enum';
 import { AppConfigService } from './../../core/services/local/appconfig-service';
 import { Component, Input, OnInit } from '@angular/core';
-import { IStory } from '../../shared/model/story-model';
+import { IStory } from '../../shared/model/story.model';
 
 @Component({
   selector: 'jiki-item-story-backlog',
