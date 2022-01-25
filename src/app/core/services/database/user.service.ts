@@ -22,6 +22,7 @@ export class UserService {
     }
 
     register(user: IUser): Observable<IResponseType<IUser>> {
+      user.creationDate = this._appConfigService.currentTimestamp();
       return this.http.post<IResponseType<IUser>>(this.appConfig.apiEndpoint + this.userUrl + '/register', user)
       .pipe(
         map(response => {
@@ -32,6 +33,7 @@ export class UserService {
     }
 
     update(user: IUser): Observable<IResponseType<IUser>> {
+      user.updateDate = this._appConfigService.currentTimestamp();
       return this.http.put<IResponseType<IUser>>(this.appConfig.apiEndpoint + this.userUrl + '/update', user)
           .pipe(catchError(this._appConfigService.handleError));
     }

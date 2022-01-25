@@ -3,11 +3,13 @@ import { IAppConfig } from '../../../shared/model/app-config.model';
 import { AppProperties } from './../../config/app-properties.module';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Injectable()
 export class AppConfigService {
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient,
+              private _datePipe: DatePipe) {}
 
     private config:any|null;
 
@@ -41,5 +43,9 @@ export class AppConfigService {
           // return Observable.throw(err.text() || 'backend server error');
       }
       return throwError("Erreur hand " + error || 'Server error');
+  }
+
+  currentTimestamp(): string{
+    return <string> this._datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
   }
 }

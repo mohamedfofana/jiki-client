@@ -24,6 +24,7 @@ export class ProjectService {
     }
 
     create(project: IProject): Observable<IResponseType<IProject>> {
+      project.creationDate = this._appConfigService.currentTimestamp();
       return this.http.post<IResponseType<IProject>>(this.appConfig.apiEndpoint + this.projectUrl + '/create', project)
       .pipe(
         map(response => {
@@ -34,6 +35,7 @@ export class ProjectService {
     }
 
     update(project: IProject): Observable<IResponseType<IProject>> {
+      project.updateDate = this._appConfigService.currentTimestamp();
       return this.http.put<IResponseType<IProject>>(this.appConfig.apiEndpoint + this.projectUrl + '/update', project)
           .pipe(catchError(this._appConfigService.handleError));
     }

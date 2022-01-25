@@ -44,6 +44,7 @@ export class LoginComponent extends AbstractOnDestroy implements OnInit {
       return this.loginForm.get('password');
     }
     submit({ value, valid }: { value: IUserLogin, valid: boolean }) {
+      this.setError('');
        let subscription = this.authService.login(value)
             .subscribe((status: boolean) => {
                 if (status) {
@@ -56,12 +57,18 @@ export class LoginComponent extends AbstractOnDestroy implements OnInit {
                         this.router.navigate(['/board']);
                     }
                 } else {
-                    const loginError = 'Email or password incorrect.';
-                    this.errorMessage = loginError;
+                    this.setError('Email or password incorrect.');
+
                 }
             },
-            (err: any) => this.logger.log(err));
+            (err: any) => {
+              this.setError('Email or password incorrect.');
+                this.logger.log(err)
+            });
             this.subscriptions.push(subscription);
     }
 
+    setError(loginError:string){
+      this.errorMessage = loginError;
+    }
 }
