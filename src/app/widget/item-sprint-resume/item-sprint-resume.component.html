@@ -8,6 +8,9 @@
       <mat-chip [ngStyle]="{'backgroundColor': sprint.iconStatusColor, 'color':'white'}">{{sprint.status}}</mat-chip>
     </mat-chip-list>
     </mat-panel-description>
+    <button mat-icon-button class="float-start" color="primary">
+      <mat-icon (click)="addEditProject(sprint)">edit</mat-icon>
+    </button>
   </mat-expansion-panel-header>
   <jiki-item-story-preview *ngFor="let story of filteredStories" [story]='story'></jiki-item-story-preview>
 </mat-expansion-panel>

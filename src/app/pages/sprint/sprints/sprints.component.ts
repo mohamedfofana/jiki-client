@@ -9,6 +9,11 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { FormControl, Validators } from '@angular/forms';
 import { StorageService } from 'src/app/core/services/local/storage.service';
+import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
+import { SprintAddEditDialogComponent } from '../sprint-add-edit-dialog/sprint-add-edit-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { IProject } from 'src/app/shared/model/project.model';
 
 @Component({
   selector: 'jiki-sprints',
@@ -29,8 +34,11 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
   selectAssigneeFormControl = new FormControl([]);
   selectStatusFormControl = new FormControl([]);
 
+  project: IProject;
   assigneeList: IUser[];
   reporterList: IUser[];
+  emptySprint: ISprint;
+  dataSource = new MatTableDataSource<ISprint>();
 
   statusList: string[] = [
     StoryStatusEnum.TODO,
@@ -38,7 +46,7 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
     StoryStatusEnum.DONE,
     StoryStatusEnum.BLOCKED
   ];
-  constructor(private _appConfigService: AppConfigService,
+  constructor(public dialog: MatDialog,private _appConfigService: AppConfigService,
     private _sprintService: SprintService,
     private _userService: UserService,
     private _storageService: StorageService,
@@ -47,11 +55,11 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
     }
 
   ngOnInit() {
-    let projectId = this._storageService.getUser().project.id;
-    let subscriptionSprint = this._sprintService.getSprintsByProjectId(projectId)
+    this.project = this._storageService.getProject();
+    let subscriptionSprint = this._sprintService.getSprintsByProjectId(this.project.id)
     .subscribe((sprints: ISprint[]) => {
       if(sprints){
-        this.sprints = sprints.sort((s1, s2)=> s1.startDate>s2.startDate? -1:1);
+        this.sprints = sprints.sort((s1, s2)=> s1.id>s2.id? -1:1);
         this.sprints.forEach(sprint=> {
           sprint.iconStatus = this.getStatusConfigKey(sprint);
           sprint.iconStatusColor = this.getStatusColorConfigKey(sprint);
@@ -112,5 +120,20 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
   getStatusColorConfigKey(sprint:ISprint){
     return this._appConfigService.getProperty("cdk.sprint.status." + sprint.status +".icon.color");
   }
-
+  addEditProject(project: ISprint) {
+    let dialogData: IDialogFormData<ISprint> = {
+      new: project?false:true,
+      entity: project
+    }
+    const dialogRef = this.dialog.open(SprintAddEditDialogComponent, {
+      data: dialogData,
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.new){
+        let data = this.dataSource.data;
+        data.push(result.entity);
+        this.dataSource.data = data;
+      }
+    });
+  }
 }

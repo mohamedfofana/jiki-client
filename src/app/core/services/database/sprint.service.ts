@@ -1,12 +1,13 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { ISprint } from 'src/app/shared/model/sprint.model';
 import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
 import { AppConfigService } from '../local/appconfig-service';
+import { IResponseType } from 'src/app/shared/interfaces';
 
 @Injectable()
 export class SprintService {
@@ -35,6 +36,28 @@ export class SprintService {
 	 */
     getCurrentSprint(): Observable<ISprint[]> {
       return this.http.get<ISprint[]>(this.appConfig.apiEndpoint + this.sprintUrl + '/current')
+          .pipe(catchError(this._appConfigService.handleError));
+    }
+
+    create(sprint: ISprint): Observable<IResponseType<ISprint>> {
+      sprint.creationDate = this._appConfigService.currentTimestamp();
+      return this.http.post<IResponseType<ISprint>>(this.appConfig.apiEndpoint + this.sprintUrl + '/create', sprint)
+      .pipe(
+        map(response => {
+            return response;
+        }),
+        catchError(this._appConfigService.handleError)
+      );
+    }
+
+    update(team: ISprint): Observable<IResponseType<ISprint>> {
+      team.updateDate = this._appConfigService.currentTimestamp();
+      return this.http.put<IResponseType<ISprint>>(this.appConfig.apiEndpoint + this.sprintUrl + '/update', team)
+          .pipe(catchError(this._appConfigService.handleError));
+    }
+
+    delete(id: number): Observable<IResponseType<ISprint>> {
+      return this.http.delete<IResponseType<ISprint>>(this.appConfig.apiEndpoint + this.sprintUrl + '/delete/' + id)
           .pipe(catchError(this._appConfigService.handleError));
     }
 

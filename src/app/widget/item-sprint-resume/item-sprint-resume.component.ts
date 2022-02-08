@@ -6,6 +6,10 @@ import { IStory } from '../../shared/model/story.model';
 import { ISprint } from '../../shared/model/sprint.model';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
+import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
+import { SprintAddEditDialogComponent } from 'src/app/pages/sprint/sprint-add-edit-dialog/sprint-add-edit-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 
 
 @Component({
@@ -20,9 +24,11 @@ export class ItemSprintResumeComponent extends AbstractOnDestroy implements OnIn
   @Input() filterReporter: IUser[];
   @Input() filterStatus: string[];
   @Input() sprint: ISprint;
+  dataSource = new MatTableDataSource<ISprint>();
   stories: IStory[];
   filteredStories: IStory[];
-  constructor(private _storyService: StoryService,
+  constructor(public dialog: MatDialog,
+    private _storyService: StoryService,
     private _loggerService: LoggerService) {
     super();
   }
@@ -111,5 +117,22 @@ export class ItemSprintResumeComponent extends AbstractOnDestroy implements OnIn
       return found;
     });
     return filtered
+  }
+
+  addEditProject(project: ISprint) {
+    let dialogData: IDialogFormData<ISprint> = {
+      new: project?false:true,
+      entity: project
+    }
+    const dialogRef = this.dialog.open(SprintAddEditDialogComponent, {
+      data: dialogData,
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.new){
+        let data = this.dataSource.data;
+        data.push(result.entity);
+        this.dataSource.data = data;
+      }
+    });
   }
 }

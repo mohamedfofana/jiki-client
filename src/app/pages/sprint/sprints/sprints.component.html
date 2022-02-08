@@ -1,8 +1,11 @@
 <div class="m-0">
-  <div class="filter-row">
-     <jiki-page-title title="Sprints"></jiki-page-title>
+  <div class="filter-row px-4 pt-3">
+     <jiki-page-title title='{{project.name}} - Sprints'></jiki-page-title>
+     <button mat-mini-fab class="float-end">
+      <mat-icon (click)="addEditProject(emptySprint)">add</mat-icon>
+    </button>
   </div>
-  <div class="filter-row">
+  <div class="filter-row px-4 ">
     <mat-toolbar class="ps-0" style="background: white">
       <div class=" col-sm ps-0">
         <mat-form-field appearance="legacy" [style.width.px]="300">

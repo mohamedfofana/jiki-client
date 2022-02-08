@@ -1,5 +1,4 @@
-<span matBadge="{{story.reporter.firstname[0].toUpperCase()}}" matBadgePosition="before" matBadgeColor="accent">
-  <div class="d-flex bd-highlight pt-2 pl-2 pr-2 pb-0 item-story-preview" >
+  <div class="d-flex bd-highlight pt-2 px-2 item-story-preview" matBadge="{{story.reporter.firstname[0].toUpperCase()}}" matBadgePosition="before" matBadgeColor="accent" >
     <mat-icon [ngStyle]="{'color': story.iconTypeColor}">{{story.iconType}}</mat-icon>
     <div class="p-2 bd-highlight blue-color-global">
       <a [routerLink]="['/story/',story.id]" routerLinkActive="router-link-active" id="id_story">{{story.longtitle}}</a>
@@ -16,4 +15,3 @@
       </span>
      </div>
   </div>
-</span>
