@@ -8,10 +8,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [BacklogRoutingModule.components],
   imports: [
+    CommonModule,
     ReactiveFormsModule,
-    WidgetModule,
-    BacklogRoutingModule,
     MyMaterialModule,
-    CommonModule   ]
+    WidgetModule,
+    BacklogRoutingModule
+    ]
 })
 export class BacklogModule { }

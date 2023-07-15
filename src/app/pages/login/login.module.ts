@@ -9,7 +9,6 @@ import { CoreModule } from '../../core/core.module';
   declarations: [ LoginRoutingModule.componnents ],
   imports: [
     ReactiveFormsModule,
-    CoreModule,
     MyMaterialModule,
     SharedModule,
     LoginRoutingModule

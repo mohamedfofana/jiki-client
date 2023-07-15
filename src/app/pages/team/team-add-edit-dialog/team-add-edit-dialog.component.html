@@ -1,0 +1,37 @@
+<h1 *ngIf="!dialogFormData.entity" mat-dialog-title class="text-center">Add new Team</h1>
+<div class="team-dialog" mat-dialog-content>
+  <form [formGroup]="teamForm" class="teamForm" (submit)="onSubmitClick()" novalidate>
+    <table>
+      <tr>
+        <td>
+          <mat-form-field appearance="fill" class="form-field-teamName">
+            <mat-label>Name</mat-label>
+            <input matInput [formControl]="nameFormControl">
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td class="float-end">
+          <mat-form-field appearance="fill">
+            <mat-label>Status</mat-label>
+            <mat-select [formControl]="statusFormControl">
+              <mat-option *ngFor="let status of enumKeys(statuses)" [value]="status">
+                {{status}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr *ngIf="formError">
+        <td>
+          <span class="mat-error">{{formErrorMessage}}</span>
+        </td>
+      </tr>
+    </table>
+    <div mat-dialog-actions class="float-end">
+      <button *ngIf="dialogFormData.entity" mat-raised-button type="submit" [disabled]="!teamForm.valid">Update</button>
+      <button *ngIf="!dialogFormData.entity" mat-raised-button type="submit" [disabled]="!teamForm.valid">Save</button>
+      <button mat-button [mat-dialog-close]="dialogFormData">Cancel</button>
+    </div>
+  </form>
+</div>

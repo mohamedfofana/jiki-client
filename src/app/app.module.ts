@@ -22,13 +22,11 @@ export function init_app(appConfigService: AppConfigService) {
     BrowserModule,
     HttpClientModule,
     LoginModule,
-    CoreModule,
-    SharedModule,
+    CoreModule.forRoot(),
     AppRoutingModule,
     BrowserAnimationsModule
   ],
   providers: [
-    AppConfigService,
     { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppConfigService], multi: true }
   ],
   bootstrap: [AppComponent]

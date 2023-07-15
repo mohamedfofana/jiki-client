@@ -2,7 +2,9 @@ import { IUser } from '../../../shared/model/user.model';
 import { Injectable } from '@angular/core';
 import { IProject } from 'src/app/shared/model/project.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class StorageService {
 
   login(user: IUser, token: string){

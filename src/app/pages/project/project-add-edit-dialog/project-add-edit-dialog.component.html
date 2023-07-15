@@ -1,0 +1,55 @@
+<h1 *ngIf="!dialogFormData.entity" mat-dialog-title class="text-center">Add new Project</h1>
+<div class="project-dialog" mat-dialog-content>
+  <form [formGroup]="projectForm" class="projectForm" (submit)="onSubmitClick()" novalidate>
+    <table>
+      <tr>
+        <td colspan="2">
+          <mat-form-field appearance="fill" class="form-field-projectName">
+            <mat-label>Name</mat-label>
+            <input matInput [formControl]="nameFormControl">
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <mat-form-field appearance="fill" class="form-field-description">
+            <mat-label>Description</mat-label>
+            <textarea matInput [formControl]="descriptionFormControl"></textarea>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field appearance="fill">
+            <mat-label>Status</mat-label>
+            <mat-select [formControl]="statusFormControl">
+              <mat-option *ngFor="let status of enumKeys(statuses)" [value]="status">
+                {{status}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+        <td formGroupName="team" class="float-end">
+          <mat-form-field appearance="fill">
+            <mat-label>Team</mat-label>
+            <mat-select [formControl]="teamFormControl">
+              <mat-option *ngFor="let team of teams" [value]="team.id">
+                {{team.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr *ngIf="formError">
+        <td>
+          <span class="mat-error">{{formErrorMessage}}</span>
+        </td>
+      </tr>
+    </table>
+    <div mat-dialog-actions class="float-end">
+      <button *ngIf="dialogFormData.entity" mat-raised-button type="submit" [disabled]="!projectForm.valid">Update</button>
+      <button *ngIf="!dialogFormData.entity" mat-raised-button type="submit" [disabled]="!projectForm.valid">Save</button>
+      <button mat-button [mat-dialog-close]="dialogFormData.entity">Cancel</button>
+    </div>
+  </form>
+</div>

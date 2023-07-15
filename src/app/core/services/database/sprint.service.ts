@@ -9,7 +9,9 @@ import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
 import { AppConfigService } from '../local/appconfig-service';
 import { IResponseType } from 'src/app/shared/interfaces';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class SprintService {
     private sprintUrl:string = "/sprint"
     constructor(private http: HttpClient,

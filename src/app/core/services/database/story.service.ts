@@ -8,7 +8,9 @@ import { catchError } from 'rxjs/operators';
 import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
 import { AppConfigService } from '../local/appconfig-service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class StoryService {
     private storyUrl:string = "/story"
     constructor(private http: HttpClient,
@@ -23,6 +25,13 @@ export class StoryService {
           .pipe(catchError(this._appConfigService.handleError));
     }
 
+    /*
+     * Find stories by id
+    */
+     getStoryById(storyId:number): Observable<IStory> {
+      return this.http.get<IStory>(this.appConfig.apiEndpoint + this.storyUrl + '/'+storyId)
+          .pipe(catchError(this._appConfigService.handleError));
+    }
     /*
      * Find stories by sprint
     */

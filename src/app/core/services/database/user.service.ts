@@ -9,7 +9,9 @@ import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
 import { AppConfigService } from '../local/appconfig-service';
 import { IApiResponse, IResponseType } from 'src/app/shared/interfaces';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class UserService {
     private userUrl:string = "/user"
     constructor(private http: HttpClient,

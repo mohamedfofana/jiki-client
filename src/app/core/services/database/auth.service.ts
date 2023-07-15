@@ -10,7 +10,9 @@ import { IUserLogin, IAuthResponse } from '../../../shared/interfaces';
 import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
 import { AppConfigService } from '../local/appconfig-service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService {
 
     // Can use /api/auth below when running locally

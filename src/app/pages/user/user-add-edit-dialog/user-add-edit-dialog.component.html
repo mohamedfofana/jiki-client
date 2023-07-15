@@ -1,0 +1,126 @@
+<h1 *ngIf="dialogFormData.entity" class="text-center" mat-dialog-title>Hi {{dialogFormData.entity.firstname}} !</h1>
+<h1 *ngIf="!dialogFormData.entity" mat-dialog-title class="text-center">Add new User</h1>
+<div class="user-dialog" mat-dialog-content>
+  <form [formGroup]="userForm"  class="userForm" (submit)="onSubmitClick()" novalidate>
+  <table>
+    <tr>
+      <td>
+      <mat-form-field appearance="fill" class="form-field-username">
+      <mat-label>Username</mat-label>
+      <input matInput [formControl]="usernameFormControl">
+    </mat-form-field>
+    </td>
+    </tr>
+    <tr>
+      <td><mat-form-field appearance="fill" class="form-field-firstname">
+        <mat-label>Firstname</mat-label>
+        <input matInput [formControl]="firstnameFormControl">
+      </mat-form-field>
+    </td>
+    <td>
+      <mat-form-field appearance="fill" class="form-field-lastname">
+        <mat-label>Lastname</mat-label>
+        <input matInput [formControl]="lastnameFormControl">
+      </mat-form-field>
+    </td>
+    </tr>
+    <tr>
+    <td colspan="2">
+    <mat-form-field appearance="fill"  class="form-field-email">
+      <mat-label>Email</mat-label>
+      <input matInput [formControl]="emailFormControl" id="email" [errorStateMatcher]="matcher">
+      <mat-error *ngIf="hasError('email', 'email') && !hasError('email','required')">
+      Please enter a valid email address
+      </mat-error>
+      <mat-error *ngIf="hasError('email', 'required')">
+      Email is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </td>
+</tr>
+<tr *ngIf="!dialogFormData.entity">
+  <td colspan="2">
+    <mat-form-field appearance="fill"  class="form-field-password">
+      <mat-label>Password</mat-label>
+      <input type="password"  matInput [formControl]="passwordFormControl" id="password" [errorStateMatcher]="matcher" >
+      <mat-error *ngIf="hasError('password','pattern') && !hasError('password','required')">
+      Password should be 8 to 32 characters, lowercase, uppercase, special character and number
+      </mat-error>
+      <mat-error *ngIf="hasError('password','required')">
+      Password is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </td>
+  </tr>
+  <tr *ngIf="!dialogFormData.entity">
+    <td colspan="2">
+      <mat-form-field appearance="fill"  class="form-field-password">
+        <mat-label>Password confirmation</mat-label>
+        <input type="password" matInput [formControl]="passwordConfirmFormControl" id="passwordConfirm" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="hasError('passwordConfirm','required')">
+        Password confirmation is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="differentPasswords() && !hasError('passwordConfirm','required') && !hasError('passwordConfirm','pattern') ">
+          Passwords must match
+        </mat-error>
+      </mat-form-field>
+    </td>
+  </tr>
+<tr>
+    <td>
+      <mat-form-field appearance="fill">
+        <mat-label>Role</mat-label>
+        <mat-select [formControl]="roleFormControl">
+          <mat-option *ngFor="let role of enumKeys(roles)" [value]="role">
+            {{role}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+</td>
+<td class="float-end">
+  <mat-form-field appearance="fill">
+    <mat-label>Status</mat-label>
+    <mat-select [formControl]="statusFormControl">
+      <mat-option *ngFor="let status of enumKeys(statuses)" [value]="status">
+        {{status}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</td>
+</tr>
+<tr>
+  <td formGroupName="team">
+    <mat-form-field appearance="fill">
+      <mat-label>Team</mat-label>
+      <mat-select [formControl]="teamFormControl">
+        <mat-option *ngFor="let team of teams" [value]="team.id">
+          {{team.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+</td>
+<td class="float-end" formGroupName="project">
+<mat-form-field appearance="fill">
+  <mat-label>Project</mat-label>
+  <mat-select [formControl]="projectFormControl">
+    <mat-option *ngFor="let project of projects" [value]="project.id">
+      {{project.name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+</td>
+</tr>
+<tr *ngIf="formError">
+  <td>
+    <span class="mat-error">{{formErrorMessage}}</span>
+  </td>
+</tr>
+</table>
+<div mat-dialog-actions class="float-end">
+  <button *ngIf="dialogFormData.entity" mat-raised-button type="submit" [disabled]="!userForm.valid">Update</button>
+  <button *ngIf="!dialogFormData.entity" mat-raised-button type="submit" [disabled]="!userForm.valid">Save</button>
+  <button mat-button [mat-dialog-close]="dialogFormData.entity">Cancel</button>
+</div>
+</form>
+</div>
+

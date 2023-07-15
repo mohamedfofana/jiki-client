@@ -1,0 +1,10 @@
+.projects-table{
+  width: 100%;
+}
+.filter-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+.filter-width{
+  width: 50%;
+}

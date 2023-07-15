@@ -3,15 +3,15 @@ import { AbstractControl } from '@angular/forms';
 
 export class ValidationService {
 
-    static getValidatorErrorMessage(code: string) {
-        const config = {
-            'required': 'Required',
-            'invalidCreditCard': 'Is invalid credit card number',
-            'invalidEmailAddress': 'Invalid email address',
-            'invalidPassword': 'Invalid password. Password must be at least 6 characters long, and contain a number.'
-        };
-        return config[code];
-    }
+    // static getValidatorErrorMessage(code: string) {
+    //     const config = {
+    //         'required': 'Required',
+    //         'invalidCreditCard': 'Is invalid credit card number',
+    //         'invalidEmailAddress': 'Invalid email address',
+    //         'invalidPassword': 'Invalid password. Password must be at least 6 characters long, and contain a number.'
+    //     };
+    //     return config[code];
+    // }
 
     static creditCardValidator(control: AbstractControl) {
         // Visa, MasterCard, American Express, Diners Club, Discover, JCB
@@ -43,5 +43,13 @@ export class ValidationService {
         } else {
             return { 'invalidPassword': true };
         }
+    }
+
+    static numericValidator(value:string){
+      //Regex for range 1 to 9999 is
+      if (value.match("[1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]")){
+        return Number(value);
+      }
+      return null;
     }
 }

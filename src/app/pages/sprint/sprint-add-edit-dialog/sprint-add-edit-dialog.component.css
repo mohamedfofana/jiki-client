@@ -1,0 +1,20 @@
+.sprint-dialog form {
+  margin-bottom: 20px;
+}
+.sprint-dialog form > * {
+  margin: 5px 0;
+}
+
+.sprint-dialog .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+.form-field-sprintTitle, .form-field-sprintDescription{
+  width: 33em;
+ }
+ .form-field-businessValue{
+  width: 14em;
+ }
+.form-error{
+font-size:75%;
+}

@@ -8,7 +8,9 @@ import { IBacklog } from 'src/app/shared/model/backlog.model';
 import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
 import { AppConfigService } from '../local/appconfig-service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class BacklogService {
     private backlogUrl:string = "/backlog"
     constructor(private http: HttpClient,

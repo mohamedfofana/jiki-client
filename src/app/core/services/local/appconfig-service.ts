@@ -5,7 +5,9 @@ import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { DatePipe } from '@angular/common';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AppConfigService {
 
   constructor(private _http: HttpClient,
