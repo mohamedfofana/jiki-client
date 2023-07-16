@@ -1,7 +1,9 @@
-# JikiClient
+
+# JIRA like project JIKI with Angular
 This is an ongoing JIRA like project. It implements several key features of Angular.
 The project main goal is the learn the concepts. 
-The version used is Angular 13.X. It will be upgraded to add the new features.   
+The version used is Angular 13.X. It will be upgraded to add the new features.     
+ 
 
 ## Angular Concepts Covered
 * TypeScript version that relies on classes and modules
@@ -17,6 +19,35 @@ The version used is Angular 13.X. It will be upgraded to add the new features.
 * Using Angular databinding Syntax [], () and [()]
 * Using template-driven and reactive forms functionality for capturing and validating data
 
-## Development server
+## APP Configuration
+Use of APP_INITIALZER to load once configuration from file
+## Authentification
+JWT Authentification
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## HTTPinterceptor
+
+## Database services
+Manage access to the Spring Boot REST API
+
+## Local services
+Use of local storage to handle JWT token and user info
+## Admin
+Manage users, projects and teams throught CRUD operations
+## Features
+* Authentification
+* Create Sprint
+* Board - Current user sprint
+    * Filter story by Reporter or Assignee 
+    * Move Story from Status to Status
+    * Move Story from Backlog to a Sprint with a Right Click
+* Backlog
+    * Show backlogs
+    * Search stories
+    * Filter story by Reporter, Assignee or Status
+    * Move Story from a Backlog to a Sprint or another Backlog with a Right Click
+* Sprints
+    * Show sprints
+    * Search stories
+    * Filter story by Reporter, Assignee or Status
+* Administration (User, Team, Project)
+* CRUD Operations
