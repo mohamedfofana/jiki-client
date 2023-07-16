@@ -1,27 +1,22 @@
 # JikiClient
+This is an ongoing JIRA like project. It implements several key features of Angular.
+The project main goal is the learn the concepts. 
+The version used is Angular 13.X. It will be upgraded to add the new features.   
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.1.
+## Angular Concepts Covered
+* TypeScript version that relies on classes and modules
+* Defining routes including child routes and lazy loaded routes
+* Using Custom Components including custom input and output properties
+* Using Custom Directives
+* Using Custom Pipes
+* Defining Properties and Using Events in Components/Directives
+* Using the Http object for Ajax calls along with RxJS observables
+* Using HttpInterceptor
+* Using StorageService
+* Working with Utility and Service classes
+* Using Angular databinding Syntax [], () and [()]
+* Using template-driven and reactive forms functionality for capturing and validating data
 
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
