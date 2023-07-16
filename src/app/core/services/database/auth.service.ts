@@ -15,8 +15,6 @@ import { AppConfigService } from '../local/appconfig-service';
 })
 export class AuthService {
 
-    // Can use /api/auth below when running locally
-    // Full domain/port is included for Docker example
     isAuthenticated = false;
     redirectUrl: string;
     @Output() authChanged: EventEmitter<boolean> = new EventEmitter<boolean>();

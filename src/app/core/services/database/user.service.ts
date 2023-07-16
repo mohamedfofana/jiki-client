@@ -7,7 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { IUser } from 'src/app/shared/model/user.model';
 import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
 import { AppConfigService } from '../local/appconfig-service';
-import { IApiResponse, IResponseType } from 'src/app/shared/interfaces';
+import { IResponseType } from 'src/app/shared/interfaces';
 
 @Injectable({
   providedIn: 'root',
