@@ -5,8 +5,7 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { IBacklog } from 'src/app/shared/model/backlog.model';
-import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
-import { AppConfigService } from '../local/appconfig-service';
+import { AppConfigService } from '../../config/appconfig-service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,17 +13,16 @@ import { AppConfigService } from '../local/appconfig-service';
 export class BacklogService {
     private backlogUrl:string = "/backlog"
     constructor(private http: HttpClient,
-      private _appConfigService: AppConfigService,
-      @Inject(APP_CONFIG) private appConfig: AppConfig) { }
+      private _appConfigService: AppConfigService) { }
 
     getBacklogs(): Observable<IBacklog[]> {
-        return this.http.get<IBacklog[]>(this.appConfig.apiEndpoint + this.backlogUrl + '/all')
+        return this.http.get<IBacklog[]>(this._appConfigService.apiConfig().apiEndpoint + this.backlogUrl + '/all')
             .pipe(catchError(this._appConfigService.handleError));
     }
 
 
     getCurrentBacklog(): Observable<IBacklog[]> {
-      return this.http.get<IBacklog[]>(this.appConfig.apiEndpoint + this.backlogUrl + '/current')
+      return this.http.get<IBacklog[]>(this._appConfigService.apiConfig().apiEndpoint + this.backlogUrl + '/current')
           .pipe(catchError(this._appConfigService.handleError));
     }
 

@@ -61,7 +61,7 @@ export class StoryViewEditComponent implements OnInit {
       this._storyService.getStoryById(this.idStory).subscribe(
         s=>{
           this.story = s;
-          this._loggerService.log(this.story);
+          //this._loggerService.log(this.story);
           this.initForm();
         }
       );

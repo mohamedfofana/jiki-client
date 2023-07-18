@@ -52,7 +52,7 @@ export class GrowlerComponent implements OnInit {
       if (growl.id === id) {
         this.growls.splice(index, 1);
         this.growlCount--;
-        this.logger.log('removed ' + id);
+        //this.logger.log('removed ' + id);
       }
     });
   }

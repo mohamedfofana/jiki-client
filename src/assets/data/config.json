@@ -1,6 +1,16 @@
 {
   "config_file" : "assets/data/config.json",
-
+  "secret_key"  : "@#$jikiAgile,;!",
+  "devConfig" : {    
+    "apiEndpoint" : "http://localhost:8181/api",
+    "authUrl" : "http://localhost:8181/login",
+    "options" : "({ headers: new HttpHeaders({ 'Content-Type': 'application/json' }).set('Access-Control-Allow-Origin', '*')})"
+  },
+  "prodConfig" : {    
+    "apiEndpoint" : "http://www.jiki.com/api",
+    "authUrl" : "http://www.jiki.com/login",
+    "options" : "({ headers: new HttpHeaders({ 'Content-Type': 'application/json' }).set('Access-Control-Allow-Origin', '*')})"
+  },
   "cdk.board.icon" : "dashboard",
   "cdk.backlog.icon" : "dashboard",
   "cdk.sprint.icon" : "directions_run",

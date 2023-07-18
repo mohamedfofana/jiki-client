@@ -1,4 +1,3 @@
-import { state } from '@angular/animations';
 import { DatePipe } from '@angular/common';
 import { AfterContentChecked, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
@@ -72,8 +71,6 @@ export class TeamAddEditDialogComponent extends AbstractOnDestroy implements OnI
     this.newTeam = this.teamForm.value;
    if (this.dialogFormData.entity){
       this.newTeam.id=this.dialogFormData.entity.id;
-      // this.newTeam.updateDate = <string> this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
-      // console.log("update date: " + this.newTeam.updateDate);
       let subscriptionTeamAdd = this._teamService.update(this.newTeam)
         .subscribe((response: IResponseType<ITeam>) => {
                 if(response.status === "OK"){
@@ -87,10 +84,9 @@ export class TeamAddEditDialogComponent extends AbstractOnDestroy implements OnI
         });
       this.subscriptions.push(subscriptionTeamAdd);
     }else{
-      // this.newTeam.creationDate = <string> this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
       let subscriptionTeamAdd = this._teamService.create(this.newTeam)
         .subscribe((response: IResponseType<ITeam>) => {
-            console.log(response.status);
+            //console.log(response.status);
               if(response.status === "OK"){
                 this.newTeam = response.entity;
                 this._growler.growl('Team created', GrowlerMessageType.Success);

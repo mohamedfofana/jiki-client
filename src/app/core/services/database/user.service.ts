@@ -5,8 +5,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { IUser } from 'src/app/shared/model/user.model';
-import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
-import { AppConfigService } from '../local/appconfig-service';
+import { AppConfigService } from '../../config/appconfig-service';
 import { IResponseType } from 'src/app/shared/interfaces';
 
 @Injectable({
@@ -15,17 +14,16 @@ import { IResponseType } from 'src/app/shared/interfaces';
 export class UserService {
     private userUrl:string = "/user"
     constructor(private http: HttpClient,
-      private _appConfigService: AppConfigService,
-      @Inject(APP_CONFIG) private appConfig: AppConfig) { }
+      private _appConfigService: AppConfigService) { }
 
     findAll(): Observable<IUser[]> {
-        return this.http.get<IUser[]>(this.appConfig.apiEndpoint + this.userUrl + '/all')
+        return this.http.get<IUser[]>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/all')
             .pipe(catchError(this._appConfigService.handleError));
     }
 
     register(user: IUser): Observable<IResponseType<IUser>> {
       user.creationDate = this._appConfigService.currentTimestamp();
-      return this.http.post<IResponseType<IUser>>(this.appConfig.apiEndpoint + this.userUrl + '/register', user)
+      return this.http.post<IResponseType<IUser>>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/register', user)
       .pipe(
         map(response => {
             return response;
@@ -36,12 +34,12 @@ export class UserService {
 
     update(user: IUser): Observable<IResponseType<IUser>> {
       user.updateDate = this._appConfigService.currentTimestamp();
-      return this.http.put<IResponseType<IUser>>(this.appConfig.apiEndpoint + this.userUrl + '/update', user)
+      return this.http.put<IResponseType<IUser>>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/update', user)
           .pipe(catchError(this._appConfigService.handleError));
     }
 
     delete(id: number): Observable<IResponseType<IUser>> {
-      return this.http.delete<IResponseType<IUser>>(this.appConfig.apiEndpoint + this.userUrl + '/delete/' + id)
+      return this.http.delete<IResponseType<IUser>>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/delete/' + id)
           .pipe(catchError(this._appConfigService.handleError));
     }
 

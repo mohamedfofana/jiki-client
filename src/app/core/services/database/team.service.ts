@@ -5,8 +5,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { ITeam } from 'src/app/shared/model/team.model';
-import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
-import { AppConfigService } from '../local/appconfig-service';
+import { AppConfigService } from '../../config/appconfig-service';
 import { IResponseType } from 'src/app/shared/interfaces';
 
 @Injectable({
@@ -16,19 +15,18 @@ export class TeamService {
     private teamUrl:string = "/team"
     constructor(
       private http: HttpClient,
-      private _appConfigService: AppConfigService,
-      @Inject(APP_CONFIG) private appConfig: AppConfig
+      private _appConfigService: AppConfigService
     ) { }
 
     findAll(): Observable<ITeam[]> {
-        return this.http.get<ITeam[]>(this.appConfig.apiEndpoint + this.teamUrl + '/all')
+        return this.http.get<ITeam[]>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/all')
             .pipe(catchError(this._appConfigService.handleError));
     }
 
 
     create(team: ITeam): Observable<IResponseType<ITeam>> {
       team.creationDate = this._appConfigService.currentTimestamp();
-      return this.http.post<IResponseType<ITeam>>(this.appConfig.apiEndpoint + this.teamUrl + '/create', team)
+      return this.http.post<IResponseType<ITeam>>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/create', team)
       .pipe(
         map(response => {
             return response;
@@ -39,12 +37,12 @@ export class TeamService {
 
     update(team: ITeam): Observable<IResponseType<ITeam>> {
       team.updateDate = this._appConfigService.currentTimestamp();
-      return this.http.put<IResponseType<ITeam>>(this.appConfig.apiEndpoint + this.teamUrl + '/update', team)
+      return this.http.put<IResponseType<ITeam>>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/update', team)
           .pipe(catchError(this._appConfigService.handleError));
     }
 
     delete(id: number): Observable<IResponseType<ITeam>> {
-      return this.http.delete<IResponseType<ITeam>>(this.appConfig.apiEndpoint + this.teamUrl + '/delete/' + id)
+      return this.http.delete<IResponseType<ITeam>>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/delete/' + id)
           .pipe(catchError(this._appConfigService.handleError));
     }
 }

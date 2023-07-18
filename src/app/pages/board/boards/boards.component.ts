@@ -4,7 +4,7 @@ import { UserService } from './../../../core/services/database/user.service';
 import { FormControl } from '@angular/forms';
 import { IUser } from '../../../shared/model/user.model';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { AppConfigService } from './../../../core/services/local/appconfig-service';
+import { AppConfigService } from '../../../core/config/appconfig-service';
 import { StoryStatusEnum } from './../../../shared/enum/story-status.enum';
 import { LoggerService } from './../../../core/services/utils/logger.service';
 import { StorageService } from './../../../core/services/local/storage.service';

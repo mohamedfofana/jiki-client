@@ -3,7 +3,7 @@ import { StoryStatusEnum } from './../../../shared/enum/story-status.enum';
 import { UserService } from './../../../core/services/database/user.service';
 import { SprintService } from './../../../core/services/database/sprint.service';
 import { ISprint } from '../../../shared/model/sprint.model';
-import { AppConfigService } from './../../../core/services/local/appconfig-service';
+import { AppConfigService } from '../../../core/config/appconfig-service';
 import { LoggerService } from './../../../core/services/utils/logger.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';

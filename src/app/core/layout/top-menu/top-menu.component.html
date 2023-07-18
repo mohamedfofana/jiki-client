@@ -3,31 +3,33 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-      <a class="navbar-brand" href="#">Jiki</a>
-      <ul class="navbar-nav mr-auto ml-4 mt-2 mt-lg-0 navbar-nav-top">
-        <li class="nav-item dropdown" *ngIf="isLoggedIn">
-           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Admin
-           </a>
-           <div class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown" >
-             <a class="dropdown-item" [routerLink]="['/users']" >Users</a>
-             <a class="dropdown-item" [routerLink]="['/projects']" >Projects</a>
-             <a class="dropdown-item" [routerLink]="['/teams']" >Teams</a>
-             <div class="dropdown-divider"></div>
-             <a class="dropdown-item" href="#">Stats</a>
-           </div>
-         </li>
-       </ul>
+      <a class="navbar-brand pl-3" href="#">
+        <img src="assets/images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        Jiki
+      </a>     
     </div>
-
-    <form class="form-horizontal right search-form" [formGroup]="searchForm" role="form" (keyup.enter)="onSubmit()">
+    <ul class="navbar-nav mr-auto ml-4 mt-2 mt-lg-0 navbar-nav-top">
+      <li class="nav-item dropdown" *ngIf="isLoggedInAsAdmin">
+         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Admin
+         </a>
+         <div class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown" >
+           <a class="dropdown-item" [routerLink]="['/users']" >Users</a>
+           <a class="dropdown-item" [routerLink]="['/projects']" >Projects</a>
+           <a class="dropdown-item" [routerLink]="['/teams']" >Teams</a>
+           <!-- <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="#">Stats</a> -->
+         </div>
+       </li>
+     </ul>
+    <!-- <form class="form-horizontal right search-form" [formGroup]="searchForm" role="form" (keyup.enter)="onSubmit()">
         <div class="input-group">
           <input type="text" class="form-control search-input"  aria-describedby="addon-wrapping" formControlName="searchText" size="30" placeholder="Rechercher">
           <span class="input-group-btn form-control-feedback">
               <mat-icon class="icon_search">search</mat-icon>
           </span>
       </div>
-    </form>
+    </form> -->
     <ul class="navbar-nav mr-auto ml-4 mt-2 mt-lg-0 navbar-nav-top">
       <li class="nav-item" *ngIf="!isLoggedIn" routerLinkActive="active" (click)="login()"><a style="cursor: pointer;margin-left: 1em;">Login</a></li>
       <li class="nav-item dropdown" *ngIf="isLoggedIn">
@@ -38,6 +40,6 @@
           <a routerLink="" class="dropdown-item" >Profile</a>
           <a routerLink="" class="dropdown-item" (click)="logout()">Logout</a>
         </div>
-      </li>
+      </li>      
     </ul>
   </nav>

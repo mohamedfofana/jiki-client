@@ -1,14 +1,12 @@
-import { LoggerService } from 'src/app/core/services/utils/logger.service';
 import { StorageService } from './../local/storage.service';
 import { Injectable, Output, EventEmitter, Inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import { IUserLogin, IAuthResponse } from '../../../shared/interfaces';
-import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
-import { AppConfigService } from '../local/appconfig-service';
+import { AppConfigService } from '../../config/appconfig-service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,28 +14,28 @@ import { AppConfigService } from '../local/appconfig-service';
 export class AuthService {
 
     isAuthenticated = false;
+    isAdmin = false;
     redirectUrl: string;
     @Output() authChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    constructor(private http: HttpClient, @Inject(APP_CONFIG) private appConfig: AppConfig,
+    constructor(private http: HttpClient,
                 private _storageService: StorageService,
-                private _appConfigService: AppConfigService,
-                private _loggerService: LoggerService) { }
+                private _appConfigService: AppConfigService) { }
 
     public userAuthChanged(status: boolean) {
-        this.isAuthenticated = status;
-        this.authChanged.emit(status); // Raise changed event
+        this.isAuthenticated = status;       
+        this.authChanged.emit(status); 
     }
 
 
     login(userLogin: IUserLogin): Observable<boolean> {
-        return this.http.post<IAuthResponse>(this.appConfig.authUrl, userLogin)
+        return this.http.post<IAuthResponse>(this._appConfigService.apiConfig().authUrl, userLogin)
             .pipe(
-                map(response => {
-                    this.userAuthChanged(response.status);
+                map(response => {                    
                     if (response.status){
                         this._storageService.login(response.user, response.token);
                     }
+                    this.userAuthChanged(response.status);
                     return response.status;
                 }),
                 catchError(this._appConfigService.handleError)

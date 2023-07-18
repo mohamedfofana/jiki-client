@@ -7,6 +7,11 @@ import { AuthService } from '../../services/database/auth.service';
 import { GrowlerService, GrowlerMessageType } from '../../growler/growler.service';
 import { LoggerService } from '../../services/utils/logger.service';
 import { Subscription } from 'rxjs';
+import { IAuthResponse } from 'src/app/shared/interfaces';
+import { findEnumValueByKey } from '../../helpers/enum.helpers';
+import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
+import { AppConfigService } from '../../config/appconfig-service';
+import { StorageService } from '../../services/local/storage.service';
 
 @Component({
   selector: 'jiki-top-menu',
@@ -20,10 +25,14 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   searchForm: FormGroup;
   searchText: string;
   isLoggedIn = false;
+  isLoggedInAsAdmin = false;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private authservice: AuthService,
-    private growler: GrowlerService,
-    private logger: LoggerService) {
+  constructor(private formBuilder: FormBuilder, 
+              private router: Router, 
+              private authservice: AuthService,
+              private storageService: StorageService,
+              private growler: GrowlerService,
+              private logger: LoggerService) {
   }
 
   ngOnInit() {
@@ -43,6 +52,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   }
 
   initAuth(): void{
+    // TODO change
     if (localStorage.getItem('top_token')){
       this.authservice.userAuthChanged(true);
     }else{
@@ -84,6 +94,11 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 
   setLoginLogoutText() {
     this.isLoggedIn = (this.authservice.isAuthenticated) ? true : false;
+    if(this.isLoggedIn){
+      const user = this.storageService.getUser();
+      let role = findEnumValueByKey(UserRoleEnum, user.role);
+      this.isLoggedInAsAdmin = (role === UserRoleEnum.ADMIN) ? true : false;
+    }
   }
 
 }

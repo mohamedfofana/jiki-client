@@ -25,13 +25,13 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
       useClass: AuthInterceptor,
       multi: true,
     }
-  ] // these should be singleton
+  ] 
 })
 export class CoreModule extends EnsureModuleLoadedOnceGuard {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     super(parentModule);
   }
-  static forRoot(): ModuleWithProviders<CoreModule> {
+  static loadModuleWithProviders(): ModuleWithProviders<CoreModule> {
     return {
       ngModule: CoreModule,
       providers: [ CoreStatics.services ]

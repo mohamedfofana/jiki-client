@@ -1,46 +1,52 @@
 
   <div class="view">
-    <div class="container align-items-center shadow-lg login-container">
+    <div class="container align-items-center login-container">
         <header class="text-center">
-                <img alt="" border="0" src="assets/images/logo-text.png">
+                <img alt="" border="0" src="assets/images/logo.png">
         </header>
         <br />
         <form [formGroup]="loginForm" (ngSubmit)="submit(loginForm)" class="login-form" novalidate>
+                        
             <div class="login">
                 <div class="row">
-                    <div class="col-md-2 pt-2">
-                        Email:
+                    <div class="col-md-4 pt-2 text-align-right">
+                        Email :
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-5">
                         <input type="email" name="email" class="form-control" formControlName="username" />
                         <div class="alert alert-danger" [hidden]="username.untouched || username.valid">
                             A valid email address is required
                         </div>
                     </div>
+                    <div class="col-md-3">                        
+                    </div>
                 </div>
                 <br />
                 <div class="row">
-                    <div class="col-md-2  pt-2">
-                        Password:
+                    <div class="col-md-4 pt-2 text-align-right">
+                        Password :
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-5">
                         <input type="password" name="password" class="form-control" formControlName="password" />
                         <div class="alert alert-danger" [hidden]="password.untouched || password.valid">
                             Password is required (6 or more characters with at least one number)
                         </div>
                     </div>
+                    <div class="col-md-3">                        
+                    </div>
                 </div>
                 <br />
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <button type="submit" class="btn blue-global-background-color w-100" [disabled]="!loginForm.valid">Log in</button>
+                <div class="text-danger text-center" *ngIf="errorMessage">
+                    <div class="statusRow">
+                        <mat-icon>error</mat-icon>&nbsp;&nbsp;{{ errorMessage }}
                     </div>
                 </div>
-                <div class="statusRow">
-                    <div class="text-danger" *ngIf="errorMessage">
-                      <mat-icon>error</mat-icon>&nbsp;&nbsp;Error: {{ errorMessage }}
+                <div class="d-flex justify-content-center">
+                    <div class="text-center">
+                        <button type="submit" class="btn blue-global-background-color w-100" [disabled]="!loginForm.valid">&nbsp;&nbsp;&nbsp;Log in&nbsp;&nbsp;&nbsp;</button>
                     </div>
                 </div>
+                
             </div>
         </form>
 

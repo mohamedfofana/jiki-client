@@ -1,4 +1,4 @@
-import { AppConfigService } from './../../core/services/local/appconfig-service';
+import { AppConfigService } from '../../core/config/appconfig-service';
 import { IStory } from '../../shared/model/story.model';
 import { Component, Input, OnInit } from '@angular/core';
 

@@ -119,7 +119,7 @@ export class SprintAddEditDialogComponent extends AbstractOnDestroy implements O
       this.newSprint.reporter = this._storageService.getUser();
       let subscriptionUserAdd = this._sprintService.create(this.newSprint)
         .subscribe((response: IResponseType<ISprint>) => {
-            console.log(response.status);
+            //console.log(response.status);
               if(response.status === "OK"){
                 this.newSprint = response.entity;
                 this._growler.growl('Sprint created', GrowlerMessageType.Success);

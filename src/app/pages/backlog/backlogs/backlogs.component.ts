@@ -13,7 +13,7 @@ import { IStory } from '../../../shared/model/story.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { IUser } from 'src/app/shared/model/user.model';
-import { AppConfigService } from 'src/app/core/services/local/appconfig-service';
+import { AppConfigService } from 'src/app/core/config/appconfig-service';
 import { UserService } from 'src/app/core/services/database/user.service';
 import { FormControl } from '@angular/forms';
 import { StoryStatusEnum } from 'src/app/shared/enum/story-status.enum';

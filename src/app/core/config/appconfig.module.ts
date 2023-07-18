@@ -1,4 +1,4 @@
-import { AppConfigService } from '../services/local/appconfig-service';
+import { AppConfigService } from './appconfig-service';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -9,8 +9,11 @@ export function init_app(appConfigService: AppConfigService) {
 @NgModule({
   imports: [ HttpClientModule ],
   providers: [
-    AppConfigService,
-    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppConfigService], multi: true }
+    { provide: APP_INITIALIZER,
+       useFactory: init_app, 
+       deps: [AppConfigService], 
+       multi: true 
+    }
   ]
 })
 export class AppConfigModule { }

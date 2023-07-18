@@ -1,5 +1,5 @@
 import { StoryStatusEnum } from './../../shared/enum/story-status.enum';
-import { AppConfigService } from './../../core/services/local/appconfig-service';
+import { AppConfigService } from '../../core/config/appconfig-service';
 import { Component, Input, OnInit } from '@angular/core';
 import { IStory } from '../../shared/model/story.model';
 

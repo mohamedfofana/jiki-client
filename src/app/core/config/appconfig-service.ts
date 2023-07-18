@@ -1,9 +1,16 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { IAppConfig } from '../../../shared/model/app-config.model';
-import { AppProperties } from './../../config/app-properties.module';
+import { environment } from '../../../environments/environment';
+import { AppProperties } from './app-properties.module';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { DatePipe } from '@angular/common';
+
+export class AppConfig {
+  apiEndpoint: string;
+  authUrl: string;
+  options: any;
+  
+}
 
 @Injectable({
   providedIn: 'root',
@@ -12,21 +19,39 @@ export class AppConfigService {
 
   constructor(private _http: HttpClient,
               private _datePipe: DatePipe) {}
-
+    static readonly DEV_CONFIG = 'devConfig';
+    static readonly PROD_CONFIG = 'prodConfig';
     private config:any|null;
-
+   
     public settings() {
         return this.config;
     }
 
-    /**
-     * Use to get the data found in the second file (config file)
-     */
     public getProperty(key: any) {
       return this.config[key];
-  }
+    }
+
+    private devConfig (): AppConfig{
+      //console.log('Loading development config');
+      const config = this.config[AppConfigService.DEV_CONFIG];
+      return config;
+    } 
+
+    private prodConfig (): AppConfig{     
+      //console.log('Loading production config');
+      const config = this.config[AppConfigService.PROD_CONFIG];
+      return config;
+    } 
+
+    public apiConfig(): AppConfig{ 
+      if(environment.production){ 
+        return this.prodConfig();
+      } 
+      return this.devConfig();
+    }
 
     public load(): Promise<any> {
+      //console.log('Initializing app config');
       return new Promise<void>((resolve, reject) => {
         this._http.get(AppProperties.config_file).toPromise().then((response) => {
            this.config = response;
@@ -34,15 +59,14 @@ export class AppConfigService {
         }).catch((response: any) => {
            reject('Could not load file ' + AppProperties.config_file + ': ${JSON.stringify(response)}');
         });
-    });
+      });
     }
+
     public handleError(error: HttpErrorResponse) {
       console.error('server error:', error);
       if (error.error instanceof Error) {
           const errMessage = error.error.message;
           return throwError(errMessage);
-          // Use the following instead if using lite-server
-          // return Observable.throw(err.text() || 'backend server error');
       }
       return throwError("Erreur hand " + error || 'Server error');
   }

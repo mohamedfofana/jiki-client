@@ -93,7 +93,7 @@ mat-form-field.mat-form-field {
 }
 .jiki-shadow-content{
   padding: 1%;
-  background-image: linear-gradient(to bottom, rgb(255 255 255) 0%, rgb(255 255 255) 100%), linear-gradient(to bottom, rgb(177 186 207) 0%, rgb(177 186 207) 100%);
+  /*background-image: linear-gradient(to bottom, rgb(255 255 255) 0%, rgb(255 255 255) 100%), linear-gradient(to bottom, rgb(177 186 207) 0%, rgb(177 186 207) 100%);*/
   background-clip: content-box, padding-box;
   /* box-shadow: 0 0 20px rgb(0 0 0 / 10%), 0 0 5px rgb(0 0 0 / 5%); */
   min-height: auto;
@@ -103,3 +103,6 @@ mat-form-field.mat-form-field {
   padding:1%;
 }
 
+.text-align-right {
+  text-align: right;
+}

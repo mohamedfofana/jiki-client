@@ -148,7 +148,7 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
     }else{
       let subscriptionUserAdd = this._userService.register(this.newUser)
         .subscribe((response: IResponseType<IUser>) => {
-            console.log(response.status);
+            //console.log(response.status);
               if(response.status === "OK"){
                 this.newUser = response.entity;
                 this._growler.growl('User created', GrowlerMessageType.Success);

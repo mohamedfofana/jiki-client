@@ -5,8 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { AppConfig, APP_CONFIG } from '../../config/app-config.module';
-import { AppConfigService } from '../local/appconfig-service';
+import { AppConfigService } from '../../config/appconfig-service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,14 +13,13 @@ import { AppConfigService } from '../local/appconfig-service';
 export class StoryService {
     private storyUrl:string = "/story"
     constructor(private http: HttpClient,
-      private _appConfigService: AppConfigService,
-      @Inject(APP_CONFIG) private appConfig: AppConfig) { }
+      private _appConfigService: AppConfigService) { }
 
     /*
      * Return stories on project backlogs
      */
     getStoriesOnBacklogsByProjectId(projectId:number): Observable<IStory[]> {
-      return this.http.get<IStory[]>(this.appConfig.apiEndpoint + this.storyUrl + '/backlogs/project/'+projectId)
+      return this.http.get<IStory[]>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/backlogs/project/'+projectId)
           .pipe(catchError(this._appConfigService.handleError));
     }
 
@@ -29,14 +27,14 @@ export class StoryService {
      * Find stories by id
     */
      getStoryById(storyId:number): Observable<IStory> {
-      return this.http.get<IStory>(this.appConfig.apiEndpoint + this.storyUrl + '/'+storyId)
+      return this.http.get<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/'+storyId)
           .pipe(catchError(this._appConfigService.handleError));
     }
     /*
      * Find stories by sprint
     */
     getStoriesBySprint(sprintId:number): Observable<IStory[]> {
-      return this.http.get<IStory[]>(this.appConfig.apiEndpoint + this.storyUrl + '/sprint/'+sprintId)
+      return this.http.get<IStory[]>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/sprint/'+sprintId)
           .pipe(catchError(this._appConfigService.handleError));
     }
 
@@ -44,7 +42,7 @@ export class StoryService {
      * Update story status
      */
     updateStatus(story:IStory):Observable<IStory>{
-      return this.http.put<IStory>(this.appConfig.apiEndpoint + this.storyUrl + '/updateStatus', story)
+      return this.http.put<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/updateStatus', story)
       .pipe(catchError(this._appConfigService.handleError));
     }
 
@@ -52,7 +50,7 @@ export class StoryService {
      * Update story backlog or sprint
      */
     updateSprintAndBacklog(story:IStory):Observable<IStory>{
-      return this.http.put<IStory>(this.appConfig.apiEndpoint + this.storyUrl + '/update/sprintAndBacklog', story)
+      return this.http.put<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/update/sprintAndBacklog', story)
       .pipe(catchError(this._appConfigService.handleError));
     }
 
