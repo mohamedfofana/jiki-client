@@ -10,7 +10,7 @@ export class StorageService {
   readonly TOKEN_ID_KEY = 'top_token';
   readonly USER_KEY = 'user';
   readonly secret_key = '!@JikI';
-  
+
   private encrypt(value: string): string {
     return CryptoJS.AES.encrypt(value, this.secret_key).toString();
   }
@@ -18,7 +18,7 @@ export class StorageService {
   private decrypt(value: string): string {
     return CryptoJS.AES.decrypt(value, this.secret_key).toString(CryptoJS.enc.Utf8);
   }
-  
+
   storeItem(key: string, value:string){
     localStorage.setItem(key, value);
   }
@@ -37,7 +37,7 @@ export class StorageService {
 
   getToken(): string{
     const token = this.findItem(this.TOKEN_ID_KEY) || '{}';
-    return this.decrypt(token);
+    return token;
   }
 
   getUser(): IUser {
@@ -47,27 +47,25 @@ export class StorageService {
     return user;
   }
 
-  getProject():IProject { 
+  getProject():IProject {
     const user = this.getUser();
     return user.project;
   }
 
   login(user: IUser, token: string){
-    this.storeItem(this.TOKEN_ID_KEY, this.encrypt(token));
+    this.storeItem(this.TOKEN_ID_KEY, token);
     this.storeItem(this.USER_KEY, this.encrypt(JSON.stringify(user)));
   }
 
-  isLoggedIn(): boolean{
-    // TODO rewrite 
+  isUserInStorage(): boolean{
     if(this.itemExists(this.TOKEN_ID_KEY) && this.itemExists(this.USER_KEY)){
-      // if() token valid and not expired 
-      // if a user is decrypted
       return true;
     }
     return false;
   }
 
   logout(){
-    localStorage.clear();
+    localStorage.removeItem(this.TOKEN_ID_KEY);
+    localStorage.removeItem(this.USER_KEY);
   }
 }

@@ -21,6 +21,7 @@ import { ProjectService } from './services/database/project.service';
 import { AppConfigService } from './config/appconfig-service';
 import { TeamService } from './services/database/team.service';
 import { DatePipe } from '@angular/common';
+import { JwtTokenService } from './services/database/jwt-token.service';
 
 export class CoreStatics {
 
@@ -47,6 +48,7 @@ export class CoreStatics {
                       LoggerService,
                       ProjectService,
                       AppConfigService, 
+                      JwtTokenService,
                       TeamService];
 
   static pipes = [ DatePipe ];

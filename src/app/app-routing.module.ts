@@ -1,4 +1,4 @@
-import { AuthenticatedGuard } from './shared/authenticated.guard';
+import { AuthenticatedGuard } from './shared/guards/authenticated.guard';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
