@@ -28,7 +28,6 @@ export class JwtTokenService {
   }
 
   decode(token: string){
-    console.log('decode');
     this.decodedToken = jwtDecode<JwtPayload>(token);
   }
 
@@ -42,7 +41,6 @@ export class JwtTokenService {
 
   isTokenExpired(): boolean {
     const expiryTime: number = this.getExpiryDate();
-    //console.log('ExpiryDate = ' + expiryTime);
     if (expiryTime) {
       return ((1000 * expiryTime) - (new Date()).getTime()) < 5000;
     }
@@ -53,8 +51,6 @@ export class JwtTokenService {
     const sub: string = this.getSub();
     const user = this._storageService.getUser();
     const dbSub = this.createUserSub(user);
-    //console.log('sub = ' + sub);
-    //console.log('dbSub = ' + dbSub);
     if (sub === dbSub) {
       return true;
     }

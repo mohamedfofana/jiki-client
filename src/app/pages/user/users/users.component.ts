@@ -95,7 +95,6 @@ export class UsersComponent extends AbstractOnDestroy implements OnInit, AfterVi
         this.setFormError(false, '');
         let subscriptionUserAdd = this._userService.delete(user.id)
           .subscribe((response: IResponseType<IUser>) => {
-            //console.log(response.status);
             if (response.status === "OK") {
               this._growler.growl('The user was deleted', GrowlerMessageType.Danger);
               this.dataSource.data = this.dataSource.data.filter((value)=>{

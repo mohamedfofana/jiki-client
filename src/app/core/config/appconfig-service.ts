@@ -32,13 +32,11 @@ export class AppConfigService {
     }
 
     private devConfig (): AppConfig{
-      //console.log('Loading development config');
       const config = this.config[AppConfigService.DEV_CONFIG];
       return config;
     } 
 
     private prodConfig (): AppConfig{     
-      //console.log('Loading production config');
       const config = this.config[AppConfigService.PROD_CONFIG];
       return config;
     } 
@@ -50,8 +48,7 @@ export class AppConfigService {
       return this.devConfig();
     }
 
-    public load(): Promise<any> {
-      //console.log('Initializing app config');
+    async load(): Promise<any> {
       return new Promise<void>((resolve, reject) => {
         this._http.get(AppProperties.config_file).toPromise().then((response) => {
            this.config = response;

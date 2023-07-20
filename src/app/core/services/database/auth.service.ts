@@ -50,7 +50,6 @@ export class AuthService {
     }
 
     isLoggedIn(){
-      //console.log('AuthService -> isLoggedIn');
       const jwtToken = this._jwtTokenService.getToken();
 
       if(this._storageService.isUserInStorage()){

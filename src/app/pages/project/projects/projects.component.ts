@@ -97,7 +97,6 @@ export class ProjectsComponent extends AbstractOnDestroy implements OnInit, Afte
         this.setFormError(false, '');
         let subscriptionProjectAdd = this._projectService.delete(user.id)
           .subscribe((response: IResponseType<IProject>) => {
-            //console.log(response.status);
             if (response.status === "OK") {
               this._growler.growl('The user was deleted', GrowlerMessageType.Danger);
               this.dataSource.data = this.dataSource.data.filter((value)=>{

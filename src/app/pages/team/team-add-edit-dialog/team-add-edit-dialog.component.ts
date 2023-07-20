@@ -86,7 +86,6 @@ export class TeamAddEditDialogComponent extends AbstractOnDestroy implements OnI
     }else{
       let subscriptionTeamAdd = this._teamService.create(this.newTeam)
         .subscribe((response: IResponseType<ITeam>) => {
-            //console.log(response.status);
               if(response.status === "OK"){
                 this.newTeam = response.entity;
                 this._growler.growl('Team created', GrowlerMessageType.Success);

@@ -106,7 +106,6 @@ export class ProjectAddEditDialogComponent extends AbstractOnDestroy implements 
     }else{
       let subscriptionProjectAdd = this._projectService.create(this.newProject)
         .subscribe((response: IResponseType<IProject>) => {
-            //console.log(response.status);
               if(response.status === "OK"){
                 this.newProject = response.entity;
                 this._growler.growl('Project created', GrowlerMessageType.Success);

@@ -96,7 +96,6 @@ export class TeamsComponent  extends AbstractOnDestroy implements OnInit, AfterV
         this.setFormError(false, '');
         let subscriptionTeamAdd = this._projectService.delete(user.id)
           .subscribe((response: IResponseType<ITeam>) => {
-            //console.log(response.status);
             if (response.status === "OK") {
               this._growler.growl('The project was deleted', GrowlerMessageType.Danger);
               this.dataSource.data = this.dataSource.data.filter((value)=>{
