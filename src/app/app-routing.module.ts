@@ -42,8 +42,18 @@ const routes: Routes = [
     loadChildren: () => import('./pages/story/story.module').then (m => m.StoryModule)
   },
   {
-    path: '**', redirectTo: 'board', pathMatch: 'full'
+    path: 'error',
+    canActivate: [AuthenticatedGuard],
+    loadChildren: () => import('./pages/error/error.module').then (m => m.ErrorModule)
+  },
+  {
+    path: '**',
+    loadChildren: () => import('./pages/page-not-found/page-not-found.module').then (m => m.PageNotFoundModule)
   }
+/*  ,
+  {
+    path: '**', redirectTo: 'board', pathMatch: 'full'
+  }*/
 ];
 
 @NgModule({

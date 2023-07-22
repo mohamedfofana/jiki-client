@@ -51,7 +51,6 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
   constructor(private _appConfigService: AppConfigService,
     private _sprintService: SprintService,
     private _projectService: ProjectService,
-    private _storyService: StoryService,
     private _userService: UserService,
     private _storageService: StorageService) {
       super();

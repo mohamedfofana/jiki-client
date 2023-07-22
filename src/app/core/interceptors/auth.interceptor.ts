@@ -35,7 +35,7 @@ export class AuthInterceptor implements HttpInterceptor {
               }
             },
             error: (error)=> {
-              this._loaderService.resetLoader();            
+              this._loaderService.resetLoader();        
               throw error;
             } 
           })

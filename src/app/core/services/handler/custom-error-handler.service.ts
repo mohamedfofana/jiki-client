@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -13,9 +14,10 @@ export class CustomErrorHandler implements ErrorHandler {
    * Anything is assignable to unknown, 
    * but unknown isn’t assignable to anything but itself and any without a type assertion or a control flow based narrowing. 
   */
-  handleError(error: unknown): void {
+  handleError(error: any): void {
     let router = this.injector.get(Router);
-      console.log('error URL: ' + router.url);
-    throw new Error('CustomErrorHandler Method not implemented.'+  error);
+      
+    router.navigate(['/error']);   
+    //throw new Error('CustomErrorHandler Method not implemented.'+  error.error);
   }
 }

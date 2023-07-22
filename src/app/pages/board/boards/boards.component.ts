@@ -70,8 +70,7 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
                   mergeMap(() => {
                     return this._userService.findAll();
                   })
-                )
-                .subscribe((users: IUser[]) => {
+                ).subscribe((users: IUser[]) => {
                   if(users){
                     this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);
                     this.reporterList = this.assigneeList;

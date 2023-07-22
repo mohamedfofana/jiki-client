@@ -9,11 +9,13 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomErrorHandler } from './core/services/handler/custom-error-handler.service';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found/page-not-found.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
