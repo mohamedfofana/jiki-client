@@ -19,39 +19,34 @@ export class StoryService {
      * Return stories on project backlogs
      */
     getStoriesOnBacklogsByProjectId(projectId:number): Observable<IStory[]> {
-      return this.http.get<IStory[]>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/backlogs/project/'+projectId)
-          .pipe(catchError(this._appConfigService.handleError));
+      return this.http.get<IStory[]>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/backlogs/project/'+projectId);
     }
 
     /*
      * Find stories by id
     */
      getStoryById(storyId:number): Observable<IStory> {
-      return this.http.get<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/'+storyId)
-          .pipe(catchError(this._appConfigService.handleError));
+      return this.http.get<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/'+storyId);
     }
     /*
      * Find stories by sprint
     */
     getStoriesBySprint(sprintId:number): Observable<IStory[]> {
-      return this.http.get<IStory[]>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/sprint/'+sprintId)
-          .pipe(catchError(this._appConfigService.handleError));
+      return this.http.get<IStory[]>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/sprint/'+sprintId);
     }
 
     /*
      * Update story status
      */
     updateStatus(story:IStory):Observable<IStory>{
-      return this.http.put<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/updateStatus', story)
-      .pipe(catchError(this._appConfigService.handleError));
+      return this.http.put<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/updateStatus', story);
     }
 
     /*
      * Update story backlog or sprint
      */
     updateSprintAndBacklog(story:IStory):Observable<IStory>{
-      return this.http.put<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/update/sprintAndBacklog', story)
-      .pipe(catchError(this._appConfigService.handleError));
+      return this.http.put<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/update/sprintAndBacklog', story);
     }
 
 }

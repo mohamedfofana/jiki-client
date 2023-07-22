@@ -17,8 +17,7 @@ export class UserService {
       private _appConfigService: AppConfigService) { }
 
     findAll(): Observable<IUser[]> {
-        return this.http.get<IUser[]>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/all')
-            .pipe(catchError(this._appConfigService.handleError));
+        return this.http.get<IUser[]>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/all');
     }
 
     register(user: IUser): Observable<IResponseType<IUser>> {
@@ -27,20 +26,17 @@ export class UserService {
       .pipe(
         map(response => {
             return response;
-        }),
-        catchError(this._appConfigService.handleError)
+        })
     );
     }
 
     update(user: IUser): Observable<IResponseType<IUser>> {
       user.updateDate = this._appConfigService.currentTimestamp();
-      return this.http.put<IResponseType<IUser>>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/update', user)
-          .pipe(catchError(this._appConfigService.handleError));
+      return this.http.put<IResponseType<IUser>>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/update', user);
     }
 
     delete(id: number): Observable<IResponseType<IUser>> {
-      return this.http.delete<IResponseType<IUser>>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/delete/' + id)
-          .pipe(catchError(this._appConfigService.handleError));
+      return this.http.delete<IResponseType<IUser>>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/delete/' + id);
     }
 
 }

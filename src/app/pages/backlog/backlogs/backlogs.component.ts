@@ -1,5 +1,5 @@
 import { SprintService } from './../../../core/services/database/sprint.service';
-import { Subscription } from 'rxjs';
+import { Subscription, map, mergeMap } from 'rxjs';
 import { IBacklog } from '../../../shared/model/backlog.model';
 import { IProject } from '../../../shared/model/project.model';
 import { ProjectService } from './../../../core/services/database/project.service';
@@ -59,32 +59,37 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
 
   ngOnInit() {
     let projectId = this._storageService.getProject().id;
-    let subscriptionSprint = this._sprintService.getCurrentByProjectId(projectId)
-    .subscribe((sprint: ISprint) => {
-      if(sprint){
-        this.currentSprint = sprint;
-      }
-    });
-    this.subscriptions.push(subscriptionSprint);
-    let subscriptionProjects = this._projectService.findAll()
-    .subscribe((projects: IProject[]) => {
-      if(projects){
-        this.projects = projects.sort((s1, s2)=> s1.name>s2.name? -1:1);
-        this.projects.forEach(project=> {
-          project.iconStatus = this.getStatusConfigKey(project);
-          project.iconStatusColor = this.getStatusColorConfigKey(project);
-        });
-      }
-    });
-    let subscriptionUser = this._userService.findAll()
-    .subscribe((users: IUser[]) => {
-      if(users){
-        this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);
-        this.reporterList = this.assigneeList;
-      }
-    });
-    this.subscriptions.push(subscriptionProjects);
-    this.subscriptions.push(subscriptionUser);
+    let subscriptionSprint$ = this._sprintService.getCurrentByProjectId(projectId)
+                              .pipe(
+                                map((sprint: ISprint) => {
+                                    if(sprint){
+                                      this.currentSprint = sprint;
+                                    }
+                                  }
+                                ),
+                                mergeMap(() => 
+                                  this._projectService.findAll()
+                                ),
+                                map((projects: IProject[]) => {
+                                  if(projects){
+                                    this.projects = projects.sort((s1, s2)=> s1.name>s2.name? -1:1);
+                                    this.projects.forEach(project=> {
+                                      project.iconStatus = this.getStatusConfigKey(project);
+                                      project.iconStatusColor = this.getStatusColorConfigKey(project);
+                                    });
+                                  }
+                                }),
+                                mergeMap(()=> 
+                                  this._userService.findAll()
+                                )
+                              ).subscribe((users: IUser[]) => {
+                                if(users){
+                                  this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);
+                                  this.reporterList = this.assigneeList;
+                                }
+                              });
+
+    this.subscriptions.push(subscriptionSprint$);
   }
 
   filterTextChanged(event: any) {

@@ -19,8 +19,7 @@ export class TeamService {
     ) { }
 
     findAll(): Observable<ITeam[]> {
-        return this.http.get<ITeam[]>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/all')
-            .pipe(catchError(this._appConfigService.handleError));
+        return this.http.get<ITeam[]>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/all');
     }
 
 
@@ -30,19 +29,16 @@ export class TeamService {
       .pipe(
         map(response => {
             return response;
-        }),
-        catchError(this._appConfigService.handleError)
+        })
       );
     }
 
     update(team: ITeam): Observable<IResponseType<ITeam>> {
       team.updateDate = this._appConfigService.currentTimestamp();
-      return this.http.put<IResponseType<ITeam>>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/update', team)
-          .pipe(catchError(this._appConfigService.handleError));
+      return this.http.put<IResponseType<ITeam>>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/update', team);
     }
 
     delete(id: number): Observable<IResponseType<ITeam>> {
-      return this.http.delete<IResponseType<ITeam>>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/delete/' + id)
-          .pipe(catchError(this._appConfigService.handleError));
+      return this.http.delete<IResponseType<ITeam>>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/delete/' + id);
     }
 }

@@ -16,14 +16,12 @@ export class BacklogService {
       private _appConfigService: AppConfigService) { }
 
     getBacklogs(): Observable<IBacklog[]> {
-        return this.http.get<IBacklog[]>(this._appConfigService.apiConfig().apiEndpoint + this.backlogUrl + '/all')
-            .pipe(catchError(this._appConfigService.handleError));
+        return this.http.get<IBacklog[]>(this._appConfigService.apiConfig().apiEndpoint + this.backlogUrl + '/all');
     }
 
 
     getCurrentBacklog(): Observable<IBacklog[]> {
-      return this.http.get<IBacklog[]>(this._appConfigService.apiConfig().apiEndpoint + this.backlogUrl + '/current')
-          .pipe(catchError(this._appConfigService.handleError));
+      return this.http.get<IBacklog[]>(this._appConfigService.apiConfig().apiEndpoint + this.backlogUrl + '/current');
     }
 
 }

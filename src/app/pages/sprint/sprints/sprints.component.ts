@@ -13,6 +13,7 @@ import { SprintAddEditDialogComponent } from '../sprint-add-edit-dialog/sprint-a
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { IProject } from 'src/app/shared/model/project.model';
+import { map, mergeMap } from 'rxjs';
 
 @Component({
   selector: 'jiki-sprints',
@@ -54,25 +55,27 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
 
   ngOnInit() {
     this.project = this._storageService.getProject();
-    let subscriptionSprint = this._sprintService.getSprintsByProjectId(this.project.id)
-    .subscribe((sprints: ISprint[]) => {
-      if(sprints){
-        this.sprints = sprints.sort((s1, s2)=> s1.id>s2.id? -1:1);
-        this.sprints.forEach(sprint=> {
-          sprint.iconStatus = this.getStatusConfigKey(sprint);
-          sprint.iconStatusColor = this.getStatusColorConfigKey(sprint);
-        });
-      }
-    });
-    let subscriptionUser = this._userService.findAll()
-    .subscribe((users: IUser[]) => {
-      if(users){
-        this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);
-        this.reporterList = this.assigneeList;
-      }
-    });
-    this.subscriptions.push(subscriptionSprint);
-    this.subscriptions.push(subscriptionUser);
+    let subscriptionSprint$ = this._sprintService.getSprintsByProjectId(this.project.id)
+                              .pipe(
+                                map((sprints: ISprint[]) => {
+                                  if(sprints){
+                                    this.sprints = sprints.sort((s1, s2)=> s1.id>s2.id? -1:1);
+                                    this.sprints.forEach(sprint=> {
+                                      sprint.iconStatus = this.getStatusConfigKey(sprint);
+                                      sprint.iconStatusColor = this.getStatusColorConfigKey(sprint);
+                                    });
+                                  }
+                                }),
+                                mergeMap(() => 
+                                  this._userService.findAll()
+                                )
+                              ).subscribe((users: IUser[]) => {
+                                if(users){
+                                  this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);
+                                  this.reporterList = this.assigneeList;
+                                }
+                              });
+    this.subscriptions.push(subscriptionSprint$);                     
   }
 
   filterTextChanged(event: any) {

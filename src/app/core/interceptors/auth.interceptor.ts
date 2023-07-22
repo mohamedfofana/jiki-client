@@ -22,13 +22,6 @@ export class AuthInterceptor implements HttpInterceptor {
       request = request.clone({ headers: request.headers.set('Content-Type', 'application/json') });
     }
     return this.handler(request, next);
-    /*.pipe(
-                                      retry({
-                                        count: 0,
-                                        delay: 1000
-                                      }
-                                      ));
-*/
   }
 
   handler(request: HttpRequest<any>, next: HttpHandler){

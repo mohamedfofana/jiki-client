@@ -11,6 +11,7 @@ import { StoryService } from './../../../core/services/database/story.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { IProject } from 'src/app/shared/model/project.model';
+import { map, mergeMap } from 'rxjs';
 
 @Component({
   selector: 'jiki-boards',
@@ -44,33 +45,39 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
     }
 
   ngOnInit() {
-    this.project = <IProject> this._storageService.getUser().project;
+    this.project = this._storageService.getUser().project;
     let projectId = this.project.id;
     this.projects.push(this.project);
-    let subscriptionSprint = this._sprintService.getCurrentByProjectId(projectId)
-    .subscribe((sprint: ISprint) => {
-      if(sprint){
-        this.currentSprint = sprint;
-        this.boardTitle = sprint.project.name + ' - ' + sprint.title;
-        let subscription = this._storyService.getStoriesBySprint(sprint.id)
-        .subscribe((stories: IStory[]) => {
-          this.stories = stories;
-          if(stories){
-            this.setStoriesByStatus(stories);
-          }
-        });
-        this.subscriptions.push(subscription);
-      }
-    });
-    let subscriptionUser = this._userService.findAll()
-    .subscribe((users: IUser[]) => {
-      if(users){
-        this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);
-        this.reporterList = this.assigneeList;
-      }
-    });
-    this.subscriptions.push(subscriptionSprint);
-    this.subscriptions.push(subscriptionUser);
+
+    const subscriptionSprint$ = this._sprintService.getCurrentByProjectId(projectId)
+                .pipe(
+                  map((sprint: ISprint) => {
+                    this.currentSprint = sprint;
+                    this.boardTitle = sprint.project.name + ' - ' + sprint.title;
+                    return sprint;
+                  }),
+                  mergeMap(sprint => {                    
+                    return this._storyService.getStoriesBySprint(sprint.id);
+                  }),
+                  map((stories: IStory[]) => {
+                    console.log('map2');
+                    this.stories = stories;
+                    if(stories){
+                      this.setStoriesByStatus(stories);
+                    }
+                    }
+                  ),
+                  mergeMap(() => {
+                    return this._userService.findAll();
+                  })
+                )
+                .subscribe((users: IUser[]) => {
+                  if(users){
+                    this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);
+                    this.reporterList = this.assigneeList;
+                  }
+                });
+    this.subscriptions.push(subscriptionSprint$);
   }
 
   setStoriesByStatus(stories:IStory[]){

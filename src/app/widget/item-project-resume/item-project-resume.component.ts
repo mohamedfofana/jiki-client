@@ -42,8 +42,10 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
   }
 
   ngOnInit(): void {
-    this.initStories();
-    this.initBackog();
+    if(this.currentSprint){
+      this.initStories();
+      this.initBackog();
+    }
   }
 initBackog(){
   let subscriptionBacklogs = this._backlogService.getBacklogs()

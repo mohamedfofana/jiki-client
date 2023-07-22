@@ -61,7 +61,6 @@ export class AppConfigService {
 
     public handleError(error: HttpErrorResponse) {
       console.error('AppConfigService Global HTTP error handler');
-      //console.error('Catching error in Common HTTP handleError  error:', error);
       if (error.error instanceof Error) {
           const errMessage = error.error.message;
           return throwError(errMessage);
