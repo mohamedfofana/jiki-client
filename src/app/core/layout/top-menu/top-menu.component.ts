@@ -5,12 +5,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 declare let $: any;
 import { AuthService } from '../../services/database/auth.service';
 import { GrowlerService, GrowlerMessageType } from '../../growler/growler.service';
-import { LoggerService } from '../../services/utils/logger.service';
 import { Subscription } from 'rxjs';
-import { IAuthResponse } from 'src/app/shared/interfaces';
 import { findEnumValueByKey } from '../../helpers/enum.helpers';
 import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
-import { AppConfigService } from '../../config/appconfig-service';
 import { StorageService } from '../../services/local/storage.service';
 
 @Component({
@@ -31,8 +28,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
               private router: Router, 
               private authservice: AuthService,
               private storageService: StorageService,
-              private growler: GrowlerService,
-              private logger: LoggerService) {
+              private growler: GrowlerService,) {
   }
 
   ngOnInit() {
@@ -47,7 +43,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
     .subscribe((data: boolean) => {
       this.setLoginLogoutText();
     },
-    (err: any) => this.logger.log(err));
+    (err: any) => console.log(err));
     this.initAuth();
   }
 

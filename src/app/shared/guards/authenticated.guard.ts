@@ -1,5 +1,3 @@
-import { LoggerService } from '../../core/services/utils/logger.service';
-import { StorageService } from '../../core/services/local/storage.service';
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
 import { Observable } from 'rxjs';

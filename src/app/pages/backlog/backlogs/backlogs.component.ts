@@ -6,7 +6,6 @@ import { ProjectService } from './../../../core/services/database/project.servic
 import { ISprint } from '../../../shared/model/sprint.model';
 import { SprintStatusEnum } from './../../../shared/enum/sprint-status.enum';
 import { moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/drag-drop';
-import { LoggerService } from './../../../core/services/utils/logger.service';
 import { StorageService } from './../../../core/services/local/storage.service';
 import { StoryService } from './../../../core/services/database/story.service';
 import { IStory } from '../../../shared/model/story.model';
@@ -54,8 +53,7 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
     private _projectService: ProjectService,
     private _storyService: StoryService,
     private _userService: UserService,
-    private _storageService: StorageService,
-    private _loggerService: LoggerService) {
+    private _storageService: StorageService) {
       super();
     }
 

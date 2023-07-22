@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { LoaderService } from '../services/utils/loader.service';
+import { LoaderService } from '../services/loader/loader.service';
 
 @Component({
   selector: 'jiki-loader',

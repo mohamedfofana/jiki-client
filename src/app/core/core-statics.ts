@@ -8,7 +8,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { GrowlerModule } from './growler/growler.module';
 import { ModalModule } from './modal/modal.module';
 import { ConfirmDialogModule } from './confirm-dialog/confirm-dialog.module';
-import { LoggerService } from './services/utils/logger.service';
 import { AuthService } from './services/database/auth.service';
 import { BacklogService } from './services/database/backlog.service';
 import { SprintService } from './services/database/sprint.service';
@@ -20,8 +19,9 @@ import { AppConfigService } from './config/appconfig-service';
 import { TeamService } from './services/database/team.service';
 import { DatePipe } from '@angular/common';
 import { JwtTokenService } from './services/database/jwt-token.service';
-import { LoaderService } from './services/utils/loader.service';
+import { LoaderService } from './services/loader/loader.service';
 import { LoaderComponent } from './loader/loader.component';
+import { LoggerService } from './services/logger/logger.service';
 
 export class CoreStatics {
 

@@ -1,9 +1,9 @@
 import { StorageService } from './../services/local/storage.service';
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, count, delay, retry, tap } from 'rxjs';
 import { AuthService } from '../services/database/auth.service';
-import { LoaderService } from '../services/utils/loader.service';
+import { LoaderService } from '../services/loader/loader.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -22,24 +22,31 @@ export class AuthInterceptor implements HttpInterceptor {
       request = request.clone({ headers: request.headers.set('Content-Type', 'application/json') });
     }
     return this.handler(request, next);
-
+    /*.pipe(
+                                      retry({
+                                        count: 0,
+                                        delay: 1000
+                                      }
+                                      ));
+*/
   }
 
   handler(request: HttpRequest<any>, next: HttpHandler){
     //console.log('request = '+ request.url);
       return next.handle(request)
         .pipe(
-          tap( (event) => {
+          tap({ 
+            next: (event) => {
               if(event instanceof HttpResponse){
                 this._loaderService.requestEndend();
               }
             },
-            (error): HttpErrorResponse => {
-              this._loaderService.resetLoader();
+            error: (error)=> {
+              this._loaderService.resetLoader();            
               throw error;
             } 
-          ),
-         );
+          })
+        );
 
   }
 

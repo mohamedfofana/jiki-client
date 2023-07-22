@@ -1,6 +1,6 @@
 import { IUser } from '../../shared/model/user.model';
 
-import { LoggerService } from './../../core/services/utils/logger.service';
+
 import { StoryService } from './../../core/services/database/story.service';
 import { IStory } from '../../shared/model/story.model';
 import { ISprint } from '../../shared/model/sprint.model';
@@ -28,8 +28,7 @@ export class ItemSprintResumeComponent extends AbstractOnDestroy implements OnIn
   stories: IStory[];
   filteredStories: IStory[];
   constructor(public dialog: MatDialog,
-    private _storyService: StoryService,
-    private _loggerService: LoggerService) {
+    private _storyService: StoryService) {
     super();
   }
 

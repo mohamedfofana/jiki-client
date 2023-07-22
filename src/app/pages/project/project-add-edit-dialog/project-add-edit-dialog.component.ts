@@ -5,7 +5,6 @@ import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
 import { ProjectService } from 'src/app/core/services/database/project.service';
 import { TeamService } from 'src/app/core/services/database/team.service';
-import { LoggerService } from 'src/app/core/services/utils/logger.service';
 import { ProjectStatusEnum } from 'src/app/shared/enum/project-status.enum';
 import { IResponseType } from 'src/app/shared/interfaces';
 import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
@@ -40,7 +39,6 @@ export class ProjectAddEditDialogComponent extends AbstractOnDestroy implements 
     private _formBuilder: FormBuilder,
     private _projectService: ProjectService,
     private _teamService: TeamService,
-    private _loggerService: LoggerService,
     private _growler: GrowlerService,
     private _changeDedectionRef: ChangeDetectorRef) {
     super();

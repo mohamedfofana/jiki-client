@@ -22,7 +22,6 @@ export class LoaderService {
     this.count++;
     if(this.count === 1){
       this.isLoading$.next(true);
-      //console.log('started');
     }
 
   }
@@ -31,7 +30,6 @@ export class LoaderService {
     this.count--;
     if(this.count === 0){
       this.isLoading$.next(false);
-      //console.log('ended');
     }    
   }
 

@@ -6,3 +6,7 @@
     -webkit-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
   }
+
+  .jiki-spinner ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+    stroke: #6c6666;
+}

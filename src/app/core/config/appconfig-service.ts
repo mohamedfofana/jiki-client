@@ -60,13 +60,14 @@ export class AppConfigService {
     }
 
     public handleError(error: HttpErrorResponse) {
-      console.error('server error:', error);
+      console.error('AppConfigService Global HTTP error handler');
+      //console.error('Catching error in Common HTTP handleError  error:', error);
       if (error.error instanceof Error) {
           const errMessage = error.error.message;
           return throwError(errMessage);
       }
-      return throwError("Erreur hand " + error || 'Server error');
-  }
+      throw error;
+    }
 
   currentTimestamp(): string{
     return <string> this._datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');

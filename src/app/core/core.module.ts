@@ -19,13 +19,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     CoreStatics.components
 ],
 
-  providers: [ CoreStatics.pipes,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true,
-    }
-  ] 
+  providers: [ CoreStatics.pipes ] 
 })
 export class CoreModule extends EnsureModuleLoadedOnceGuard {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

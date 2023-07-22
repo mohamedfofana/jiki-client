@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { GrowlerService } from 'src/app/core/growler/growler.service';
 import { StoryService } from 'src/app/core/services/database/story.service';
 import { StorageService } from 'src/app/core/services/local/storage.service';
-import { LoggerService } from 'src/app/core/services/utils/logger.service';
 import { IStory } from 'src/app/shared/model/story.model';
-import { LoginComponent } from '../../login/login.component';
 
 
 @Component({
@@ -47,14 +44,11 @@ export class StoryViewEditComponent implements OnInit {
   constructor(private _route: ActivatedRoute,
     private _storyService: StoryService,
     private _formBuilder: FormBuilder,
-    private _storageService: StorageService,
-    private _loggerService: LoggerService,
-    private _growler: GrowlerService,
+    private _storageService: StorageService
 
               ) { }
 
   ngOnInit(): void {
-   this._loggerService.log('here');
    const id:string = this._route.snapshot.paramMap.get("id") ?? '';
    this.idStory = parseInt(id);
    if(!Number.isNaN(this.idStory)){

@@ -4,7 +4,6 @@ import { UserService } from './../../../core/services/database/user.service';
 import { SprintService } from './../../../core/services/database/sprint.service';
 import { ISprint } from '../../../shared/model/sprint.model';
 import { AppConfigService } from '../../../core/config/appconfig-service';
-import { LoggerService } from './../../../core/services/utils/logger.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { FormControl, Validators } from '@angular/forms';
@@ -49,8 +48,7 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
   constructor(public dialog: MatDialog,private _appConfigService: AppConfigService,
     private _sprintService: SprintService,
     private _userService: UserService,
-    private _storageService: StorageService,
-    private _loggerService: LoggerService) {
+    private _storageService: StorageService) {
       super();
     }
 

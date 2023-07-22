@@ -4,13 +4,10 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
-import { ProjectService } from 'src/app/core/services/database/project.service';
 import { TeamService } from 'src/app/core/services/database/team.service';
-import { LoggerService } from 'src/app/core/services/utils/logger.service';
 import { TeamStatusEnum } from 'src/app/shared/enum/team-status.enum';
 import { IResponseType } from 'src/app/shared/interfaces';
 import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
-import { IProject } from 'src/app/shared/model/project.model';
 import { ITeam } from 'src/app/shared/model/team.model';
 import { errorMessages, MyErrorStateMatcher, regExps } from 'src/app/shared/validators/custom.validators';
 
@@ -38,7 +35,6 @@ export class TeamAddEditDialogComponent extends AbstractOnDestroy implements OnI
     private _formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private _teamService: TeamService,
-    private _loggerService: LoggerService,
     private _growler: GrowlerService,
     private _changeDedectionRef: ChangeDetectorRef) {
     super();

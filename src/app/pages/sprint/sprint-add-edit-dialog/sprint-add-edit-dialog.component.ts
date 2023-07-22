@@ -5,9 +5,7 @@ import { GrowlerMessageType, GrowlerService } from 'src/app/core/growler/growler
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
 import { ProjectService } from 'src/app/core/services/database/project.service';
 import { SprintService } from 'src/app/core/services/database/sprint.service';
-import { StoryService } from 'src/app/core/services/database/story.service';
 import { StorageService } from 'src/app/core/services/local/storage.service';
-import { LoggerService } from 'src/app/core/services/utils/logger.service';
 import { SprintStatusEnum } from 'src/app/shared/enum/sprint-status.enum';
 import { SprintWorkflowEnum } from 'src/app/shared/enum/sprint-workflow..enum';
 import { IResponseType } from 'src/app/shared/interfaces';
@@ -46,7 +44,6 @@ export class SprintAddEditDialogComponent extends AbstractOnDestroy implements O
     private _projectService: ProjectService,
     private _sprintService: SprintService,
     private _storageService: StorageService,
-    private _loggerService: LoggerService,
     private _growler: GrowlerService,
     private _changeDedectionRef: ChangeDetectorRef) {
     super();

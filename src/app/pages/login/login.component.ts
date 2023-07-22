@@ -5,7 +5,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from 'src/app/core/services/database/auth.service';
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
-import { LoggerService } from 'src/app/core/services/utils/logger.service';
 import { IUserLogin } from 'src/app/shared/interfaces';
 import { AbstractOnDestroy } from '../../core/services/abstract.ondestroy';
 
@@ -21,8 +20,7 @@ export class LoginComponent extends AbstractOnDestroy implements OnInit {
     constructor(private formBuilder: FormBuilder,
                 private router: Router,
                 private authService: AuthService,
-                private growler: GrowlerService,
-                private logger: LoggerService) {
+                private growler: GrowlerService,) {
                   super();
                  }
 
@@ -63,7 +61,6 @@ export class LoginComponent extends AbstractOnDestroy implements OnInit {
             },
             (err: any) => {
               this.setError('Email or password incorrect.');
-                this.logger.log(err)
             });
             this.subscriptions.push(subscription);
     }

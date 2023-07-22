@@ -5,7 +5,6 @@ import { GrowlerMessageType, GrowlerService } from 'src/app/core/growler/growler
 import { ProjectService } from 'src/app/core/services/database/project.service';
 import { TeamService } from 'src/app/core/services/database/team.service';
 import { UserService } from 'src/app/core/services/database/user.service';
-import { LoggerService } from 'src/app/core/services/utils/logger.service';
 import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
 import { UserStatusEnum } from 'src/app/shared/enum/user-status-enum';
 import { IResponseType } from 'src/app/shared/interfaces';
@@ -52,7 +51,6 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
     private _userService: UserService,
     private _projectService: ProjectService,
     private _teamService: TeamService,
-    private _loggerService: LoggerService,
     private _growler: GrowlerService,
     private _changeDedectionRef: ChangeDetectorRef) {
     super();

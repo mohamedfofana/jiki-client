@@ -1,6 +1,4 @@
 import { IUser } from '../../shared/model/user.model';
-
-import { LoggerService } from '../../core/services/utils/logger.service';
 import { StoryService } from '../../core/services/database/story.service';
 import { IStory } from '../../shared/model/story.model';
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
@@ -39,8 +37,7 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
   backlogRightClickControl = new FormControl();
 
   constructor(private _storyService: StoryService,
-    private _backlogService: BacklogService,
-    private _loggerService: LoggerService) {
+    private _backlogService: BacklogService) {
     super();
   }
 

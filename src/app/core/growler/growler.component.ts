@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { GrowlerService, GrowlerMessageType } from './growler.service';
-import { LoggerService } from '../services/utils/logger.service';
 
 @Component({
   selector: 'jiki-growler',
@@ -23,8 +22,7 @@ export class GrowlerComponent implements OnInit {
   @Input() position = 'bottom-right';
   @Input() timeout = 3000;
 
-  constructor(private growlerService: GrowlerService,
-    private logger: LoggerService) {
+  constructor(private growlerService: GrowlerService) {
     growlerService.growl = this.growl.bind(this);
   }
 
