@@ -70,7 +70,7 @@ export class UsersComponent extends AbstractOnDestroy implements OnInit, AfterVi
       data: dialogData,
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result.new){
+      if ( result && result.new){
         let data = this.dataSource.data;
         data.push(result.entity);
         this.dataSource.data = data;

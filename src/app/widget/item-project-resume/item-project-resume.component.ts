@@ -9,8 +9,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { ISprint } from 'src/app/shared/model/sprint.model';
 import { BacklogService } from 'src/app/core/services/database/backlog.service';
 import { IBacklog } from 'src/app/shared/model/backlog.model';
-import { FormControl } from '@angular/forms';
-import { forkJoin, map, Observable, startWith } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'jiki-item-project-resume',
@@ -34,7 +33,6 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
-  backlogRightClickControl = new FormControl();
 
   constructor(private _storyService: StoryService,
     private _backlogService: BacklogService) {

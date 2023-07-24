@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { AfterContentChecked, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
@@ -9,7 +9,7 @@ import { TeamStatusEnum } from 'src/app/shared/enum/team-status.enum';
 import { IResponseType } from 'src/app/shared/interfaces';
 import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { ITeam } from 'src/app/shared/model/team.model';
-import { errorMessages, MyErrorStateMatcher, regExps } from 'src/app/shared/validators/custom.validators';
+import { errorMessages, MyErrorStateMatcher } from 'src/app/shared/validators/custom.validators';
 
 @Component({
   selector: 'app-team-add-edit-dialog',
@@ -18,8 +18,8 @@ import { errorMessages, MyErrorStateMatcher, regExps } from 'src/app/shared/vali
 })
 export class TeamAddEditDialogComponent extends AbstractOnDestroy implements OnInit, AfterContentChecked {
   teamForm: FormGroup;
-  nameFormControl: FormControl;
-  statusFormControl: FormControl;
+  nameFormControl: FormControl<string|null>;
+  statusFormControl: FormControl<string|null>;
   errors = errorMessages;
   formError:boolean;
   formErrorMessage:string;

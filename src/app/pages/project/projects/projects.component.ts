@@ -72,7 +72,7 @@ export class ProjectsComponent extends AbstractOnDestroy implements OnInit, Afte
       data: dialogData,
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result.new){
+      if (result && result.new){
         let data = this.dataSource.data;
         data.push(result.entity);
         this.dataSource.data = data;

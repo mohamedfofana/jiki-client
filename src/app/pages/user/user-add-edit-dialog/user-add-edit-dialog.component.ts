@@ -1,5 +1,5 @@
 import { AfterContentChecked, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GrowlerMessageType, GrowlerService } from 'src/app/core/growler/growler.service';
 import { ProjectService } from 'src/app/core/services/database/project.service';
@@ -22,16 +22,16 @@ import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 })
 export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnInit, AfterContentChecked {
   userForm: FormGroup;
-  emailFormControl: FormControl;
-  usernameFormControl: FormControl;
-  firstnameFormControl: FormControl;
-  lastnameFormControl: FormControl;
-  passwordFormControl: FormControl;
-  passwordConfirmFormControl: FormControl;
-  roleFormControl: FormControl;
-  statusFormControl: FormControl;
-  teamFormControl: FormControl;
-  projectFormControl: FormControl;
+  emailFormControl: FormControl<string|null>;
+  usernameFormControl: FormControl<string|null>;
+  firstnameFormControl: FormControl<string|null>;
+  lastnameFormControl: FormControl<string|null>;
+  passwordFormControl: FormControl<string|null>;
+  passwordConfirmFormControl: FormControl<string|null>;
+  roleFormControl: FormControl<string|null>;
+  statusFormControl: FormControl<string|null>;
+  teamFormControl: FormControl<number|null>;
+  projectFormControl: FormControl<number|null>;
   errors = errorMessages;
   formError:boolean;
   formErrorMessage:string;
@@ -71,8 +71,8 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
         this.passwordConfirmFormControl = new FormControl('',);
         this.roleFormControl = new FormControl(this.dialogFormData.entity.role, [Validators.required]);
         this.statusFormControl = new FormControl(this.dialogFormData.entity.status, [Validators.required]);
-        this.teamFormControl = new FormControl(this.dialogFormData.entity.team.id, [Validators.required]);
-        this.projectFormControl = new FormControl(this.dialogFormData.entity.project.id, [Validators.required]);
+        this.teamFormControl = new FormControl(this.dialogFormData.entity.team? this.dialogFormData.entity.team.id:null, [Validators.required]);
+        this.projectFormControl = new FormControl(this.dialogFormData.entity.project?this.dialogFormData.entity.project.id:null, [Validators.required]);
 
      }else{
         this.emailFormControl = new FormControl('', [Validators.required, Validators.email]);
@@ -83,8 +83,8 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
         this.passwordConfirmFormControl = new FormControl('', [Validators.required]);
         this.roleFormControl = new FormControl('', [Validators.required]);
         this.statusFormControl = new FormControl('', [Validators.required]);
-        this.teamFormControl = new FormControl('', [Validators.required]);
-        this.projectFormControl = new FormControl('', [Validators.required]);
+        this.teamFormControl = new FormControl(null, [Validators.required]);
+        this.projectFormControl = new FormControl(null, [Validators.required]);
      }
      this.userForm = this._formBuilder.group({
       email : this.emailFormControl,

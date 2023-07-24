@@ -1,15 +1,11 @@
 import { SprintService } from './../../../core/services/database/sprint.service';
-import { Subscription, map, mergeMap } from 'rxjs';
-import { IBacklog } from '../../../shared/model/backlog.model';
+import { map, mergeMap } from 'rxjs';
 import { IProject } from '../../../shared/model/project.model';
 import { ProjectService } from './../../../core/services/database/project.service';
 import { ISprint } from '../../../shared/model/sprint.model';
-import { SprintStatusEnum } from './../../../shared/enum/sprint-status.enum';
-import { moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { StorageService } from './../../../core/services/local/storage.service';
-import { StoryService } from './../../../core/services/database/story.service';
 import { IStory } from '../../../shared/model/story.model';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { IUser } from 'src/app/shared/model/user.model';
 import { AppConfigService } from 'src/app/core/config/appconfig-service';
@@ -35,9 +31,9 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
   selectedReporter:IUser[]=[];
   selectedStatus:string[]=[];
 
-  selectReporterFormControl =  new FormControl([]);
-  selectAssigneeFormControl = new FormControl([]);
-  selectStatusFormControl = new FormControl([]);
+  selectReporterFormControl =  new FormControl<IUser[] >([]);
+  selectAssigneeFormControl = new FormControl<IUser[]>([]);
+  selectStatusFormControl = new FormControl<string[]>([]);
 
   assigneeList: IUser[];
   reporterList: IUser[];

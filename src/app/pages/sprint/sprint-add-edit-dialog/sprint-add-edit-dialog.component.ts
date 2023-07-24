@@ -20,12 +20,12 @@ import { errorMessages, MyErrorStateMatcher } from 'src/app/shared/validators/cu
 })
 export class SprintAddEditDialogComponent extends AbstractOnDestroy implements OnInit, AfterContentChecked {
   sprintForm: FormGroup;
-  titleFormControl: FormControl;
-  descriptionFormControl: FormControl;
-  businessValueFormControl: FormControl;
-  statusFormControl: FormControl;
-  projectFormControl: FormControl;
-  estimatedEndDateFormControl: FormControl;
+  titleFormControl: FormControl<string | null>;
+  descriptionFormControl: FormControl<string | null>;
+  businessValueFormControl: FormControl<number | null>;
+  statusFormControl: FormControl<string | null>;
+  projectFormControl: FormControl<number | null>;
+  estimatedEndDateFormControl: FormControl<string | null>;
 
   errors = errorMessages;
   formError:boolean;
@@ -65,7 +65,7 @@ export class SprintAddEditDialogComponent extends AbstractOnDestroy implements O
         this.titleFormControl = new FormControl('', [Validators.required]);
         this.descriptionFormControl = new FormControl('', [Validators.required]);
         this.statusFormControl = new FormControl('', [Validators.required]);
-        this.businessValueFormControl = new FormControl('', [Validators.required, Validators.pattern("^\d*[13579]$")]);
+        this.businessValueFormControl = new FormControl(null, [Validators.required, Validators.pattern("^\d*[13579]$")]);
         this.projectFormControl = new FormControl(this._storageService.getProject().id);
      }
      this.sprintForm = this._formBuilder.group({
@@ -90,6 +90,7 @@ export class SprintAddEditDialogComponent extends AbstractOnDestroy implements O
   }
 
   ngAfterContentChecked(): void {
+    console.log("change");
     this._changeDedectionRef.detectChanges();
 }
 

@@ -30,8 +30,8 @@ export class LoginComponent extends AbstractOnDestroy implements OnInit {
 
     buildForm() {
         this.loginForm = this.formBuilder.group({
-            username:      ['', [ Validators.required ]],
-            password:   ['', [ Validators.required ]]
+            username: ['', [ Validators.required ]],
+            password: ['', [ Validators.required ]]
         });
     }
     get username(): any {

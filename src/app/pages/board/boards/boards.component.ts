@@ -32,8 +32,8 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
   selectedAssignee:IUser[]=[];
   selectedReporter:IUser[]=[];
 
-  selectReporterFormControl =  new FormControl([]);
-  selectAssigneeFormControl = new FormControl([]);
+  selectReporterFormControl =  new FormControl<IUser[]>([]);
+  selectAssigneeFormControl = new FormControl<IUser[]>([]);
 
   assigneeList: IUser[];
   reporterList: IUser[];

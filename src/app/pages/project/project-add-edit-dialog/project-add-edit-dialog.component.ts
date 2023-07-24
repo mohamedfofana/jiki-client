@@ -19,10 +19,10 @@ import { errorMessages, MyErrorStateMatcher, regExps } from 'src/app/shared/vali
 })
 export class ProjectAddEditDialogComponent extends AbstractOnDestroy implements OnInit, AfterContentChecked {
   projectForm: FormGroup;
-  nameFormControl: FormControl;
-  descriptionFormControl: FormControl;
-  statusFormControl: FormControl;
-  teamFormControl: FormControl;
+  nameFormControl: FormControl<string|null>;
+  descriptionFormControl: FormControl<string|null>;
+  statusFormControl: FormControl<string|null>;
+  teamFormControl: FormControl<number|null>;
  errors = errorMessages;
   formError:boolean;
   formErrorMessage:string;
@@ -59,7 +59,7 @@ export class ProjectAddEditDialogComponent extends AbstractOnDestroy implements 
         this.nameFormControl = new FormControl('', [Validators.required]);
         this.descriptionFormControl = new FormControl('', [Validators.required]);
         this.statusFormControl = new FormControl('', [Validators.required]);
-        this.teamFormControl = new FormControl('', [Validators.required]);
+        this.teamFormControl = new FormControl(null, [Validators.required]);
      }
      this.projectForm = this._formBuilder.group({
       name : this.nameFormControl,

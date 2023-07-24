@@ -30,9 +30,9 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
   selectedReporter:IUser[]=[];
   selectedStatus:string[]=[];
 
-  selectReporterFormControl =  new FormControl([]);
-  selectAssigneeFormControl = new FormControl([]);
-  selectStatusFormControl = new FormControl([]);
+  selectReporterFormControl =  new FormControl<IUser[]>([]);
+  selectAssigneeFormControl = new FormControl<IUser[]>([]);
+  selectStatusFormControl = new FormControl<string[]>([]);
 
   project: IProject;
   assigneeList: IUser[];
@@ -130,7 +130,7 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
       data: dialogData,
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result.new){
+      if (result && result.new){
         let data = this.dataSource.data;
         data.push(result.entity);
         this.dataSource.data = data;

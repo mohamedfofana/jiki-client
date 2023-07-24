@@ -61,17 +61,16 @@ export class TeamsComponent  extends AbstractOnDestroy implements OnInit, AfterV
   }
 
   addEditTeam(team: ITeam) {
-
-      let dialogData: IDialogFormData<ITeam> = {
+    let dialogData: IDialogFormData<ITeam> = {
         new: team?false:true,
         entity: team
-      }
+    }
     this.setFormError(false, '');
     const dialogRef = this.dialog.open(TeamAddEditDialogComponent, {
       data: dialogData,
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result.new){
+      if (result && result.new){
         let data = this.dataSource.data;
         data.push(result.entity);
         this.dataSource.data = data;
