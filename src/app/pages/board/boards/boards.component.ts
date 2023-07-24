@@ -60,7 +60,6 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
                     return this._storyService.getStoriesBySprint(sprint.id);
                   }),
                   map((stories: IStory[]) => {
-                    console.log('map2');
                     this.stories = stories;
                     if(stories){
                       this.setStoriesByStatus(stories);
