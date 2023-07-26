@@ -30,8 +30,7 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
   sprints: ISprint[];
   backlogs: IBacklog[];
   filteredStories: IStory[];
-  @ViewChild(MatMenuTrigger)
-  contextMenu: MatMenuTrigger;
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
   constructor(private _storyService: StoryService,
@@ -57,6 +56,7 @@ initBackog(){
   initStories(){
     let subscriptionStories = this._storyService.getStoriesOnBacklogsByProjectId(this.project.id)
       .subscribe((stories: IStory[]) => {
+        console.log('initStories');
         if (stories) {
           this.stories = stories;
           this.filteredStories = stories;
@@ -149,7 +149,7 @@ initBackog(){
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
     this.contextMenu.menuData = story;
-    this.contextMenu.menu.focusFirstItem('mouse');
+    //this.contextMenu.menu!.resetActiveItem();
     this.contextMenu.openMenu();
   }
 

@@ -24,11 +24,11 @@
 	<ng-template matMenuContent let-item="item">
    <span class="p-1">Move to</span>
    <div>
-     <button mat-menu-item (click)="moveToSprint()">{{currentSprint.title}}</button>
+     <button class="btn-light" mat-menu-item (click)="moveToSprint()">{{currentSprint.title}}</button>
     </div>
    <div *ngIf="!isBacklog">
    <hr class="m-1">
-    <button mat-menu-item *ngFor="let project of projects" (click)="moveToBacklog(project)">{{project.name}}</button>
+    <button mat-menu-item class="btn-light" *ngFor="let project of projects" (click)="moveToBacklog(project)">{{project.name}}</button>
 	</div>
   </ng-template>
 </mat-menu>
