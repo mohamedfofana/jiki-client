@@ -9,7 +9,8 @@ import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy
 import { ISprint } from 'src/app/shared/model/sprint.model';
 import { BacklogService } from 'src/app/core/services/database/backlog.service';
 import { IBacklog } from 'src/app/shared/model/backlog.model';
-import { forkJoin } from 'rxjs';
+import { BehaviorSubject, Observable, filter, forkJoin, map, of, switchMap } from 'rxjs';
+import { NotifierService } from 'src/app/core/services/notification/notifier.service';
 
 @Component({
   selector: 'jiki-item-project-resume',
@@ -26,7 +27,8 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
   @Input() project: IProject;
   @Input() projects: IProject[];
   @Input() currentSprint : ISprint;
-  stories: IStory[];
+  stories$: Observable<IStory[]>;
+  filteredStories$: Observable<IStory[]>;
   sprints: ISprint[];
   backlogs: IBacklog[];
   filteredStories: IStory[];
@@ -34,13 +36,17 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
   contextMenuPosition = { x: '0px', y: '0px' };
 
   constructor(private _storyService: StoryService,
-    private _backlogService: BacklogService) {
+              private _backlogService: BacklogService,
+              private _notifierService: NotifierService) {
     super();
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     if(this.currentSprint){
-      this.initStories();
+      this.stories$ = this.filteredStories$ = this._notifierService.storiesNotifier().pipe(
+                                                                                           switchMap( _ => this.initStories())
+                                                                                          );
+      //this.initStories();
       this.initBackog();
     }
   }
@@ -54,94 +60,104 @@ initBackog(){
     this.subscriptions.push(subscriptionBacklogs);
 }
   initStories(){
-    let subscriptionStories = this._storyService.getStoriesOnBacklogsByProjectId(this.project.id)
-      .subscribe((stories: IStory[]) => {
-        console.log('initStories');
-        if (stories) {
-          this.stories = stories;
-          this.filteredStories = stories;
-        }
-      });
-
-    this.subscriptions.push(subscriptionStories);
+   return this._storyService.getStoriesOnBacklogsByProjectId(this.project.id);    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.onChange();
   }
   onChange() {
-    let currentStories = this.stories;
+    let currentStories$ = this.stories$;
     if (this.filterText && this.filterText.trim().length>0) {
-      currentStories = this.getChangeText(currentStories);
+      currentStories$ = this.getChangeText(currentStories$);
     }
 
     if (this.filterAssignee && this.filterAssignee.length>0) {
-      currentStories = this.getChangeAssignee(currentStories);
+      currentStories$ = this.getChangeAssignee(currentStories$);
     }
 
     if (this.filterReporter && this.filterReporter.length>0) {
-      currentStories = this.getChangeReporter(currentStories);
+      currentStories$ = this.getChangeReporter(currentStories$);
     }
 
     if (this.filterStatus && this.filterStatus.length>0) {
-      currentStories = this.getChangeStatus(currentStories);
+      currentStories$ = this.getChangeStatus(currentStories$);
     }
 
-    if (currentStories) {
-      this.filteredStories = currentStories;
+    if (currentStories$) {
+      this.filteredStories$ = currentStories$;
     } else {
-      this.filteredStories = this.stories;
+      this.filteredStories$ = this.stories$;
     }
   }
 
-  getChangeText(currentStories:IStory[]):IStory[] {
-    return currentStories.filter(s => {
-      return new String(s.title).includes(this.filterText);
-    });
+  getChangeText(currentStories$:Observable<IStory[]>):Observable<IStory[]> {
+    let changed$ =  currentStories$.pipe(
+                          map(stories => {
+                            return stories.filter(s => new String(s.title).includes(this.filterText))
+                          })
+                        ); 
+
+
+    return changed$;
   }
 
-  getChangeReporter(currentStories:IStory[]):IStory[] {
-      let filtered = currentStories.filter(s => {
-        let found:boolean = false;
-        this.filterReporter.forEach(a => {
-            if (s.reporter.id === a.id){
-              found = true;
-            }
-          });
-        return found;
-      });
-      return  filtered;
+  getChangeReporter(currentStories$:Observable<IStory[]> ):Observable<IStory[]>  {
+    let filtered$ =  currentStories$.pipe(
+                                        map(stories => {
+                                          return stories.filter(s => {                              
+                                            return this.memberOfReporter(s);
+                                          }  
+                                        )})
+    ); 
+    return filtered$;
   }
 
-  getChangeAssignee(currentStories:IStory[]):IStory[] {
-      let filtered = currentStories.filter(s => {
-        let found:boolean = false;
-        this.filterAssignee.forEach(a => {
-            if (s.assignedUser){
-              if (s.assignedUser.id === a.id){
-                found = true;
-              }
-            }
-          });
-        return found;
-      });
-      return filtered;
+  getChangeAssignee(currentStories$:Observable<IStory[]> ):Observable<IStory[]>  {
+    let filtered$ =  currentStories$.pipe(
+                                        map(stories => {
+                                          return stories.filter(s => {                              
+                                            return this.memberOfAssignee(s);
+                                          }  
+                                        )})
+    ); 
+    return filtered$;
   }
 
-  getChangeStatus(currentStories:IStory[]):IStory[] {
+  getChangeStatus(currentStories$:Observable<IStory[]> ):Observable<IStory[]>  {
     let statuses = new String(this.filterStatus);
     let status:string[]=[];
     status = statuses.split(",");
-    let filtered = currentStories.filter(s => {
-      let found = false;
-      status.forEach(stat => {
-        if (s.status == stat) {
-          found = true;
-        }
-      });
-      return found;
-    });
-    return filtered
+    let filtered$ =  currentStories$.pipe(
+      map(stories => {       
+        return stories.filter(s => {    
+          const found = status.find( stat => s.status === stat)
+          return (found)? true:false;                                    
+        }  
+      )})
+    ); 
+  return filtered$;
+
+  }
+
+  memberOfAssignee(story: IStory): boolean{
+    if (story.assignedUser){
+      if (story.assignedUser.id){
+        const found = this.filterAssignee.find( a => story.assignedUser.id === a.id)
+        return (found)? true:false;
+      }
+    }
+    return false;
+  }
+
+  memberOfReporter(story: IStory): boolean{
+    if (story.reporter){
+      if (story.reporter.id){
+        const found = this.filterReporter.find( a => story.reporter.id === a.id)
+        return (found)? true:false;
+      }
+    }
+    return false;
   }
 
   onContextMenu(event: MouseEvent, story: IStory) {
@@ -149,7 +165,6 @@ initBackog(){
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
     this.contextMenu.menuData = story;
-    //this.contextMenu.menu!.resetActiveItem();
     this.contextMenu.openMenu();
   }
 
@@ -159,18 +174,22 @@ initBackog(){
     story.backlog = null;
     story.sprint = this.currentSprint;
 
-    forkJoin([this._storyService.updateSprintAndBacklog(story)]).subscribe(
-      s=>this.initStories()
-    );
+    const subs = this._storyService.updateSprintAndBacklog(story).subscribe(s =>
+             this._notifierService.notifyStories()
+      );
+    this.subscriptions.push(subs)
+
   }
+  
   moveToBacklog(project: IProject) {
     let story =  this.contextMenu.menuData;
     story.project.id = project.id;
     story.backlog.id = project.backlog.id
     story.sprint = null;
 
-    forkJoin([this._storyService.updateSprintAndBacklog(story)]).subscribe(
-                                s=>this.initStories()
-                                );
+    const subs = this._storyService.updateSprintAndBacklog(story).subscribe(s =>
+      this._notifierService.notifyStories() 
+    );
+    this.subscriptions.push(subs)
  }
 }

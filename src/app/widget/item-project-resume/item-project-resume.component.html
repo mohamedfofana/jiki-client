@@ -12,7 +12,7 @@
     </mat-chip-list>
     </mat-panel-description>
   </mat-expansion-panel-header>
-  <jiki-item-story-preview *ngFor="let story of filteredStories" [story]='story' (contextmenu)="onContextMenu($event, story)"></jiki-item-story-preview>
+  <jiki-item-story-preview *ngFor="let story of filteredStories$ | async" [story]='story' (contextmenu)="onContextMenu($event, story)"></jiki-item-story-preview>
 </mat-expansion-panel>
 <br>
 <div style="visibility: hidden; position: fixed"

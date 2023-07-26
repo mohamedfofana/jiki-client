@@ -22,6 +22,7 @@ import { JwtTokenService } from './services/database/jwt-token.service';
 import { LoaderService } from './services/loader/loader.service';
 import { LoaderComponent } from './loader/loader.component';
 import { LoggerService } from './services/logger/logger.service';
+import { NotifierService } from './services/notification/notifier.service';
 
 export class CoreStatics {
 
@@ -50,7 +51,8 @@ export class CoreStatics {
                       AppConfigService, 
                       JwtTokenService,
                       TeamService,
-                      LoaderService];
+                      LoaderService,
+                      NotifierService];
 
   static pipes = [ DatePipe ];
 

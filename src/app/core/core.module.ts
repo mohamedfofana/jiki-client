@@ -3,8 +3,6 @@ import { CoreStatics } from './core-statics';
 import { NgModule, SkipSelf, Optional, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EnsureModuleLoadedOnceGuard } from './ensure-module-loaded-once.guard';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 
 @NgModule({
