@@ -5,12 +5,11 @@ import { WidgetModule } from './../../widget/widget.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SprintRoutingModule } from './sprint-routing.module';
-import { SprintAddEditDialogComponent } from './sprint-add-edit-dialog/sprint-add-edit-dialog.component';
 
 
 
 @NgModule({
-  declarations: [SprintRoutingModule.components, SprintAddEditDialogComponent],
+  declarations: [SprintRoutingModule.components],
   imports: [
     ReactiveFormsModule,
     SprintRoutingModule,

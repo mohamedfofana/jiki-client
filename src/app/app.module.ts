@@ -19,11 +19,11 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found/pag
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
+    BrowserAnimationsModule,
     LoginModule,
+    HttpClientModule,    
     CoreModule.loadModuleWithProviders(),
-    AppRoutingModule,
-    BrowserAnimationsModule
+    AppRoutingModule
   ],
   bootstrap: [AppComponent],
   providers: [

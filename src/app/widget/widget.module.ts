@@ -6,7 +6,10 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, MyMaterialModule],
+  imports: [CommonModule, 
+            ReactiveFormsModule, 
+            RouterModule, 
+            MyMaterialModule],
   exports: [ WidgetStatics.components],
   declarations: [ WidgetStatics.components ]
 })

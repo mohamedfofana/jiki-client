@@ -39,7 +39,7 @@ a:hover {
   color: #4db7fe;
 }
 
-.mat-body, .mat-body-1, .mat-typography {
+.mat-body, .mat-subtitle-2, .mat-typography {
   font: inherit;
   letter-spacing: inherit;
 }
@@ -82,10 +82,6 @@ mat-form-field.mat-form-field {
 
 .mat-chip-list-wrapper {
   display: contents;
-}
-
-.filter-row{
-  /* margin-bottom: 2em; */
 }
 
 .item-spacer {

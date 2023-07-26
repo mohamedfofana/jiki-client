@@ -7,9 +7,9 @@
       <span *ngIf="isBacklog">
         BACKLOG
         </span>
-    <mat-chip-list *ngIf="!isBacklog">
+    <mat-chip-listbox *ngIf="!isBacklog">
       <mat-chip [ngStyle]="{'backgroundColor': project.iconStatusColor, 'color':'white'}">{{project.status}}</mat-chip>
-    </mat-chip-list>
+    </mat-chip-listbox>
     </mat-panel-description>
   </mat-expansion-panel-header>
   <jiki-item-story-preview *ngFor="let story of filteredStories$ | async" [story]='story' (contextmenu)="onContextMenu($event, story)"></jiki-item-story-preview>

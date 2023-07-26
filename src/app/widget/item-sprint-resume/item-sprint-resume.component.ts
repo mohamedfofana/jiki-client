@@ -8,8 +8,8 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
 import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { SprintAddEditDialogComponent } from 'src/app/pages/sprint/sprint-add-edit-dialog/sprint-add-edit-dialog.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 
 
 @Component({

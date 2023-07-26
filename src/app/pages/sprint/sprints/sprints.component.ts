@@ -10,8 +10,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { StorageService } from 'src/app/core/services/local/storage.service';
 import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { SprintAddEditDialogComponent } from '../sprint-add-edit-dialog/sprint-add-edit-dialog.component';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import { IProject } from 'src/app/shared/model/project.model';
 import { map, mergeMap } from 'rxjs';
 

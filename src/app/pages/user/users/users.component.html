@@ -1,11 +1,11 @@
 <div class="global-padding">
   <h3>Users</h3>
-<div class="filter-header">
+<div class="filter-header p-0">
   <mat-form-field class="filter-width">
     <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
   </mat-form-field>
-  <button mat-mini-fab class="float-end">
-    <mat-icon (click)="addEditUser(emptyUser)">add</mat-icon>
+  <button mat-mini-fab class="float-end" (click)="addEditUser(emptyUser)">
+    <mat-icon >add</mat-icon>
   </button>
 </div>
 
@@ -45,11 +45,11 @@
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Actions </mat-header-cell>
       <mat-cell *matCellDef="let user">
-        <button mat-icon-button class="float-start" color="primary">
-          <mat-icon (click)="addEditUser(user)">edit</mat-icon>
+        <button mat-icon-button class="float-start" color="primary" (click)="addEditUser(user)">
+          <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button class="float-end" color="warn">
-          <mat-icon (click)="delete(user)">delete</mat-icon>
+        <button mat-icon-button class="float-end" color="warn" (click)="delete(user)">
+          <mat-icon>delete</mat-icon>
         </button>
     </mat-cell>
     </ng-container>

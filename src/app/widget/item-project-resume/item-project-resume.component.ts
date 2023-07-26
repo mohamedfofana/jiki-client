@@ -5,7 +5,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
 import { IProject } from 'src/app/shared/model/project.model';
 
-import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { ISprint } from 'src/app/shared/model/sprint.model';
 import { BacklogService } from 'src/app/core/services/database/backlog.service';
 import { IBacklog } from 'src/app/shared/model/backlog.model';
@@ -180,7 +180,7 @@ initBackog(){
     this.subscriptions.push(subs)
 
   }
-  
+
   moveToBacklog(project: IProject) {
     let story =  this.contextMenu.menuData;
     story.project.id = project.id;

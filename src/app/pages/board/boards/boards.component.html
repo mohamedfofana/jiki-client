@@ -13,13 +13,13 @@
               <mat-select  [formControl]="selectReporterFormControl" (selectionChange)="filterUserChanged($event)" multiple>
 
                 <mat-select-trigger>
-                  <mat-chip-list [style.display]="'contents'">
+                  <mat-chip-listbox [style.display]="'contents'">
                     <mat-chip *ngFor="let rep of selectReporterFormControl.value" [style.font.size.px]="10"
                     [removable]="true" (removed)="onReporterRemoved(rep)">
                     {{ rep.firstname }}
                     <mat-icon matChipRemove>cancel</mat-icon>
                   </mat-chip>
-                </mat-chip-list>
+                </mat-chip-listbox>
               </mat-select-trigger>
 
                 <mat-option *ngFor="let user of reporterList" [value]="user">
@@ -34,13 +34,13 @@
               <mat-select  [formControl]="selectAssigneeFormControl" (selectionChange)="filterUserChanged($event)" multiple>
 
                 <mat-select-trigger>
-                  <mat-chip-list>
+                  <mat-chip-listbox>
                     <mat-chip *ngFor="let ass of selectAssigneeFormControl.value" [style.font.size.px]="10"
                       [removable]="true" (removed)="onAssigneeRemoved(ass)">
                       {{ ass.firstname }}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
-                  </mat-chip-list>
+                  </mat-chip-listbox>
                 </mat-select-trigger>
 
                 <mat-option *ngFor="let user of assigneeList" [value]="user">
@@ -116,7 +116,7 @@
   </div>
   <hr>
   <div class="row mt-3">
-    <div class="sprints-row">
+    <div class="sprints-row" ng>
       <jiki-item-project-resume
         *ngFor="let project of projects"
         [projects]="projects"

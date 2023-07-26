@@ -4,7 +4,7 @@
     <table>
       <tr>
         <td formGroupName="project">
-          <mat-form-field appearance="legacy">
+          <mat-form-field >
             <mat-label>Project</mat-label>
             <mat-select [formControl]="projectFormControl">
               <mat-option *ngFor="let project of projects" [value]="project.id">
@@ -16,7 +16,7 @@
       </tr>
       <tr>
         <td colspan="2">
-          <mat-form-field appearance="legacy" class="form-field-sprintTitle">
+          <mat-form-field  class="form-field-sprintTitle">
             <mat-label>Tiltle</mat-label>
             <input matInput [formControl]="titleFormControl">
           </mat-form-field>
@@ -24,7 +24,7 @@
       </tr>
       <tr>
         <td colspan="2">
-          <mat-form-field appearance="legacy" class="form-field-sprintDescription">
+          <mat-form-field  class="form-field-sprintDescription">
             <mat-label>Description</mat-label>
             <textarea matInput [formControl]="descriptionFormControl"></textarea>
           </mat-form-field>
@@ -32,7 +32,7 @@
       </tr>
       <tr>
         <td colspan="2">
-          <mat-form-field appearance="legacy" class="form-field-businessValue">
+          <mat-form-field  class="form-field-businessValue">
             <mat-label>Business Value</mat-label>
             <input type="number" matInput [formControl]="businessValueFormControl">
             <mat-error *ngIf="hasError('businessValue','pattern') && !hasError('businessValue','required')">
@@ -43,7 +43,7 @@
       </tr>
       <tr>
         <td colspan="2">
-          <mat-form-field appearance="legacy">
+          <mat-form-field >
             <mat-label>Status</mat-label>
             <mat-select [formControl]="statusFormControl">
               <mat-option *ngFor="let status of enumKeys(statuses)" [value]="status">
