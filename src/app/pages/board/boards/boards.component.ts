@@ -52,6 +52,8 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
     const subscriptionSprint$ = this._sprintService.getCurrentByProjectId(projectId)
                 .pipe(
                   map((sprint: ISprint) => {
+                    console.log('currentSprint Project= ' +projectId);
+                    console.log('currentSprint Board= ' +sprint);
                     this.currentSprint = sprint;
                     this.boardTitle = sprint.project.name + ' - ' + sprint.title;
                     return sprint;

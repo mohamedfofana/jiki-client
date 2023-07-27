@@ -1,6 +1,6 @@
-<div class="container-fluid px-4 pt-3">
+<div class="container-fluid px-4 pt-3" *ngIf="currentSprint">
   <div class="row">
-    <div class="col-sm pb-3" *ngIf="currentSprint">
+    <div class="col-sm pb-3">
      <jiki-page-title [title]='boardTitle'></jiki-page-title>
     </div>
   </div>

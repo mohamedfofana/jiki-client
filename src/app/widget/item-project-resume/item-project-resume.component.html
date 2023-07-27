@@ -3,13 +3,13 @@
     <mat-panel-title>
     {{project.name}}
     </mat-panel-title>
-    <mat-panel-description>
-      <span *ngIf="isBacklog">
+    <mat-panel-description style="flex-grow: 0;">
+        <span *ngIf="isBacklog">
         BACKLOG
         </span>
-    <mat-chip-listbox *ngIf="!isBacklog">
-      <mat-chip [ngStyle]="{'backgroundColor': project.iconStatusColor, 'color':'white'}">{{project.status}}</mat-chip>
-    </mat-chip-listbox>
+      <mat-chip-listbox *ngIf="!isBacklog">
+        <mat-chip [ngStyle]="{'backgroundColor': project.iconStatusColor, 'color':'white'}">{{project.status}}</mat-chip>
+      </mat-chip-listbox>
     </mat-panel-description>
   </mat-expansion-panel-header>
   <jiki-item-story-preview *ngFor="let story of filteredStories$ | async" [story]='story' (contextmenu)="onContextMenu($event, story)"></jiki-item-story-preview>

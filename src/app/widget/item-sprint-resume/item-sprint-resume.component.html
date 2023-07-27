@@ -3,7 +3,7 @@
     <mat-panel-title>
     {{sprint.title}}
     </mat-panel-title>
-    <mat-panel-description>
+    <mat-panel-description style="flex-grow: 0;">
     <mat-chip-listbox>
       <mat-chip [ngStyle]="{'backgroundColor': sprint.iconStatusColor, 'color':'white'}">{{sprint.status}}</mat-chip>
     </mat-chip-listbox>
@@ -12,6 +12,6 @@
       <mat-icon (click)="addEditProject(sprint)">edit</mat-icon>
     </button>
   </mat-expansion-panel-header>
-  <jiki-item-story-preview *ngFor="let story of filteredStories" [story]='story'></jiki-item-story-preview>
+  <jiki-item-story-preview *ngFor="let story of filteredStories$ | async" [story]='story'></jiki-item-story-preview>
 </mat-expansion-panel>
 <br>

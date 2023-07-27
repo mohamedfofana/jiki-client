@@ -10,6 +10,7 @@ import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { SprintAddEditDialogComponent } from 'src/app/pages/sprint/sprint-add-edit-dialog/sprint-add-edit-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { Observable, map } from 'rxjs';
 
 
 @Component({
@@ -25,97 +26,112 @@ export class ItemSprintResumeComponent extends AbstractOnDestroy implements OnIn
   @Input() filterStatus: string[];
   @Input() sprint: ISprint;
   dataSource = new MatTableDataSource<ISprint>();
-  stories: IStory[];
-  filteredStories: IStory[];
+  stories$: Observable<IStory[]>;
+  filteredStories$: Observable<IStory[]>;
   constructor(public dialog: MatDialog,
     private _storyService: StoryService) {
     super();
   }
 
   ngOnInit(): void {
-    let subscription = this._storyService.getStoriesBySprint(this.sprint.id)
-      .subscribe((stories: IStory[]) => {
-        if (stories) {
-          this.stories = stories;
-          this.filteredStories = stories;
-        }
-      });
-    this.subscriptions.push(subscription);
+    this.stories$ = this.filteredStories$ = this._storyService.getStoriesBySprint(this.sprint.id);  
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.onChange();
   }
   onChange() {
-    let currentStories = this.stories;
+    let currentStories$ = this.stories$;
     if (this.filterText && this.filterText.trim().length>0) {
-      currentStories = this.getChangeText(currentStories);
+      currentStories$ = this.getChangeText(currentStories$);
     }
 
     if (this.filterAssignee && this.filterAssignee.length>0) {
-      currentStories = this.getChangeAssignee(currentStories);
+      currentStories$ = this.getChangeAssignee(currentStories$);
     }
 
     if (this.filterReporter && this.filterReporter.length>0) {
-      currentStories = this.getChangeReporter(currentStories);
+      currentStories$ = this.getChangeReporter(currentStories$);
     }
 
-    // if (this.filterStatus && this.filterStatus!="None" && this.filterStatus!="") {
-    //   currentStories = this.getChangeStatus(currentStories);
-    // }
+    if (this.filterStatus && this.filterStatus.length>0) {
+      currentStories$ = this.getChangeStatus(currentStories$);
+    }
 
-    if (currentStories) {
-      this.filteredStories = currentStories;
+    if (currentStories$) {
+      this.filteredStories$ = currentStories$;
     } else {
-      this.filteredStories = this.stories;
+      this.filteredStories$ = this.stories$;
     }
   }
 
-  getChangeText(currentStories:IStory[]):IStory[] {
-    return currentStories.filter(s => {
-      return new String(s.title).includes(this.filterText);
-    });
+  getChangeText(currentStories$:Observable<IStory[]>):Observable<IStory[]> {
+    let changed$ =  currentStories$.pipe(
+                          map(stories => {
+                            return stories.filter(s => new String(s.title).includes(this.filterText))
+                          })
+                        ); 
+
+
+    return changed$;
   }
 
-  getChangeReporter(currentStories:IStory[]):IStory[] {
-      let filtered = currentStories.filter(s => {
-        let found:boolean = false;
-        this.filterReporter.forEach(a => {
-            if (s.reporter.id === a.id){
-              found = true;
-            }
-          });
-        return found;
-      });
-      return  filtered;
+  getChangeReporter(currentStories$:Observable<IStory[]> ):Observable<IStory[]>  {
+    let filtered$ =  currentStories$.pipe(
+                                        map(stories => {
+                                          return stories.filter(s => {                              
+                                            return this.memberOfReporter(s);
+                                          }  
+                                        )})
+    ); 
+    return filtered$;
   }
 
-  getChangeAssignee(currentStories:IStory[]):IStory[] {
-      let filtered = currentStories.filter(s => {
-        let found:boolean = false;
-        this.filterAssignee.forEach(a => {
-            if (s.assignedUser.id === a.id){
-              found = true;
-            }
-          });
-        return found;
-      });
-      return filtered;
+  getChangeAssignee(currentStories$:Observable<IStory[]> ):Observable<IStory[]>  {
+    let filtered$ =  currentStories$.pipe(
+                                        map(stories => {
+                                          return stories.filter(s => {                              
+                                            return this.memberOfAssignee(s);
+                                          }  
+                                        )})
+    ); 
+    return filtered$;
   }
 
-  getChangeStatus(currentStories:IStory[]):IStory[] {
+
+  getChangeStatus(currentStories$:Observable<IStory[]> ):Observable<IStory[]>  {
     let statuses = new String(this.filterStatus);
     let status:string[]=[];
     status = statuses.split(",");
-    let filtered = currentStories.filter(s => {
-      let found = false;
-      status.forEach(stat => {
-        if (s.status == stat) {
-          found = true;
-        }
-      });
-      return found;
-    });
-    return filtered
+    let filtered$ =  currentStories$.pipe(
+      map(stories => {       
+        return stories.filter(s => {    
+          const found = status.find( stat => s.status === stat)
+          return (found)? true:false;                                    
+        }  
+      )})
+    ); 
+
+    return filtered$;
+  }
+
+  memberOfAssignee(story: IStory): boolean{
+    if (story.assignedUser){
+      if (story.assignedUser.id){
+        const found = this.filterAssignee.find( a => story.assignedUser.id === a.id)
+        return (found)? true:false;
+      }
+    }
+    return false;
+  }
+
+  memberOfReporter(story: IStory): boolean{
+    if (story.reporter){
+      if (story.reporter.id){
+        const found = this.filterReporter.find( a => story.reporter.id === a.id)
+        return (found)? true:false;
+      }
+    }
+    return false;
   }
 
   addEditProject(project: ISprint) {

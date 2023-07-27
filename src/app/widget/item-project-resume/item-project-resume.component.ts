@@ -42,11 +42,11 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
   }
 
   ngOnInit(): void {    
+    console.log(' currentSprint item project resume ' + this.currentSprint);
     if(this.currentSprint){
       this.stories$ = this.filteredStories$ = this._notifierService.storiesNotifier().pipe(
                                                                                            switchMap( _ => this.initStories())
                                                                                           );
-      //this.initStories();
       this.initBackog();
     }
   }
@@ -136,7 +136,7 @@ initBackog(){
         }  
       )})
     ); 
-  return filtered$;
+    return filtered$;
 
   }
 

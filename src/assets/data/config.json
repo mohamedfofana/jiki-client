@@ -28,9 +28,11 @@
   "cdk.sprint.status.CLOSED.icon" : "close",
 
   "cdk.sprint.status.CREATED.icon.color" : "#4db7fe",
+  "cdk.sprint.status.STARTED.icon.color" : "#4db7fe",
   "cdk.sprint.status.RUNNING.icon.color" : "#21BF73",
   "cdk.sprint.status.FINISHED.icon.color" : "#FD5E53",
   "cdk.sprint.status.CLOSED.icon.color" : "#FD5E53",
+  "cdk.sprint.status.TERMINATED.icon.color" : "#FD5E53",
 
 
   "cdk.story.status.TODO.icon" : "fiber_new",
