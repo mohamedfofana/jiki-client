@@ -3,26 +3,23 @@
 
     <div class="card-title mb-2">
       <a [routerLink]="['/stories/viewEdit/', story.id]" routerLinkActive="router-link-active">{{story.longtitle}}</a>
-      <div class="avatar-circle avatar-circle-small avatar-background-color-assigned float-end" *ngIf="story.assignedUser">
+      <div class="avatar-circle avatar-circle-small avatar-background-color-assigned m-1 float-end" *ngIf="story.assignedUser">
         <span class="initials">
           {{story.assignedUser.firstname[0].toUpperCase()}}
         </span>
       </div>
     </div>
 
-    <p class="card-text mb-4 mr-4 text-truncate">{{story.description}}</p>
+    <p class="card-text mb-4 mr-4 text-truncate">{{story.title}}</p>
   </div>
 
-  <div class="card-footer p-0">
+  <div class="card-footer">
     <mat-icon [ngStyle]="{'color': story.iconTypeColor}">{{story.iconType}}</mat-icon>
-    <div class="avatar-circle avatar-circle-small avatar-background-color-reporter m-1 float-start" >
+    <div class="avatar-circle avatar-circle-small avatar-background-color-reporter m-1 float-end" >
       <span class="initials">
         {{story.reporter.firstname[0].toUpperCase()}}
       </span>
     </div>
-    <!-- <div class="float-end m-1 text-truncate">
-      {{story.title}}
-    </div> -->
   </div>
 
 </div>
