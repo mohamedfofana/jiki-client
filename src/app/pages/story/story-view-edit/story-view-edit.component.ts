@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Editor } from 'ngx-editor';
+import { Observable } from 'rxjs';
 import { StoryService } from 'src/app/core/services/database/story.service';
-import { StorageService } from 'src/app/core/services/local/storage.service';
+import { UserService } from 'src/app/core/services/database/user.service';
+import { StoryStatusEnum } from 'src/app/shared/enum/story-status.enum';
 import { IStory } from 'src/app/shared/model/story.model';
+import { IUser } from 'src/app/shared/model/user.model';
+import { SelectUserViewPipe } from 'src/app/shared/pipes/select-user-view.pipe';
 
 
 @Component({
@@ -11,42 +15,28 @@ import { IStory } from 'src/app/shared/model/story.model';
   templateUrl: './story-view-edit.component.html',
   styleUrls: ['./story-view-edit.component.css']
 })
-export class StoryViewEditComponent implements OnInit {
-  // Form
-  storyForm: FormGroup;
-  // Controls
-  titleFormControl: FormControl<string | null>;
-  descriptionFormControl: FormControl<string | null>;
-  businessValueFormControl: FormControl<number | null>;
-  statusFormControl: FormControl<string | null>;
-  typeFormControl: FormControl<string | null>;
-  prioritFormControl: FormControl;
-  appliVersionFormControl: FormControl<string | null>;
-  workflowFormControl: FormControl<string | null>;
-  storyPointsFormControl: FormControl;
-  startDateFormControl: FormControl;
-  endDateFormControl: FormControl;
-  creationDateFormControl: FormControl;
-  updateDateFormControl: FormControl;
-  projectFormControl: FormControl<number | null>;
-  sprintFormControl: FormControl;
-  reporterFormControl: FormControl;
-  assignedToFormControl: FormControl;
-  backlogFormControl: FormControl;
-  estimatedEndDateFormControl: FormControl;
-
-  //
+export class StoryViewEditComponent implements OnInit, OnDestroy {
+  editor: Editor;
+  // Editale 
+  newStory: IStory;
+  enumKeys = Object.keys;
+  statuses = StoryStatusEnum;
   story: IStory;
+  user:IUser;
+  users$: Observable<IUser[]>;
   idStory: number;
   showFiller = false;
   htmlContent = '';
 
   constructor(private _route: ActivatedRoute,
-    private _storyService: StoryService,
-    private _formBuilder: FormBuilder,
-    private _storageService: StorageService
-
+              private _storyService: StoryService,
+              private _userService: UserService,
+              private _selectUserViewPipe: SelectUserViewPipe
               ) { }
+
+   displayUserFn = (user: IUser) =>  {
+    return user && this._selectUserViewPipe.transform(user);
+   }
 
   ngOnInit(): void {
    const id:string = this._route.snapshot.paramMap.get("id") ?? '';
@@ -55,33 +45,34 @@ export class StoryViewEditComponent implements OnInit {
       this._storyService.getStoryById(this.idStory).subscribe(
         s=>{
           this.story = s;
+          this.newStory =s;
           //this._loggerService.log(this.story);
-          this.initForm();
+          this.editor = new Editor();
+          this.story.longtitle = this.story.project.name+"-"+this.story.id;
         }
       );
+      // get users in projects
+      this.users$ = this._userService.findAll();
    }
   }
-  initControls(){
-     // init controls
-     this.titleFormControl = new FormControl(this.story.title, [Validators.required]);
-     this.descriptionFormControl = new FormControl(this.story.description, [Validators.required]);
-     this.statusFormControl = new FormControl(this.story.status, [Validators.required]);
-     this.businessValueFormControl = new FormControl(this.story.businessValue, [Validators.required, Validators.pattern("^\d*[13579]$")]);
-     this.projectFormControl = new FormControl(this._storageService.getProject().id);
+
+  onLostFocus(event: any){
+    // Update story
+    const field = event.target.name;
+    const value = event.target.value;
+    console.log('onLostFocus : ' +field);
+    console.log(' newStory =' + this.newStory.title);
+    console.log(' old =' + this.story.title);
   }
-  initForm(){
-    this.initControls();
-   // create Form
-    this.storyForm = this._formBuilder.group({
-      title: this.titleFormControl,
-      description: this.descriptionFormControl,
-      status: this.statusFormControl,
-      businessValue: this.businessValueFormControl,
-      project: this._formBuilder.group({
-        id: this.projectFormControl
-      })
-    });
+
+  updateDescription(){
+
   }
-  onSubmitClick(): void {
+
+  onSubmit(f:any): void {
+  }
+
+  ngOnDestroy(): void {
+    this.editor.destroy();
   }
 }

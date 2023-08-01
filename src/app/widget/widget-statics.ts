@@ -6,6 +6,15 @@ import { ItemStorySprintComponent } from './item-story-sprint/item-story-sprint.
 import { ItemSprintComponent } from './item-sprint/item-sprint.component';
 import { ItemStoryBacklogComponent } from './item-story-backlog/item-story-backlog.component';
 import { ItemProjectResumeComponent } from './item-project-resume/item-project-resume.component';
+import { EditableInputComponent } from './editable-input/editable-input.component';
 export class WidgetStatics {
-  static components = [ ItemPageTitleComponent, ItemStoryBacklogComponent, ItemProjectResumeComponent, ItemSprintResumeComponent, ItemSprintComponent, ItemStorySprintComponent, ItemBoardComponent, ItemStoryPreviewComponent ]
+  static components = [ ItemPageTitleComponent, 
+                        ItemStoryBacklogComponent, 
+                        ItemProjectResumeComponent, 
+                        ItemSprintResumeComponent, 
+                        ItemSprintComponent, 
+                        ItemStorySprintComponent, 
+                        ItemBoardComponent, 
+                        ItemStoryPreviewComponent,
+                        EditableInputComponent ]
 }

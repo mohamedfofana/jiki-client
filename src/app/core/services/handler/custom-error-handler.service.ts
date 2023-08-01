@@ -18,8 +18,8 @@ export class CustomErrorHandler implements ErrorHandler {
     this.zone.run(() => {
       let router = this.injector.get(Router);
         
-      router.navigate(['/error']);   
-      throw new Error('CustomErrorHandler Method not implemented.'+  error.error);
+      router.navigate(['/error'], {skipLocationChange: true});   
+      throw new Error('CustomErrorHandler Method not implemented.'+  error.message + error.error);
     });   
   }
 }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { StoriesComponent } from './stories/stories.component';
-import { StoryViewEditComponent } from './story-view-edit.component/story-view-edit.component';
+import { StoryViewEditComponent } from './story-view-edit/story-view-edit.component';
 
 
 const routes: Routes = [

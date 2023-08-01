@@ -16,7 +16,7 @@ export interface IStory{
     businessValue: number;
     storyPoints: number;
     reporter:IUser;
-    assignedTeam:ITeam;
+    assignedTeam:ITeam | null;
     sprint:ISprint| null;
     project:IProject;
     backlog:IBacklog | null ;
@@ -24,7 +24,7 @@ export interface IStory{
     creationDate:string;
     startDate:string;
     endDate:string;
-    estimateDate:string;
+    estimatedEndDate:string;
     updateDate:string;
     // Calculated attributes
     longtitle: string;
