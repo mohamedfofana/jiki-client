@@ -84,15 +84,12 @@
           <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
           <ngx-editor [editor]="editor" [ngModel]="newStory.description" name="description" [disabled]="false" [placeholder]="'Type here...'"></ngx-editor>
         </div>
-        <div class="d-flex flex-row-reverse">
-          <div class="p-2">
+        <div class="d-flex flex-row-reverse pe-0">
+          <div class="p-2 pe-0">
             <button type="button" class="btn btn-success" (click)="updateDescription()">Update</button>
           </div>
         </div>
       </div>
-      <!--  -->
-      <!-- <angular-editor [placeholder]="'Enter text here...'" [(ngModel)]="htmlContent"></angular-editor>-->
-
       <div class="row mt-4 mb-4 comments-box ps-0">
         <h5 class="ps-0">Commentaires</h5>
       </div>
@@ -101,36 +98,56 @@
       <table class="table table-borderless">
         <tbody>
           <tr>
-            <!-- <td class="fw-bold">Assigned To :</td> -->
-            <!-- <td><jiki-editable-input [text]="story.assignedUser.firstname + ' ' + story.assignedUser.lastname"></jiki-editable-input></td> -->
             <td>
-              <mat-form-field class="example-full-width">   
+              <mat-form-field>   
                 <mat-label>Assignee</mat-label>           
                 <input type="text"
                        matInput
                        name="assigneeId"
+                       (click)="show('deleteAssigneeId')"                       
+                       (blur)="hide('deleteAssigneeId')"
                        [ngModel]="newStory.assignedUser"
-                       [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUserFn">
-                  <mat-option *ngFor="let user of users$ | async" [value]="user">
+                       (ngModelChange)="filterAssignee($event)"
+                       [matAutocomplete]="autoAssignee">
+                <mat-autocomplete #autoAssignee="matAutocomplete" [displayWith]="displayUserFn">
+                  <mat-option *ngFor="let user of filteredAssignees$ | async" [value]="user">
                     {{user | selectUserView}}
                   </mat-option>
                 </mat-autocomplete>
+                <button id="deleteAssigneeId" style="display: none;"
+                  matSuffix
+                  mat-icon-button
+                  (click)="resetAssignee($event)"
+                  matTooltipPosition="below"
+                >
+                  <mat-icon>{{iconDeleteAssignee}}</mat-icon>
+                </button>
               </mat-form-field>
             </td>
             <td>
-              <mat-form-field class="example-full-width">       
+              <mat-form-field>       
                 <mat-label>Reporter</mat-label>       
                 <input type="text"
                        matInput
                        name="reporterId"
+                       (click)="show('deleteReporterId')"
+                       (blur)="hide('deleteReporterId')"
                        [ngModel]="newStory.reporter"
-                       [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUserFn">
-                  <mat-option *ngFor="let user of users$ | async" [value]="user">
+                       (ngModelChange)="filterReporter($event)"
+                       [matAutocomplete]="autoReporter">
+                <mat-autocomplete #autoReporter="matAutocomplete" [displayWith]="displayUserFn">
+                  <mat-option *ngFor="let user of filteredReporters$ | async" [value]="user">
                     {{user | selectUserView}}
                   </mat-option>
                 </mat-autocomplete>
+                <button id="deleteReporterId" style="display: none;"
+                matSuffix
+                mat-icon-button
+                (click)="resetReporter($event)"
+                matTooltipPosition="below"
+              >
+                <mat-icon>{{iconDeleteReporter}}</mat-icon>
+              </button>
               </mat-form-field>
             </td>
           </tr>

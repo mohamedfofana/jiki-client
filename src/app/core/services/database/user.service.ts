@@ -20,6 +20,10 @@ export class UserService {
         return this.http.get<IUser[]>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/all');
     }
 
+    findByProject(projectId: number): Observable<IUser[]> {
+      return this.http.get<IUser[]>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/project/'+projectId);
+    }
+
     register(user: IUser): Observable<IResponseType<IUser>> {
       user.creationDate = this._appConfigService.currentTimestamp();
       return this.http.post<IResponseType<IUser>>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/register', user)
