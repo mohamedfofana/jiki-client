@@ -20,16 +20,16 @@ export class ItemStoryPreviewComponent implements OnInit{
   }
 
   getStatusConfigKey(){
-    return this._appConfigService.getProperty("cdk.story.status." + this.story.status+".icon");
+    return this._appConfigService.getStoryStatusIcon(this.story.status);
   }
   getTypeConfigKey(){
-    return this._appConfigService.getProperty("cdk.story.type." + this.story.type+".icon");
+    return this._appConfigService.getStoryTypeIcon(this.story.type);
   }
   getStatusColorConfigKey(){
-    return this._appConfigService.getProperty("cdk.story.status." + this.story.status+".icon_color");
+    return this._appConfigService.getStoryStatusIconColor(this.story.status);
   }
   getTypeColorConfigKey(){
-    return this._appConfigService.getProperty("cdk.story.type." + this.story.type+".icon_color");
+    return this._appConfigService.getStoryTypeIconColor(this.story.type);
   }
 
 

@@ -47,7 +47,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 /**
 * Collection of reusable RegExps
 */
-export const regExps: { [key: string]: RegExp } = {
+export const regExps1: { [key: string]: RegExp } = {
   /*
   At least one digit [0-9]
   At least one lowercase character [a-z]
@@ -56,9 +56,25 @@ export const regExps: { [key: string]: RegExp } = {
   At least 8 characters in length, but no more than 32.
   */
   //  password: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/
-   password: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}:;<>,.?/~_+-=|]).{8,32}$/
+   password: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}:;<>,.?/~_+-=|]).{8,32}$/,
+   numeric: /[0-9]/
 };
 
+export const StoryPointsSet:number[] = [1, 2, 3, 5, 8, 13];
+export const PrioritySet:string[] = ['1', '2', '3'];
+
+export const regExps = {
+  /*
+  At least one digit [0-9]
+  At least one lowercase character [a-z]
+  At least one uppercase character [A-Z]
+  At least one special character [*.!@#$%^&(){}[]:;<>,.?/~_+-=|\]
+  At least 8 characters in length, but no more than 32.
+  */
+  //  password: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/
+   password: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}:;<>,.?/~_+-=|]).{8,32}$/,
+   numeric: /[0-9]/
+};
 /**
  * Collection of reusable error messages
  */

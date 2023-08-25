@@ -116,10 +116,10 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
     this.selectStatusFormControl.setValue(this.filterStatus);
   }
   getStatusConfigKey(sprint:ISprint){
-    return this._appConfigService.getProperty("cdk.sprint.status." + sprint.status +".icon");
+    return this._appConfigService.getSprintStatusIcon(sprint.status);
   }
   getStatusColorConfigKey(sprint:ISprint){
-    return this._appConfigService.getProperty("cdk.sprint.status." + sprint.status +".icon.color");
+    return this._appConfigService.getSprintStatusIconColor(sprint.status);
   }
   addEditProject(project: ISprint) {
     let dialogData: IDialogFormData<ISprint> = {

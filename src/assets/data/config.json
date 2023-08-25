@@ -41,16 +41,16 @@
   "cdk.story.status.DONE.icon" : "check_circle",
   "cdk.story.status.CANCELED.icon" : "cancel",
 
-  "cdk.story.status.TODO.icon_color" : "#4db7fe",
-  "cdk.story.status.BLOCKED.icon_color" : "salmon",
-  "cdk.story.status.IN_PROGRESS.icon_color" : "#21BF73",
-  "cdk.story.status.DONE.icon_color" : "#21BF73",
-  "cdk.story.status.CANCELED.icon_color" : "#FD5E53",
+  "cdk.story.status.TODO.icon.color" : "#4db7fe",
+  "cdk.story.status.BLOCKED.icon.color" : "salmon",
+  "cdk.story.status.IN_PROGRESS.icon.color" : "#21BF73",
+  "cdk.story.status.DONE.icon.color" : "#21BF73",
+  "cdk.story.status.CANCELED.icon.color" : "#FD5E53",
 
 
   "cdk.story.type.BUG.icon" : "bug_report",
-  "cdk.story.type.USER_STORY.icon" : "description",
+  "cdk.story.type.STORY.icon" : "description",
 
   "cdk.story.type.BUG.icon_color" : "crimson",
-  "cdk.story.type.USER_STORY.icon_color" : "limegreen"
+  "cdk.story.type.STORY.icon.color" : "limegreen"
 }

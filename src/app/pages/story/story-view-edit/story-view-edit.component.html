@@ -1,5 +1,5 @@
 <div class="m-0 px-4 pt-3" *ngIf="story && users$">
-  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+  <form #f="ngForm">
     <!-- <pre>{{f.value | json}}</pre> -->
   <div class="row mb-4">
       <div class="col-md-1 bd-highlight h4" style="line-height: 1.5;">
@@ -7,7 +7,7 @@
       </div>
       <div class="col-md-11 bd-highlight h4">
         <textarea name="title" (blur)="onLostFocus($event);"
-                  style="height: 30px; line-height: 1.2; width: 30%;" [ngModel]="newStory.title" class="textarea-inline-control" cdkTextareaAutosize >
+                  style="height: 30px; line-height: 1.2; width: 30%;" [(ngModel)]="newStory.title" class="textarea-inline-control" cdkTextareaAutosize >
         </textarea>      
       </div>
   </div>
@@ -19,17 +19,15 @@
             <tbody>
               <tr>
                 <td class="fw-bold">Type :</td>
-                <td>
-                  <textarea name="type" (blur)="onLostFocus($event);"
-                      [ngModel]="newStory.type" class="textarea-inline-control" cdkTextareaAutosize >
-                  </textarea>
+                <td>                 
+                  <mat-icon  [ngStyle]="{'color': story.iconTypeColor}">{{story.iconType}}</mat-icon>                  
                 </td>
               </tr>
               <tr>
                 <td class="fw-bold">Priority :</td>
                 <td>
                   <textarea name="priority" (blur)="onLostFocus($event);"
-                    [ngModel]="newStory.priority" class="textarea-inline-control" cdkTextareaAutosize >
+                    [(ngModel)]="newStory.priority" class="textarea-inline-control" cdkTextareaAutosize >
                   </textarea>
                 </td>
               </tr>
@@ -39,9 +37,9 @@
               </tr>
               <tr>
                 <td  class="fw-bold">Story Points :</td>
-                <td>
+                <td>                
                   <textarea name="storyPoints" (blur)="onLostFocus($event);"
-                    [ngModel]="newStory.storyPoints" class="textarea-inline-control" cdkTextareaAutosize >
+                    [(ngModel)]="newStory.storyPoints" class="textarea-inline-control" cdkTextareaAutosize >
                   </textarea>
                 </td>
               </tr>
@@ -57,7 +55,11 @@
                   <td colspan="2">                   
                     <mat-form-field >      
                       <mat-label>Status</mat-label>              
-                      <mat-select  name="status" [(ngModel)]="newStory.status">
+                      <mat-select  
+                        name="status" 
+                        [(ngModel)]="newStory.status" 
+                        (selectionChange)="onSelectionChange($event)"
+                        >
                         <mat-option *ngFor="let status of enumKeys(statuses)" [value]="status">
                           {{status}}
                         </mat-option>
@@ -66,11 +68,19 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="fw-bold">Version :</td>
-                  <td>
-                    <textarea name="appliVersion" (blur)="onLostFocus($event);"
-                        [ngModel]="newStory.appliVersion" class="textarea-inline-control" cdkTextareaAutosize >
-                    </textarea>
+                  <td colspan="2">  
+                    <mat-form-field >      
+                      <mat-label>Version</mat-label>              
+                      <mat-select  
+                        name="appliVersion" 
+                        [(ngModel)]="newStory.appliVersion"
+                        (selectionChange)="onSelectionChange($event)"
+                        >
+                        <mat-option *ngFor="let v of versions$ | async" [value]="v.version">
+                          {{v.version}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
                   </td>
                 </tr>
               </tbody>
@@ -82,7 +92,7 @@
         <h5 class="ps-0">Description</h5>
         <div class="NgxEditor__Wrapper">
           <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
-          <ngx-editor [editor]="editor" [ngModel]="newStory.description" name="description" [disabled]="false" [placeholder]="'Type here...'"></ngx-editor>
+          <ngx-editor [editor]="editor" [(ngModel)]="newStory.description" name="description" [disabled]="false" [placeholder]="'Type here...'"></ngx-editor>
         </div>
         <div class="d-flex flex-row-reverse pe-0">
           <div class="p-2 pe-0">
@@ -104,56 +114,49 @@
                 <input type="text"
                        matInput
                        name="assigneeId"
-                       (click)="show('deleteAssigneeId')"                       
-                       (blur)="hide('deleteAssigneeId')"
-                       [ngModel]="newStory.assignedUser"
+                       (blur)="onLostFocus($event);"
+                       [(ngModel)]="newStory.assignedUser"
                        (ngModelChange)="filterAssignee($event)"
                        [matAutocomplete]="autoAssignee">
-                <mat-autocomplete #autoAssignee="matAutocomplete" [displayWith]="displayUserFn">
+                <mat-autocomplete 
+                  #autoAssignee="matAutocomplete" 
+                  [displayWith]="displayUserFn"
+                  (optionSelected)="onAssigneeSelectionChange()"
+                >
                   <mat-option *ngFor="let user of filteredAssignees$ | async" [value]="user">
                     {{user | selectUserView}}
                   </mat-option>
                 </mat-autocomplete>
-                <button id="deleteAssigneeId" style="display: none;"
+                <button id="deleteAssigneeId"
                   matSuffix
                   mat-icon-button
                   (click)="resetAssignee($event)"
                   matTooltipPosition="below"
                 >
-                  <mat-icon>{{iconDeleteAssignee}}</mat-icon>
+                  <mat-icon color="warn">close</mat-icon>
                 </button>
+                <mat-hint>
+                  <button type = "button" (click)="assignToMe()" class = "p-0 btn btn-link" style="text-decoration: none;">Assign to me</button>
+                </mat-hint>
               </mat-form-field>
             </td>
             <td>
-              <mat-form-field>       
+              <mat-form-field >                     
                 <mat-label>Reporter</mat-label>       
                 <input type="text"
                        matInput
-                       name="reporterId"
-                       (click)="show('deleteReporterId')"
-                       (blur)="hide('deleteReporterId')"
-                       [ngModel]="newStory.reporter"
-                       (ngModelChange)="filterReporter($event)"
-                       [matAutocomplete]="autoReporter">
-                <mat-autocomplete #autoReporter="matAutocomplete" [displayWith]="displayUserFn">
-                  <mat-option *ngFor="let user of filteredReporters$ | async" [value]="user">
-                    {{user | selectUserView}}
-                  </mat-option>
-                </mat-autocomplete>
-                <button id="deleteReporterId" style="display: none;"
-                matSuffix
-                mat-icon-button
-                (click)="resetReporter($event)"
-                matTooltipPosition="below"
-              >
-                <mat-icon>{{iconDeleteReporter}}</mat-icon>
-              </button>
+                       name="reporterId"                      
+                       value="{{newStory.reporter| selectUserView}}"
+                       readonly
+                >
+               
               </mat-form-field>
             </td>
           </tr>
           <tr>
-            <td colspan="2">
+            <td colspan="2" style="text-align: center;">
                 <hr>
+                <span style="font-weight: bold;">Dates</span>
             </td>
           </tr>
           <tr>
@@ -161,15 +164,15 @@
             <td>{{story.creationDate}}</td>
           </tr>
           <tr>
-            <td class="fw-bold">Estimated End Date :</td>
+            <td class="fw-bold">Estimated End :</td>
             <td>{{story.estimatedEndDate}}</td>
           </tr>
           <tr>
-            <td class="fw-bold">Update Date :</td>
+            <td class="fw-bold">Last Update :</td>
             <td>{{story.updateDate}}</td>
           </tr>
-          <tr>
-            <td class="fw-bold">End Date :</td>
+          <tr *ngIf="story.endDate">
+            <td class="fw-bold">End Date (Only if done):</td>
             <td>{{story.endDate}}</td>
           </tr>
         </tbody>

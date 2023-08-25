@@ -1,9 +1,8 @@
 import { IStory } from '../../../shared/model/story.model';
-import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 
 import { AppConfigService } from '../../config/appconfig-service';
 
@@ -47,6 +46,13 @@ export class StoryService {
      */
     updateSprintAndBacklog(story:IStory):Observable<IStory>{
       return this.http.put<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/update/sprintAndBacklog', story);
+    }
+
+    /*
+     * Path story
+     */
+    patch(id: number, fieldValueMap: Map<string, Object>){
+      return this.http.patch(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/' + id, Object.fromEntries(fieldValueMap));
     }
 
 }

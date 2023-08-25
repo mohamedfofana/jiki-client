@@ -125,9 +125,9 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
     this.selectStatusFormControl.setValue(this.filterStatus);
   }
   getStatusConfigKey(project:IProject){
-    return this._appConfigService.getProperty("cdk.sprint.status." + project.status +".icon");
+    return this._appConfigService.getSprintStatusIcon(project.status);
   }
   getStatusColorConfigKey(project:IProject){
-    return this._appConfigService.getProperty("cdk.sprint.status." + project.status +".icon.color");
+    return this._appConfigService.getSprintStatusIconColor(project.status);
   }
       }

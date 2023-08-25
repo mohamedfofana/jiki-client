@@ -1,20 +1,31 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Editor } from 'ngx-editor';
-import { Observable, mergeMap, map } from 'rxjs';
-import { ConfirmDialogComponent } from 'src/app/core/confirm-dialog/confirm-dialog.component';
+import { Observable, mergeMap, map, Subscription } from 'rxjs';
+import { AppConfigService } from 'src/app/core/config/appconfig-service';
 import { StoryService } from 'src/app/core/services/database/story.service';
 import { UserService } from 'src/app/core/services/database/user.service';
+import { VersionService } from 'src/app/core/services/database/version.service';
 import { StoryStatusEnum } from 'src/app/shared/enum/story-status.enum';
-import { IDialogData } from 'src/app/shared/model/dialog-data.model';
 import { IStory } from 'src/app/shared/model/story.model';
 import { IUser } from 'src/app/shared/model/user.model';
+import { IVersion } from 'src/app/shared/model/version.model';
 import { SelectUserViewPipe } from 'src/app/shared/pipes/select-user-view.pipe';
+import { PrioritySet, regExps, StoryPointsSet } from 'src/app/shared/validators/custom.validators';
 
 declare var $: any;
-
+enum Fields  {
+  appliVersion = "appliVersion",
+  status = "status",
+  title = "title",
+  storyPoints = "storyPoints",
+  priority = "priority",
+  assigneeId = "assigneeId",
+  description = "description"
+}
 @Component({
   selector: 'app-story-view-edit',
   templateUrl: './story-view-edit.component.html',
@@ -25,22 +36,26 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
   // Editale 
   newStory: IStory;
   enumKeys = Object.keys;
+  enumValues = Object.values;
   statuses = StoryStatusEnum;
   story: IStory;
   emptyUser:IUser;
   users$: Observable<IUser[]>;
   filteredAssignees$: Observable<IUser[]>;
-  filteredReporters$: Observable<IUser[]>;
+  versions$: Observable<IVersion[]>;
   idStory: number;
-  showFiller = false;
   htmlContent = '';
-  iconDeleteAssignee = 'close';
-  iconDeleteReporter = 'close';
+  subscriptions: Subscription[]= [];
+  storyTypeIcon: string;
+  fieldMap= new Map<string, string>();
+
 
   constructor(private _route: ActivatedRoute,
               private _storyService: StoryService,
               private _userService: UserService,
+              private _versionService: VersionService,
               private _selectUserViewPipe: SelectUserViewPipe,
+              private _appConfigService: AppConfigService,
               public dialogConfirm: MatDialog,
               ) { }
 
@@ -56,33 +71,50 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
     this._storyService.getStoryById(this.idStory)
           .pipe(
             map(
-              s=>{
-                this.story = s;
-                this.newStory =s;
-                this.editor = new Editor();
-                this.story.longtitle = this.story.project.name+"-"+this.story.id;
+              story=>{               
+                this.initStories(story);
               }
             ),
             mergeMap(() => 
+            // TODO Change and get all the user on the team's project 
               this.users$ = this._userService.findByProject(this.story.project.id)
             ),
             map(
               () =>   
-              this.filteredReporters$ = this.filteredAssignees$ = this.users$
+              this.filteredAssignees$ = this.users$
+            ),
+            mergeMap(() =>
+                this.versions$ = this._versionService.findByProject(this.story.project.id)
             )
           ).subscribe(
 
           );
           
    }
+   this.initFieldMap();
+  }
+
+  private initFieldMap() {
+    this.fieldMap.set(Fields.appliVersion, "appli_version");
+    this.fieldMap.set(Fields.status, "status");
+    this.fieldMap.set(Fields.title, "title");
+    this.fieldMap.set(Fields.storyPoints, "story_points");
+    this.fieldMap.set(Fields.priority, "priority");
+    this.fieldMap.set(Fields.assigneeId, "assigned_user_id");
+    this.fieldMap.set(Fields.description, "description");
+  }
+
+  initStories(s: IStory){
+    this.story = s;
+    this.newStory =Object.assign({}, s);
+    this.editor = new Editor();
+    this.story.longtitle = this.story.project.name+"-"+this.story.id;
+    this.story.iconType = this._appConfigService.getStoryTypeIcon(this.story.type);
+    this.story.iconTypeColor = this._appConfigService.getStoryTypeIconColor(this.story.type);
   }
 
   public filterAssignee(value: string ) {
     this.filteredAssignees$ = this._filterUsers(value);
-  }
-
-  public filterReporter(value: string) {
-    this.filteredReporters$ = this._filterUsers(value);
   }
 
   private _filterUsers(value: string): Observable<IUser[]>{
@@ -95,76 +127,107 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
     return filtered$;
   }
 
-  public resetReporter(event: any){
-    console.log(event);
-    this.filteredReporters$ = this.users$;
-    this.newStory.reporter = this.emptyUser;
+  assignToMe(){
+    this.filteredAssignees$ = this.users$;  
+    
+    this.newStory.assignedUser = this.story.reporter;
+    this.story.assignedUser = this.story.reporter;
+    
+    this.updateField('assigned_user_id', this.newStory.assignedUser.id);    
+
   }
 
   public resetAssignee(event: any){
-    console.log(event);
     this.filteredAssignees$ = this.users$;
     this.newStory.assignedUser = this.emptyUser;
   }
 
-  show(id: string){
-    console.log('show = '+$(id));
-    $('#'+id).show();
+  onAssigneeSelectionChange(){
+    this.filteredAssignees$ = this.users$;
+    if(this.newStory.assignedUser.id !== this.story.assignedUser.id){
+      this.updateField(Fields.assigneeId, this.newStory.assignedUser.id);
+      this.story.assignedUser = this.newStory.assignedUser;
+    }
   }
-  
-  hide(id:string){
-    console.log('hide = '+$(id));
-    $('#'+id).hide();
+
+  onSelectionChange(event: any){   
+    const field = event.source.ngControl.name;
+
+    if(field === Fields.appliVersion){ 
+      if(this.newStory.appliVersion !== this.story.appliVersion){
+        this.updateField(field, this.newStory.appliVersion);
+      }
+    }
+
+    if(field === Fields.status){      
+      if(this.newStory.status !== this.story.status){
+        this.updateField(field, this.newStory.status);
+      }
+    }  
   }
 
   onLostFocus(event: any){
-    // Update story
     const field = event.target.name;
-    const value = event.target.value;
-    console.log('onLostFocus : ' +field);
-    console.log(' newStory =' + this.newStory.title);
-    console.log(' old =' + this.story.title);
+    
+    if(field === Fields.title){
+      if(this.newStory.title !== this.story.title){
+        this.updateField(field, this.newStory.title);
+      }
+    }
+    if(field === Fields.storyPoints){    
+      if(this.newStory.storyPoints !== this.story.storyPoints){
+        const valid = StoryPointsSet.find( a => this.newStory.storyPoints == a);   
+        if(!valid){       
+          this.newStory.storyPoints = this.story.storyPoints;       
+        }else{
+          this.updateField(field, this.newStory.storyPoints);
+        }  
+      }
+    }
+
+    if(field === Fields.priority){
+      if(this.newStory.priority !== this.story.priority){
+        const valid = PrioritySet.find( a => this.newStory.priority == a);   
+        if(!valid){       
+          this.newStory.priority = this.story.priority;       
+        }else{
+          this.updateField(field, this.newStory.priority);
+        }  
+      }
+    }
+
+    if(field === Fields.assigneeId){
+      this.filteredAssignees$ = this.users$;
+      this.newStory.assignedUser = this.story.assignedUser;
+    }
+  }
+
+  updateField(field: any, value: Object){
+    let fieldValueMap = new Map<string, Object>();
+    let updatedField: any = this.fieldMap.get(field);
+    fieldValueMap.set(updatedField, value);
+
+    let sub = this._storyService.patch(this.newStory.id, fieldValueMap)
+                                .subscribe(() => {
+                                    console.log('updated = ' + field);
+                               });
+   this.subscriptions.push(sub);
+
   }
 
   updateDescription(){
-    console.log('updateDescription()');
-  }
-
-  onSubmit(f:any): void {
+    if(this.newStory.description !== this.story.description){
+      this.updateField(Fields.description, this.newStory.description);
+      this.story.description = this.newStory.description
+    }    
   }
 
   ngOnDestroy(): void {
     this.editor.destroy();
-  }
-
-  delete(user: IUser) {
-    const dialogData: IDialogData = {
-      title: 'Please Confirm',
-      body: 'Are you sure you want to delete the user?',
-      okColor: 'warn',
-      cancelButtonText: 'Cancel',
-      okButtonText: 'Delete'
-    };
-
-    const dialogRef = this.dialogConfirm.open(ConfirmDialogComponent, {
-      data: dialogData,
+    this.subscriptions.forEach(x => {
+      if(!x.closed) {
+        x.unsubscribe();
+      }
     });
-    dialogRef.afterClosed().subscribe(confirmed => {
-     /* if (confirmed) {
-        this.setFormError(false, '');
-        let subscriptionProjectAdd = this._projectService.delete(user.id)
-          .subscribe((response: IResponseType<IProject>) => {
-            if (response.status === "OK") {
-              this._growler.growl('The user was deleted', GrowlerMessageType.Danger);
-              this.dataSource.data = this.dataSource.data.filter((value)=>{
-                return value.id != user.id;
-              });
-            } else {
-              this.setFormError(true, "Unable to delete the user");
-            }
-          });
-        this.subscriptions.push(subscriptionProjectAdd);
-      }*/
-    });
-  }
+  } 
 }

@@ -27,8 +27,40 @@ export class AppConfigService {
         return this.config;
     }
 
-    public getProperty(key: any) {
+    public getProperty(key: string) {
       return this.config[key];
+    }
+
+    public getSprintStatusIcon(status: string){
+      return this.getProperty("cdk.sprint.status." + status +".icon");
+    }
+
+    public getSprintTypeIcon(status: string){
+      return this.getProperty("cdk.sprint.type." + status +".icon");
+    }
+
+    public getStoryStatusIcon(status: string){
+      return this.getProperty("cdk.story.status." + status +".icon");
+    }
+
+    public getStoryTypeIcon(type: string){
+      return this.getProperty("cdk.story.type." + type +".icon");
+    }
+
+    public getStoryStatusIconColor(status: string){
+      return this.getProperty("cdk.story.status." + status +".icon.color");
+    }
+
+    public getStoryTypeIconColor(type: string){
+      return this.getProperty("cdk.story.type." + type +".icon.color");
+    }
+
+    public getSprintStatusIconColor(status: string){
+      return this.getProperty("cdk.sprint.status." + status +".icon.color");
+    }
+
+    public getSprintTypeIconColor(type: string){
+      return this.getProperty("cdk.sprint.type." + type +".icon.color");
     }
 
     private devConfig (): AppConfig{

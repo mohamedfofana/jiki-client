@@ -196,6 +196,15 @@ mat-form-field.mat-form-field {
 /*
   Angular Material
 */
+.white-icon {
+  color: white;
+}
+.red-icon {
+  color: red;
+}
+.transparent-icon {
+  color: transparent;
+}
 /*.mat-expansion-panel-header-description {
   flex-grow: 0;
 }
