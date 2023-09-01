@@ -3,8 +3,8 @@
   <p>{{data.body}}</p>
 </div>
 <div mat-dialog-actions class="float-end">
-    <button mat-button [mat-dialog-close]="false" mat-raised-button>{{data.cancelButtonText}}</button>
-    <button mat-button [mat-dialog-close]="true" mat-raised-button color="{{data.okColor}}">{{data.okButtonText}}</button>
+    <button mat-button [mat-dialog-close]="false" mat-raised-button >{{data.cancelButtonText}}</button>
+    <button mat-button [mat-dialog-close]="true" mat-raised-button color="{{data.okColor}}" *ngIf="data.withActionButton">{{data.actionButtonText}}</button>
 </div>
 
 

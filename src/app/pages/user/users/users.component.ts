@@ -82,9 +82,10 @@ export class UsersComponent extends AbstractOnDestroy implements OnInit, AfterVi
     const dialogData: IDialogData = {
       title: 'Please Confirm',
       body: 'Are you sure you want to delete the user?',
+      withActionButton: true,
       okColor: 'warn',
       cancelButtonText: 'Cancel',
-      okButtonText: 'Delete'
+      actionButtonText: 'Delete'
     };
 
     const dialogRef = this.dialogConfirm.open(ConfirmDialogComponent, {

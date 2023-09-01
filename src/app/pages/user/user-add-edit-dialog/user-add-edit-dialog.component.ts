@@ -31,7 +31,7 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
   roleFormControl: FormControl<string|null>;
   statusFormControl: FormControl<string|null>;
   teamFormControl: FormControl<number|null>;
-  projectFormControl: FormControl<number|null>;
+  //projectFormControl: FormControl<number|null>;
   errors = errorMessages;
   formError:boolean;
   formErrorMessage:string;
@@ -40,7 +40,7 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
   statuses = UserStatusEnum;
   roles = UserRoleEnum;
   teams: ITeam[];
-  projects: IProject[];
+  //projects: IProject[];
   enumKeys = Object.keys;
   differentPassword:boolean = false;
 
@@ -49,14 +49,14 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
     @Inject(MAT_DIALOG_DATA) public dialogFormData: IDialogFormData<IUser>,
     private _formBuilder: FormBuilder,
     private _userService: UserService,
-    private _projectService: ProjectService,
+    //private _projectService: ProjectService,
     private _teamService: TeamService,
     private _growler: GrowlerService,
     private _changeDedectionRef: ChangeDetectorRef) {
     super();
   }
   ngOnInit(){
-    this.initProjects();
+    //this.initProjects();
     this.initTeams();
     this.initForm();
   }
@@ -72,7 +72,7 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
         this.roleFormControl = new FormControl(this.dialogFormData.entity.role, [Validators.required]);
         this.statusFormControl = new FormControl(this.dialogFormData.entity.status, [Validators.required]);
         this.teamFormControl = new FormControl(this.dialogFormData.entity.team? this.dialogFormData.entity.team.id:null, [Validators.required]);
-        this.projectFormControl = new FormControl(this.dialogFormData.entity.project?this.dialogFormData.entity.project.id:null, [Validators.required]);
+        //this.projectFormControl = new FormControl(this.dialogFormData.entity.project?this.dialogFormData.entity.project.id:null, [Validators.required]);
 
      }else{
         this.emailFormControl = new FormControl('', [Validators.required, Validators.email]);
@@ -84,7 +84,7 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
         this.roleFormControl = new FormControl('', [Validators.required]);
         this.statusFormControl = new FormControl('', [Validators.required]);
         this.teamFormControl = new FormControl(null, [Validators.required]);
-        this.projectFormControl = new FormControl(null, [Validators.required]);
+        //this.projectFormControl = new FormControl(null, [Validators.required]);
      }
      this.userForm = this._formBuilder.group({
       email : this.emailFormControl,
@@ -97,8 +97,8 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
       status : this.statusFormControl,
       team : this._formBuilder.group({
           id: this.teamFormControl}),
-      project : this._formBuilder.group({
-          id: this.projectFormControl})
+      // project : this._formBuilder.group({
+      //     id: this.projectFormControl})
     });
   }
   initTeams(){
@@ -111,15 +111,15 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
   this.subscriptions.push(subscriptionTeams);
   }
 
-  initProjects(){
-    let subscriptionProjects = this._projectService.findAll()
-    .subscribe((projects: IProject[]) => {
-      if(projects){
-        this.projects = projects;
-      }
-    });
-  this.subscriptions.push(subscriptionProjects);
-  }
+  // initProjects(){
+  //   let subscriptionProjects = this._projectService.findAll()
+  //   .subscribe((projects: IProject[]) => {
+  //     if(projects){
+  //       this.projects = projects;
+  //     }
+  //   });
+  // this.subscriptions.push(subscriptionProjects);
+  // }
 
   ngAfterContentChecked(): void {
     this._changeDedectionRef.detectChanges();

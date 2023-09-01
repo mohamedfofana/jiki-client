@@ -14,7 +14,7 @@ export class LoginGuard  {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    if (!this._authService.isLoggedIn()){
+    if (!this._authService.isUserAndTokenValid()){
       return true; 
     }
     

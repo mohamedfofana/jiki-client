@@ -9,6 +9,18 @@ import { Subscription } from 'rxjs';
 import { findEnumValueByKey } from '../../helpers/enum.helpers';
 import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
 import { StorageService } from '../../services/local/storage.service';
+import { IProject } from 'src/app/shared/model/project.model';
+import { ProjectService } from '../../services/database/project.service';
+import { ISprint } from 'src/app/shared/model/sprint.model';
+import { SprintAddDialogComponent } from 'src/app/pages/sprint/sprint-add-dialog/sprint-add-dialog.component';
+import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { IStory } from 'src/app/shared/model/story.model';
+import { SprintService } from '../../services/database/sprint.service';
+import { IDialogData } from 'src/app/shared/model/dialog-data.model';
+import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { SprintStatusEnum } from 'src/app/shared/enum/sprint-status.enum';
 
 @Component({
   selector: 'jiki-top-menu',
@@ -23,11 +35,18 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   searchText: string;
   isLoggedIn = false;
   isLoggedInAsAdmin = false;
-
+  project: IProject;
+  emptySprint: ISprint;
+  emptyStory: IStory;
+  dataSource = new MatTableDataSource<ISprint>();
+  
   constructor(private formBuilder: FormBuilder, 
               private router: Router, 
+              public dialogConfirm: MatDialog,
+              public dialog: MatDialog,
               private authservice: AuthService,
-              private storageService: StorageService,
+              private _sprintService: SprintService,
+              private _storageService: StorageService,  
               private growler: GrowlerService,) {
   }
 
@@ -36,23 +55,40 @@ export class TopMenuComponent implements OnInit, OnDestroy {
       $('.navbar-nav-top').find('li.active').removeClass('active');
       $(this).parent('li').addClass('active');
     });
+    
     this.searchForm = this.formBuilder.group({
       searchText: ['', Validators.required]
     });
-    this.sub = this.authservice.authChanged
-    .subscribe((data: boolean) => {
-      this.setLoginLogoutText();
-    },
-    (err: any) => console.log(err));
+    
+    this.sub = this.authservice.isAuthenticatedSub().subscribe(state => {
+                            this.setLoginLogoutText(state);
+                            this.isLoggedIn = state;
+                            this.isLoggedInAsAdmin = this.authservice.isUserAdmin();
+                            if(state && this._storageService.isUserInStorage() && !this.isLoggedInAsAdmin){
+                              this.project =  this._storageService.getProject();
+                            }
+                            
+    });
+
     this.initAuth();
+
+   
   }
 
   initAuth(): void{
-    // TODO change
-    if (localStorage.getItem('top_token')){
+    if (this._storageService.isUserInStorage()){
       this.authservice.userAuthChanged(true);
     }else{
       this.authservice.userAuthChanged(false);
+    }
+  }
+
+  
+  setLoginLogoutText(state: boolean) {
+    if(state){
+      const user = this._storageService.getUser();
+      let role = findEnumValueByKey(UserRoleEnum, user.role);
+      this.isLoggedInAsAdmin = (role === UserRoleEnum.ADMIN) ? true : false;
     }
   }
 
@@ -72,29 +108,74 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    const isAuthenticated = this.authservice.isAuthenticated;
-    // No need to delete token on server. It will expire soon ?, Create a service to remove token when login out
-    if (isAuthenticated) {
-      this.growler.growl('Logged Out', GrowlerMessageType.Info);
-      this.authservice.logout();
-      this.router.navigate(['/login']);
-      this.authservice.isAuthenticated = false;
-      this.setLoginLogoutText();
-      return;
-    }
+    this.growler.growl('Logged Out', GrowlerMessageType.Info);
+    this.authservice.logout();
+    this.router.navigate(['/login']);
+    this.setLoginLogoutText(false);
   }
 
   redirectToLogin() {
     this.router.navigate(['/login']);
   }
 
-  setLoginLogoutText() {
-    this.isLoggedIn = (this.authservice.isAuthenticated) ? true : false;
-    if(this.isLoggedIn){
-      const user = this.storageService.getUser();
-      let role = findEnumValueByKey(UserRoleEnum, user.role);
-      this.isLoggedInAsAdmin = (role === UserRoleEnum.ADMIN) ? true : false;
+  addStory(story: IStory) {
+    // Pop up create Story
+    // Redirect to view edit page after creation
+    // init on blacklog 
+  }
+
+  addSprint(sprint: ISprint) {
+    const subscriptionSprint$ = this._sprintService.getSprintsByProjectId(this.project.id)
+                                .subscribe((sprints: ISprint[]) => {                                
+                                  if(sprints && sprints.length > 0){
+                                    const created  = sprints.find(s => s.status === SprintStatusEnum.CREATED);
+                                    const running  = sprints.find(s => s.status === SprintStatusEnum.RUNNING);
+                                    if (created) {
+                                      this.showPopupError('A sprint is already created. Please start the sprint.');
+                                    }else if (running) {
+                                      this.showPopupError('A sprint is in progress ...');
+                                    }else {
+                                      this.showPopupSprint(sprint);
+                                    }                                    
+                                  }else{                                   
+                                    this.showPopupSprint(sprint);
+                                  }
+                                }
+                              );
+   
+  }
+
+  showPopupError(body: string) {
+    const dialogData: IDialogData = {
+      title: 'Warning !',
+      body: body,
+      okColor: 'warn',
+      withActionButton: false,
+      cancelButtonText: 'Ok',
+      actionButtonText: 'Delete'
+    };
+
+    const dialogRef = this.dialogConfirm.open(ConfirmDialogComponent, {
+      data: dialogData,
+    });
+  }
+
+  showPopupSprint(sprint: ISprint) {
+    let dialogData: IDialogFormData<ISprint> = {
+      new: true,
+      entity: sprint
     }
+    const dialogRef = this.dialog.open(SprintAddDialogComponent, {
+      data: dialogData,
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if (result && result.new){
+        let data = this.dataSource.data;
+        data.push(result.entity);
+        this.dataSource.data = data;
+      }
+    });
   }
 
 }

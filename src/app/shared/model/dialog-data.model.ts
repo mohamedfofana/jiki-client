@@ -1,9 +1,9 @@
 export interface IDialogData {
   title: string;
   body: string;
-  confirmed?: boolean;
+  withActionButton: boolean;
   okColor: "warn" | "primary",
   cancelButtonText: string;
-  okButtonText: string;
+  actionButtonText: string;
 
 }

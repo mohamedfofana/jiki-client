@@ -85,8 +85,9 @@ export class ProjectsComponent extends AbstractOnDestroy implements OnInit, Afte
       title: 'Please Confirm',
       body: 'Are you sure you want to delete the user?',
       okColor: 'warn',
+      withActionButton: true,
       cancelButtonText: 'Cancel',
-      okButtonText: 'Delete'
+      actionButtonText: 'Delete'
     };
 
     const dialogRef = this.dialogConfirm.open(ConfirmDialogComponent, {

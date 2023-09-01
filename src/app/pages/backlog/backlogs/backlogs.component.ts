@@ -1,5 +1,5 @@
 import { SprintService } from './../../../core/services/database/sprint.service';
-import { map, mergeMap } from 'rxjs';
+import { filter, map, mergeMap } from 'rxjs';
 import { IProject } from '../../../shared/model/project.model';
 import { ProjectService } from './../../../core/services/database/project.service';
 import { ISprint } from '../../../shared/model/sprint.model';
@@ -12,6 +12,7 @@ import { AppConfigService } from 'src/app/core/config/appconfig-service';
 import { UserService } from 'src/app/core/services/database/user.service';
 import { FormControl } from '@angular/forms';
 import { StoryStatusEnum } from 'src/app/shared/enum/story-status.enum';
+import { AuthService } from 'src/app/core/services/database/auth.service';
 
 @Component({
   selector: 'app-backlogs',
@@ -20,6 +21,7 @@ import { StoryStatusEnum } from 'src/app/shared/enum/story-status.enum';
 })
 export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
   currentSprint: ISprint;
+  currentProject: IProject;
   sprints: ISprint[];
   projects: IProject[];
   stories: IStory[];
@@ -48,15 +50,17 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
     private _sprintService: SprintService,
     private _projectService: ProjectService,
     private _userService: UserService,
+    private _authservice: AuthService,
     private _storageService: StorageService) {
       super();
     }
 
   ngOnInit() {
-    let projectId = this._storageService.getProject().id;
-    let subscriptionSprint$ = this._sprintService.getCurrentByProjectId(projectId)
-                              .pipe(
-                                map((sprint: ISprint) => {
+    if(!this._authservice.isUserAdmin()){
+      this.currentProject = this._storageService.getProject();
+      const subscriptionSprint$ = this._sprintService.getCurrentByProjectId(this.currentProject.id)
+                                .pipe(
+                                map((sprint: ISprint) => { 
                                     if(sprint){
                                       this.currentSprint = sprint;
                                     }
@@ -84,7 +88,8 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
                                 }
                               });
 
-    this.subscriptions.push(subscriptionSprint$);
+      this.subscriptions.push(subscriptionSprint$);
+    }    
   }
 
   filterTextChanged(event: any) {

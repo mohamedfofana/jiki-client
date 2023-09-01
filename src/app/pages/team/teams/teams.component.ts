@@ -66,11 +66,13 @@ export class TeamsComponent  extends AbstractOnDestroy implements OnInit, AfterV
         entity: team
     }
     this.setFormError(false, '');
+
     const dialogRef = this.dialog.open(TeamAddEditDialogComponent, {
       data: dialogData,
     });
+
     dialogRef.afterClosed().subscribe(result => {
-      if (result && result.new){
+      if (result && result.new && result.entity){
         let data = this.dataSource.data;
         data.push(result.entity);
         this.dataSource.data = data;
@@ -83,8 +85,9 @@ export class TeamsComponent  extends AbstractOnDestroy implements OnInit, AfterV
       title: 'Please Confirm',
       body: 'Are you sure you want to delete the team?',
       okColor: 'warn',
+      withActionButton: true,
       cancelButtonText: 'Cancel',
-      okButtonText: 'Delete'
+      actionButtonText: 'Delete'
     };
 
     const dialogRef = this.dialogConfirm.open(ConfirmDialogComponent, {

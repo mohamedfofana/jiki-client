@@ -46,9 +46,9 @@ export class SprintService {
       );
     }
 
-    update(team: ISprint): Observable<IResponseType<ISprint>> {
-      team.updateDate = this._appConfigService.currentTimestamp();
-      return this.http.put<IResponseType<ISprint>>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/update', team);
+    start(sprint: ISprint): Observable<IResponseType<ISprint>> {
+      sprint.updateDate = this._appConfigService.currentTimestamp();
+      return this.http.put<IResponseType<ISprint>>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/start', sprint);
     }
 
     delete(id: number): Observable<IResponseType<ISprint>> {

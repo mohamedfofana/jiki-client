@@ -12,6 +12,7 @@ export interface ISprint{
     reporter:IUser;
     project:IProject;
     stories:[IStory];
+    startDate:string;
     creationDate:string;
     endDate:string;
     updateDate:string;

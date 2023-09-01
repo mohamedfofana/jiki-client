@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { StoriesComponent } from './stories/stories.component';
 import { StoryViewEditComponent } from './story-view-edit/story-view-edit.component';
+import { StoryAddComponent } from './story-add/story-add.component';
 
 
 const routes: Routes = [
@@ -15,7 +16,6 @@ const routes: Routes = [
   ]
 })
 export class StoryRoutingModule {
-  static components = [StoriesComponent,
-                       StoryViewEditComponent
+  static components = [StoriesComponent, StoryViewEditComponent, StoryAddComponent
   ];
 }

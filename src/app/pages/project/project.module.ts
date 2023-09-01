@@ -4,6 +4,7 @@ import { ProjectRoutingModule } from './project-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { MyMaterialModule } from '../material/material-module';
+import { ProjectViewEditComponent } from './project-view-edit/project-view-edit.component';
 
 @NgModule({
   declarations: [ProjectRoutingModule.components],

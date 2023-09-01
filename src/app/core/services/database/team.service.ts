@@ -22,6 +22,9 @@ export class TeamService {
         return this.http.get<ITeam[]>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/all');
     }
 
+    findById(id: number): Observable<ITeam> {
+      return this.http.get<ITeam>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/'+ id);
+    }
 
     create(team: ITeam): Observable<IResponseType<ITeam>> {
       team.creationDate = this._appConfigService.currentTimestamp();

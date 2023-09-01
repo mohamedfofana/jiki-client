@@ -22,6 +22,10 @@ export class ProjectService {
         return this.http.get<IProject[]>(this._appConfigService.apiConfig().apiEndpoint + this.projectUrl + '/all');
     }
 
+    findByTeam(teamId: number): Observable<IProject> {
+      return this.http.get<IProject>(this._appConfigService.apiConfig().apiEndpoint + this.projectUrl + '/team/' + teamId);
+   }
+
     create(project: IProject): Observable<IResponseType<IProject>> {
       project.creationDate = this._appConfigService.currentTimestamp();
       return this.http.post<IResponseType<IProject>>(this._appConfigService.apiConfig().apiEndpoint + this.projectUrl + '/create', project)

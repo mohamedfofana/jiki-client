@@ -15,17 +15,13 @@ import { ISprint } from 'src/app/shared/model/sprint.model';
 import { errorMessages, MyErrorStateMatcher } from 'src/app/shared/validators/custom.validators';
 @Component({
   selector: 'app-sprint-add-edit-dialog',
-  templateUrl: './sprint-add-edit-dialog.component.html',
-  styleUrls: ['./sprint-add-edit-dialog.component.css']
+  templateUrl: './sprint-add-dialog.component.html',
+  styleUrls: ['./sprint-add-dialog.component.css']
 })
-export class SprintAddEditDialogComponent extends AbstractOnDestroy implements OnInit, AfterContentChecked {
+export class SprintAddDialogComponent extends AbstractOnDestroy implements OnInit, AfterContentChecked {
   sprintForm: FormGroup;
   titleFormControl: FormControl<string | null>;
   descriptionFormControl: FormControl<string | null>;
-  businessValueFormControl: FormControl<number | null>;
-  statusFormControl: FormControl<string | null>;
-  projectFormControl: FormControl<number | null>;
-  estimatedEndDateFormControl: FormControl<string | null>;
 
   errors = errorMessages;
   formError:boolean;
@@ -38,7 +34,7 @@ export class SprintAddEditDialogComponent extends AbstractOnDestroy implements O
   enumKeys = Object.keys;
 
   constructor(
-    public dialogRef: MatDialogRef<SprintAddEditDialogComponent>,
+    public dialogRef: MatDialogRef<SprintAddDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public dialogFormData: IDialogFormData<ISprint>,
     private _formBuilder: FormBuilder,
     private _projectService: ProjectService,
@@ -57,26 +53,16 @@ export class SprintAddEditDialogComponent extends AbstractOnDestroy implements O
     if (this.dialogFormData.entity){
         this.titleFormControl = new FormControl(this.dialogFormData.entity.title, [Validators.required]);
         this.descriptionFormControl = new FormControl(this.dialogFormData.entity.description, [Validators.required]);
-        this.statusFormControl = new FormControl(this.dialogFormData.entity.status, [Validators.required]);
-        this.businessValueFormControl = new FormControl(this.dialogFormData.entity.businessValue, [Validators.required, Validators.pattern("^\d*[13579]$")]);
-        this.projectFormControl = new FormControl(this.dialogFormData.entity.project.id);
-
+      
      }else{
         this.titleFormControl = new FormControl('', [Validators.required]);
         this.descriptionFormControl = new FormControl('', [Validators.required]);
-        this.statusFormControl = new FormControl('', [Validators.required]);
-        this.businessValueFormControl = new FormControl(null, [Validators.required, Validators.pattern("^\d*[13579]$")]);
-        this.projectFormControl = new FormControl(this._storageService.getProject().id);
+      
      }
      this.sprintForm = this._formBuilder.group({
       title : this.titleFormControl,
       description : this.descriptionFormControl,
-      status : this.statusFormControl,
-      businessValue : this.businessValueFormControl,
-      project : this._formBuilder.group({
-          id: this.projectFormControl})
-    });
-    this.projectFormControl.disable();
+     });
   }
 
   initProjects(){
@@ -90,29 +76,12 @@ export class SprintAddEditDialogComponent extends AbstractOnDestroy implements O
   }
 
   ngAfterContentChecked(): void {
-    console.log("change");
     this._changeDedectionRef.detectChanges();
 }
 
   onSubmitClick(): void {
     this.setFormError(false, '');
     this.newSprint = this.sprintForm.value;
-   if (this.dialogFormData.entity){
-      this.newSprint.project = this.dialogFormData.entity.project;
-      this.newSprint.id=this.dialogFormData.entity.id;
-      let subscriptionUserAdd = this._sprintService.update(this.newSprint)
-        .subscribe((response: IResponseType<ISprint>) => {
-                if(response.status === "OK"){
-                  this.newSprint = response.entity;
-                  this._growler.growl('Sprint updated', GrowlerMessageType.Success);
-                  this.copySprint(this.dialogFormData, this.newSprint);
-                  this.dialogRef.close(this.dialogFormData);
-                }else{
-                  this.setFormError(true, "Unable to update the sprint");
-                }
-        });
-      this.subscriptions.push(subscriptionUserAdd);
-    }else{
       this.newSprint.project = this._storageService.getProject();
       this.newSprint.reporter = this._storageService.getUser();
       let subscriptionUserAdd = this._sprintService.create(this.newSprint)
@@ -127,7 +96,6 @@ export class SprintAddEditDialogComponent extends AbstractOnDestroy implements O
               }
         });
       this.subscriptions.push(subscriptionUserAdd);
-    }
 
   }
   setFormError(state:boolean, message: string){
@@ -143,7 +111,6 @@ export class SprintAddEditDialogComponent extends AbstractOnDestroy implements O
       dialogFormData.entity.id = newT.id;
       dialogFormData.entity.title = newT.title;
       dialogFormData.entity.description = newT.description;
-      dialogFormData.entity.status = newT.status;
     }{
       dialogFormData.entity = newT;
     }

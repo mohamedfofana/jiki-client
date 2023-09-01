@@ -209,7 +209,7 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
 
     let sub = this._storyService.patch(this.newStory.id, fieldValueMap)
                                 .subscribe(() => {
-                                    console.log('updated = ' + field);
+                                    //console.log('updated = ' + field);
                                });
    this.subscriptions.push(sub);
 
