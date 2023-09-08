@@ -19,25 +19,27 @@ export class SprintService {
    /*
      Return current sprint of a project
     */
-    getCurrentByProjectId(id:number): Observable<ISprint> {
+    findCurrentByProjectId(id:number): Observable<ISprint> {
       return this.http.get<ISprint>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/current/project/' + id);
     }
 
   /*
 	 * find sprints by project
 	 */
-    getSprintsByProjectId(id:number): Observable<ISprint[]> {
+    findByProjectId(id:number): Observable<ISprint[]> {
       return this.http.get<ISprint[]>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/project/' + id);
     }
   /*
 	 * find sprint by status = RUNNING
 	 */
-    getCurrentSprint(): Observable<ISprint[]> {
+    findCurrentSprint(): Observable<ISprint[]> {
       return this.http.get<ISprint[]>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/current');
     }
 
     create(sprint: ISprint): Observable<IResponseType<ISprint>> {
       sprint.creationDate = this._appConfigService.currentTimestamp();
+      sprint.updateDate = this._appConfigService.currentTimestamp();
+      
       return this.http.post<IResponseType<ISprint>>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/create', sprint)
       .pipe(
         map(response => {
@@ -48,6 +50,7 @@ export class SprintService {
 
     start(sprint: ISprint): Observable<IResponseType<ISprint>> {
       sprint.updateDate = this._appConfigService.currentTimestamp();
+      sprint.startDate = this._appConfigService.currentTimestamp();
       return this.http.put<IResponseType<ISprint>>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/start', sprint);
     }
 

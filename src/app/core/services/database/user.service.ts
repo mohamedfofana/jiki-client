@@ -20,8 +20,8 @@ export class UserService {
         return this.http.get<IUser[]>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/all');
     }
 
-    findByProject(projectId: number): Observable<IUser[]> {
-      return this.http.get<IUser[]>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/project/'+projectId);
+    findByTeam(teamId: number): Observable<IUser[]> {
+      return this.http.get<IUser[]>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/team/'+teamId);
     }
 
     register(user: IUser): Observable<IResponseType<IUser>> {

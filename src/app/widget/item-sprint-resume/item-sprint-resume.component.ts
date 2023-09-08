@@ -6,16 +6,12 @@ import { IStory } from '../../shared/model/story.model';
 import { ISprint } from '../../shared/model/sprint.model';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
-import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
-import { SprintAddDialogComponent } from 'src/app/pages/sprint/sprint-add-dialog/sprint-add-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable, map } from 'rxjs';
 import { SprintStatusEnum } from 'src/app/shared/enum/sprint-status.enum';
 import { SprintService } from 'src/app/core/services/database/sprint.service';
 import { Router } from '@angular/router';
-import { IDialogData } from 'src/app/shared/model/dialog-data.model';
-import { ConfirmDialogComponent } from 'src/app/core/confirm-dialog/confirm-dialog.component';
+import { DialogService } from 'src/app/core/services/dialog/dialog.service';
 
 
 @Component({
@@ -30,22 +26,20 @@ export class ItemSprintResumeComponent extends AbstractOnDestroy implements OnIn
   @Input() filterReporter: IUser[];
   @Input() filterStatus: string[];
   @Input() sprint: ISprint;
-  dataSource = new MatTableDataSource<ISprint>();
   stories$: Observable<IStory[]>;
   filteredStories$: Observable<IStory[]>;
   notStarted: boolean = false;
   readonly MAX_SPRINT_BUSINESS_VALUE: number = 24; // 2*8 // 8 = 1 weeks 
 
-  constructor(public dialog: MatDialog,
-              private _storyService: StoryService, 
-              public dialogConfirm: MatDialog,
+  constructor(private _dialogService: DialogService,
+              private _storyService: StoryService,
               private _sprintService: SprintService,              
               private router: Router) {
     super();
   }
 
   ngOnInit(): void {
-    this.stories$ = this.filteredStories$ = this._storyService.getStoriesBySprint(this.sprint.id); 
+    this.stories$ = this.filteredStories$ = this._storyService.findBySprint(this.sprint.id); 
     this.notStarted = (this.sprint.status === SprintStatusEnum.CREATED); 
 
   }
@@ -55,7 +49,7 @@ export class ItemSprintResumeComponent extends AbstractOnDestroy implements OnIn
     this.stories$.subscribe((stories: IStory[]) => {
       theBusinessValue = stories.reduce((s1, s2) => s1 + s2.businessValue, 0);
       if(theBusinessValue < this.MAX_SPRINT_BUSINESS_VALUE) {
-        this.showPopupError('You must have a story on the sprint.')
+        this._dialogService.showPopupError('You do not have engough business value on the sprint.')
       }else {
         this.sendStart(theBusinessValue);
       }
@@ -68,21 +62,6 @@ export class ItemSprintResumeComponent extends AbstractOnDestroy implements OnIn
       if (sprint) {
         this.router.navigate(['/board']);
       }
-    });
-  }
-  
-  showPopupError(body: string) {
-    const dialogData: IDialogData = {
-      title: 'Warning !',
-      body: body,
-      okColor: 'warn',
-      withActionButton: false,
-      cancelButtonText: 'Ok',
-      actionButtonText: 'Delete'
-    };
-
-    const dialogRef = this.dialogConfirm.open(ConfirmDialogComponent, {
-      data: dialogData,
     });
   }
 
@@ -182,22 +161,5 @@ export class ItemSprintResumeComponent extends AbstractOnDestroy implements OnIn
       }
     }
     return false;
-  }
-
-  addEditProject(project: ISprint) {
-    let dialogData: IDialogFormData<ISprint> = {
-      new: project?false:true,
-      entity: project
-    }
-    const dialogRef = this.dialog.open(SprintAddDialogComponent, {
-      data: dialogData,
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result.new){
-        let data = this.dataSource.data;
-        data.push(result.entity);
-        this.dataSource.data = data;
-      }
-    });
   }
 }

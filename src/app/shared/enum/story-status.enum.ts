@@ -1,6 +1,6 @@
 export enum StoryStatusEnum {
-  TODO = "TODO",
-  IN_PROGRESS = "IN_PROGRESS",
-  BLOCKED = "BLOCKED",
-  DONE = "DONE"
+  TODO = "Todo",
+  IN_PROGRESS = "In progress",
+  BLOCKED = "Blocked",
+  DONE = "Done"
 }

@@ -1,8 +1,7 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from 'src/app/core/confirm-dialog/confirm-dialog.component';
 import { GrowlerMessageType, GrowlerService } from 'src/app/core/growler/growler.service';
@@ -13,6 +12,7 @@ import { IDialogData } from 'src/app/shared/model/dialog-data.model';
 import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { IProject } from 'src/app/shared/model/project.model';
 import { ProjectAddEditDialogComponent } from '../project-add-edit-dialog/project-add-edit-dialog.component';
+import { ProjectStatusConstant } from 'src/app/shared/constants/project-status.constant';
 
 @Component({
   selector: 'app-projects',
@@ -23,16 +23,16 @@ export class ProjectsComponent extends AbstractOnDestroy implements OnInit, Afte
   projects: IProject[] = [];
   emptyProject: IProject;
   currentProject: IProject;
-  displayedColumns: string[] = ['id', 'name', 'description', 'status', 'actions'];
+  displayedColumns: string[] = ['id', 'shortname', 'name', 'status', 'team', 'actions'];
   dataSource = new MatTableDataSource<IProject>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   formError: boolean;
   formErrorMessage: string;
+  statuses = ProjectStatusConstant;
 
   constructor(public dialog: MatDialog,
     public dialogConfirm: MatDialog,
-    private _liveAnnouncer: LiveAnnouncer,
     private _projectService: ProjectService,
     private _growler: GrowlerService) {
     super();
@@ -42,7 +42,7 @@ export class ProjectsComponent extends AbstractOnDestroy implements OnInit, Afte
     let subscriptionProjects = this._projectService.findAll()
       .subscribe((projects: IProject[]) => {
         if (projects) {
-          this.projects = projects;
+          this.projects = projects;          
           this.dataSource.data = projects as IProject[];
         }
       });
@@ -72,18 +72,32 @@ export class ProjectsComponent extends AbstractOnDestroy implements OnInit, Afte
       data: dialogData,
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result && result.new){
+      if (result && result.entity){
+        const newProject: IProject = result.entity;
         let data = this.dataSource.data;
-        data.push(result.entity);
-        this.dataSource.data = data;
+        if (result.new){
+          data.push(newProject);
+          this.dataSource.data = data;
+        }else {
+          this.dataSource.data.forEach( t => {
+            if (t.id === newProject.id) {
+              t.name = newProject.name;
+              t.shortname = newProject.shortname;
+              t.description = newProject.description;
+              t.status = newProject.status;
+            }
+          });
+          this.dataSource.data = data;
+        }
       }
+
     });
   }
 
   delete(user: IProject) {
     const dialogData: IDialogData = {
       title: 'Please Confirm',
-      body: 'Are you sure you want to delete the user?',
+      body: 'Are you sure you want to delete the project?',
       okColor: 'warn',
       withActionButton: true,
       cancelButtonText: 'Cancel',
@@ -99,12 +113,12 @@ export class ProjectsComponent extends AbstractOnDestroy implements OnInit, Afte
         let subscriptionProjectAdd = this._projectService.delete(user.id)
           .subscribe((response: IResponseType<IProject>) => {
             if (response.status === "OK") {
-              this._growler.growl('The user was deleted', GrowlerMessageType.Danger);
+              this._growler.growl('The project was deleted', GrowlerMessageType.Danger);
               this.dataSource.data = this.dataSource.data.filter((value)=>{
                 return value.id != user.id;
               });
             } else {
-              this.setFormError(true, "Unable to delete the user");
+              this.setFormError(true, "Unable to delete the ptoject");
             }
           });
         this.subscriptions.push(subscriptionProjectAdd);

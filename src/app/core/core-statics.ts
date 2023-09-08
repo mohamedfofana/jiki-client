@@ -23,6 +23,7 @@ import { LoaderService } from './services/loader/loader.service';
 import { LoaderComponent } from './loader/loader.component';
 import { LoggerService } from './services/logger/logger.service';
 import { NotifierService } from './services/notification/notifier.service';
+import { DialogService } from './services/dialog/dialog.service';
 
 export class CoreStatics {
 
@@ -52,7 +53,8 @@ export class CoreStatics {
                       JwtTokenService,
                       TeamService,
                       LoaderService,
-                      NotifierService];
+                      NotifierService,
+                      DialogService];
 
   static pipes = [ DatePipe ];
 

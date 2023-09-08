@@ -1,11 +1,10 @@
-import { DatePipe } from '@angular/common';
 import { AfterContentChecked, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
 import { TeamService } from 'src/app/core/services/database/team.service';
-import { TeamStatusEnum } from 'src/app/shared/enum/team-status.enum';
+import { TeamStatusConstant } from 'src/app/shared/constants/team-status.constant';
 import { IResponseType } from 'src/app/shared/interfaces';
 import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { ITeam } from 'src/app/shared/model/team.model';
@@ -20,20 +19,19 @@ export class TeamAddEditDialogComponent extends AbstractOnDestroy implements OnI
   teamForm: FormGroup;
   nameFormControl: FormControl<string|null>;
   statusFormControl: FormControl<string|null>;
+  descriptionFormControl: FormControl<string|null>;
   errors = errorMessages;
   formError:boolean;
   formErrorMessage:string;
   matcher = new MyErrorStateMatcher();
   newTeam: ITeam;
-  statuses = TeamStatusEnum;
-  enumKeys = Object.keys;
+  statuses = TeamStatusConstant;
   differentPassword:boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<TeamAddEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public dialogFormData: IDialogFormData<ITeam>,
     private _formBuilder: FormBuilder,
-    private datePipe: DatePipe,
     private _teamService: TeamService,
     private _growler: GrowlerService,
     private _changeDedectionRef: ChangeDetectorRef) {
@@ -47,13 +45,16 @@ export class TeamAddEditDialogComponent extends AbstractOnDestroy implements OnI
     if (this.dialogFormData.entity){
         this.nameFormControl = new FormControl(this.dialogFormData.entity.name, [Validators.required]);
         this.statusFormControl = new FormControl(this.dialogFormData.entity.status, [Validators.required]);
+        this.descriptionFormControl = new FormControl(this.dialogFormData.entity.description, [Validators.required]);
     }else{
         this.nameFormControl = new FormControl('', [Validators.required]);
-        this.statusFormControl = new FormControl('', [Validators.required]);
+        this.statusFormControl = new FormControl('');
+        this.descriptionFormControl = new FormControl('', [Validators.required]);
      }
      this.teamForm = this._formBuilder.group({
-      name : this.nameFormControl,
-      status : this.statusFormControl
+      name: this.nameFormControl,
+      description: this.descriptionFormControl,
+      status: this.statusFormControl
     });
   }
 
@@ -107,7 +108,7 @@ export class TeamAddEditDialogComponent extends AbstractOnDestroy implements OnI
     if(dialogFormData.entity){
       dialogFormData.entity.id = newT.id;
       dialogFormData.entity.name = newT.name;
-      dialogFormData.entity.status = newT.status;
+      dialogFormData.entity.description = newT.description;
       dialogFormData.entity.creationDate =  newT.creationDate;
       dialogFormData.entity.updateDate = newT.updateDate;
     }{

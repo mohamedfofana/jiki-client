@@ -59,7 +59,7 @@ initBackog(){
     this.subscriptions.push(subscriptionBacklogs);
 }
   initStories(){
-   return this._storyService.getStoriesOnBacklogsByProjectId(this.project.id);    
+   return this._storyService.findOnBacklogsByProjectId(this.project.id);    
   }
 
   ngOnChanges(changes: SimpleChanges): void {

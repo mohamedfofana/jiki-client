@@ -14,7 +14,7 @@
            </a>
            <div class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown" >
             <a class="dropdown-item" [routerLink]="['projects/viewEdit/', project.id]" *ngIf="!isLoggedInAsAdmin && project">My project</a>
-            <a class="dropdown-item" [routerLink]="['/users']" *ngIf="isLoggedInAsAdmin">All</a>
+            <a class="dropdown-item" [routerLink]="['/projects']" *ngIf="isLoggedInAsAdmin">All</a>
            </div>
          </li>
        </ul>  
@@ -24,8 +24,8 @@
             Stories
            </a>
            <div class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown" >
-            <a class="dropdown-item" [routerLink]="['/users']">My tickets</a>
-            <a class="dropdown-item" [routerLink]="['/users']">Recently visited</a>
+            <a class="dropdown-item" [routerLink]="['/board']">My tickets</a>
+            <a class="dropdown-item" [routerLink]="['/backlog']">Recently visited</a>
            </div>
          </li>
        </ul>   

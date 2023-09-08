@@ -44,7 +44,6 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
   reporterList: IUser[];
   constructor(private _storyService: StoryService,
               private _sprintService: SprintService,
-              private _projectService: ProjectService,
               private _authservice: AuthService,
               private _storageService: StorageService,
               private _userService: UserService) {
@@ -56,7 +55,7 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
     if(!this._authservice.isUserAdmin()){
       this.currentProject = this._storageService.getProject();
       this.projects.push(this.currentProject);
-      const subscriptionSprint$ = this._sprintService.getCurrentByProjectId(this.currentProject.id)
+      const subscriptionSprint$ = this._sprintService.findCurrentByProjectId(this.currentProject.id)
                 .pipe(                  
                   filter(sprint => {
                     if(sprint)
@@ -71,7 +70,7 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
                     return sprint;
                   }),
                   mergeMap(sprint => {                    
-                    return this._storyService.getStoriesBySprint(sprint.id);
+                    return this._storyService.findBySprint(sprint.id);
                   }),
                   filter(stories => {
                     if(stories)
@@ -87,9 +86,9 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
                     }
                     }
                   ),
-                  mergeMap(() => {
-                    return this._userService.findAll();
-                  })
+                  mergeMap(() => 
+                    this._userService.findByTeam(this._storageService.getUser().team.id)
+                  )
                 ).subscribe((users: IUser[]) => {
                   if(users){
                     this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);

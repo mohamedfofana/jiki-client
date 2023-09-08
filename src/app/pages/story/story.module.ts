@@ -8,7 +8,6 @@ import { StoryRoutingModule } from './story-routing.module';
 import { NgxEditorModule } from 'ngx-editor';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { StoryAddComponent } from './story-add/story-add.component';
 
 @NgModule({
   declarations: [StoryRoutingModule.components],

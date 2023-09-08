@@ -12,6 +12,7 @@ import { IResponseType } from 'src/app/shared/interfaces';
   providedIn: 'root',
 })
 export class TeamService {
+
     private teamUrl:string = "/team"
     constructor(
       private http: HttpClient,
@@ -24,6 +25,13 @@ export class TeamService {
 
     findById(id: number): Observable<ITeam> {
       return this.http.get<ITeam>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/'+ id);
+    }
+    
+    findAllAvailableForProject(projectId: number | undefined): Observable<ITeam[]> {
+      if(!projectId) {
+        projectId = 0;
+      }      
+      return this.http.get<ITeam[]>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/allAvailableForProject/'+ projectId);
     }
 
     create(team: ITeam): Observable<IResponseType<ITeam>> {

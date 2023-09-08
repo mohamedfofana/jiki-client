@@ -1,7 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Editor } from 'ngx-editor';
 import { Observable, mergeMap, map, Subscription } from 'rxjs';
@@ -9,12 +7,16 @@ import { AppConfigService } from 'src/app/core/config/appconfig-service';
 import { StoryService } from 'src/app/core/services/database/story.service';
 import { UserService } from 'src/app/core/services/database/user.service';
 import { VersionService } from 'src/app/core/services/database/version.service';
-import { StoryStatusEnum } from 'src/app/shared/enum/story-status.enum';
+import { StorageService } from 'src/app/core/services/local/storage.service';
+import { StoryLinkConstant } from 'src/app/shared/constants/story-link.constant';
+import { StoryPriorityConstant } from 'src/app/shared/constants/story-priority.constant';
+import { StoryStatusConstant } from 'src/app/shared/constants/story-status.constant';
+import { StoryTypeConstant } from 'src/app/shared/constants/story-type.constant';
 import { IStory } from 'src/app/shared/model/story.model';
 import { IUser } from 'src/app/shared/model/user.model';
 import { IVersion } from 'src/app/shared/model/version.model';
 import { SelectUserViewPipe } from 'src/app/shared/pipes/select-user-view.pipe';
-import { PrioritySet, regExps, StoryPointsSet } from 'src/app/shared/validators/custom.validators';
+import { PrioritySet, StoryPointsSet, StoryPointsValues } from 'src/app/shared/validators/custom.validators';
 
 declare var $: any;
 enum Fields  {
@@ -35,9 +37,11 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
   editor: Editor;
   // Editale 
   newStory: IStory;
-  enumKeys = Object.keys;
-  enumValues = Object.values;
-  statuses = StoryStatusEnum;
+  statuses = StoryStatusConstant;
+  storyPoints = StoryPointsValues;
+  priorities = StoryPriorityConstant;
+  linkTypes = StoryLinkConstant;
+  storyTypes = StoryTypeConstant;
   story: IStory;
   emptyUser:IUser;
   users$: Observable<IUser[]>;
@@ -51,6 +55,7 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
 
 
   constructor(private _route: ActivatedRoute,
+              private _storageService: StorageService,
               private _storyService: StoryService,
               private _userService: UserService,
               private _versionService: VersionService,
@@ -59,7 +64,7 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
               public dialogConfirm: MatDialog,
               ) { }
 
-   displayUserFn = (user: IUser) =>  {
+   displayUserFn = (user: IUser) =>  {    
     return user && this._selectUserViewPipe.transform(user);
    }
 
@@ -68,21 +73,20 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
    this.idStory = parseInt(id);
    if(!Number.isNaN(this.idStory)){
   
-    this._storyService.getStoryById(this.idStory)
+    this._storyService.findById(this.idStory)
           .pipe(
-            map(
-              story=>{               
+            map((story: IStory) =>{     
+                console.log(story);          
                 this.initStories(story);
               }
-            ),
-            mergeMap(() => 
-            // TODO Change and get all the user on the team's project 
-              this.users$ = this._userService.findByProject(this.story.project.id)
-            ),
-            map(
-              () =>   
-              this.filteredAssignees$ = this.users$
-            ),
+              ),
+              mergeMap(() => 
+              this.filteredAssignees$ = this.users$ = this._userService.findByTeam(this._storageService.getUser().team.id)
+              ),
+            //   map(() =>   
+            //     //console.log(story);
+            //   this.filteredAssignees$ = this.users$
+            // ),
             mergeMap(() =>
                 this.versions$ = this._versionService.findByProject(this.story.project.id)
             )
@@ -108,9 +112,10 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
     this.story = s;
     this.newStory =Object.assign({}, s);
     this.editor = new Editor();
-    this.story.longtitle = this.story.project.name+"-"+this.story.id;
-    this.story.iconType = this._appConfigService.getStoryTypeIcon(this.story.type);
-    this.story.iconTypeColor = this._appConfigService.getStoryTypeIconColor(this.story.type);
+    this.newStory.iconType = this._appConfigService.getStoryTypeIcon(this.newStory.type);
+    this.newStory.iconTypeColor = this._appConfigService.getStoryTypeIconColor(this.newStory.type);
+    const storyType = this.storyTypes.find(t => t.code===this.newStory.type);
+    this.newStory.type = storyType? storyType.value:'';
   }
 
   public filterAssignee(value: string ) {
@@ -152,7 +157,7 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
 
   onSelectionChange(event: any){   
     const field = event.source.ngControl.name;
-
+    console.log('field = ' + field);
     if(field === Fields.appliVersion){ 
       if(this.newStory.appliVersion !== this.story.appliVersion){
         this.updateField(field, this.newStory.appliVersion);
@@ -164,16 +169,7 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
         this.updateField(field, this.newStory.status);
       }
     }  
-  }
 
-  onLostFocus(event: any){
-    const field = event.target.name;
-    
-    if(field === Fields.title){
-      if(this.newStory.title !== this.story.title){
-        this.updateField(field, this.newStory.title);
-      }
-    }
     if(field === Fields.storyPoints){    
       if(this.newStory.storyPoints !== this.story.storyPoints){
         const valid = StoryPointsSet.find( a => this.newStory.storyPoints == a);   
@@ -187,14 +183,19 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
 
     if(field === Fields.priority){
       if(this.newStory.priority !== this.story.priority){
-        const valid = PrioritySet.find( a => this.newStory.priority == a);   
-        if(!valid){       
-          this.newStory.priority = this.story.priority;       
-        }else{
-          this.updateField(field, this.newStory.priority);
-        }  
+        this.updateField(field, this.newStory.priority);
       }
     }
+  }
+
+  onLostFocus(event: any){
+    const field = event.target.name;
+    
+    if(field === Fields.title){
+      if(this.newStory.title !== this.story.title){
+        this.updateField(field, this.newStory.title);
+      }
+    }     
 
     if(field === Fields.assigneeId){
       this.filteredAssignees$ = this.users$;
@@ -206,10 +207,11 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
     let fieldValueMap = new Map<string, Object>();
     let updatedField: any = this.fieldMap.get(field);
     fieldValueMap.set(updatedField, value);
-
+    console.log('updated = ' + field);
+    console.log('value = ' + value);
     let sub = this._storyService.patch(this.newStory.id, fieldValueMap)
                                 .subscribe(() => {
-                                    //console.log('updated = ' + field);
+                                    console.log('updated = ' + field);
                                });
    this.subscriptions.push(sub);
 
@@ -223,7 +225,7 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.editor.destroy();
+    this.editor?.destroy();
     this.subscriptions.forEach(x => {
       if(!x.closed) {
         x.unsubscribe();

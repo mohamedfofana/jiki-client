@@ -63,7 +63,7 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
     if(!this._authservice.isUserAdmin()){
       this.project = this._storageService.getProject();
       this.title =this.project.name +  '- Sprints'
-      const subscriptionSprint$ = this._sprintService.getSprintsByProjectId(this.project.id)
+      const subscriptionSprint$ = this._sprintService.findByProjectId(this.project.id)
                               .pipe(
                                 map((sprints: ISprint[]) => {
                                   if(sprints  && sprints.length > 0){
@@ -75,7 +75,7 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
                                   }
                                 }),
                                 mergeMap(() => 
-                                  this._userService.findAll()
+                                  this._userService.findByTeam(this._storageService.getUser().team.id)
                                 )
                               ).subscribe((users: IUser[]) => {
                                 if(users){
@@ -131,20 +131,4 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
     return this._appConfigService.getSprintStatusIconColor(sprint.status);
   }
 
-  addEditProject(project: ISprint) {
-    let dialogData: IDialogFormData<ISprint> = {
-      new: project?false:true,
-      entity: project
-    }
-    const dialogRef = this.dialog.open(SprintAddDialogComponent, {
-      data: dialogData,
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result.new){
-        let data = this.dataSource.data;
-        data.push(result.entity);
-        this.dataSource.data = data;
-      }
-    });
-  }
 }

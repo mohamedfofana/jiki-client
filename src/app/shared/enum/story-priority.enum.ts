@@ -1,7 +1,6 @@
 export enum StoryPriorityEnum {
-  UNDEFINED = "UNDEFINED",
-  MINOR = "MINOR",
-  MAJOR = "MAJOR",
-  CRITICAL = "CRITICAL",
-  BLOCKED = "BLOCKED"
+  MINOR = "Minor",
+  MAJOR = "Major",
+  CRITICAL = "Critical",
+  BLOCKED = "Blocked"
 }

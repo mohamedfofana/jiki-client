@@ -1,4 +1,4 @@
 export enum TeamStatusEnum {
-  OPEN = "OPEN",
-  CLOSED = "CLOSED"
+  CREATED = "Created",
+  CLOSED = "Closed"
 }

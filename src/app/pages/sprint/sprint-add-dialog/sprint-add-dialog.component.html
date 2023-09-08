@@ -1,12 +1,12 @@
-<h1 *ngIf="!dialogFormData.entity" mat-dialog-title class="text-center">Add Sprint</h1>
-<div class="project-dialog" mat-dialog-content>
+<h1 mat-dialog-title class="text-center">Add Sprint</h1>
+<div class="spint-dialog" mat-dialog-content>
   <form [formGroup]="sprintForm" class="sprintForm" (submit)="onSubmitClick()" novalidate>
     <table>      
       <tr>
         <td colspan="2">
           <mat-form-field  class="form-field-sprintTitle">
             <mat-label>Tiltle</mat-label>
-            <input matInput [formControl]="titleFormControl">
+            <input matInput [formControl]="titleFormControl" size="10">
           </mat-form-field>
         </td>
       </tr>
@@ -25,9 +25,8 @@
       </tr>
     </table>
     <div mat-dialog-actions class="float-end">
-      <button *ngIf="dialogFormData.entity" mat-raised-button type="submit" [disabled]="!sprintForm.valid">Update</button>
-      <button *ngIf="!dialogFormData.entity" mat-raised-button type="submit" [disabled]="!sprintForm.valid">Save</button>
-      <button mat-button [mat-dialog-close]="dialogFormData.entity">Cancel</button>
+      <button mat-raised-button type="submit" [disabled]="!sprintForm.valid">Save</button>
+      <button mat-button [mat-dialog-close]="">Cancel</button>
     </div>
   </form>
 </div>

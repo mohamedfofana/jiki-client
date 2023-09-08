@@ -10,27 +10,25 @@ import { findEnumValueByKey } from '../../helpers/enum.helpers';
 import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
 import { StorageService } from '../../services/local/storage.service';
 import { IProject } from 'src/app/shared/model/project.model';
-import { ProjectService } from '../../services/database/project.service';
 import { ISprint } from 'src/app/shared/model/sprint.model';
 import { SprintAddDialogComponent } from 'src/app/pages/sprint/sprint-add-dialog/sprint-add-dialog.component';
-import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
 import { IStory } from 'src/app/shared/model/story.model';
 import { SprintService } from '../../services/database/sprint.service';
-import { IDialogData } from 'src/app/shared/model/dialog-data.model';
-import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { SprintStatusEnum } from 'src/app/shared/enum/sprint-status.enum';
+import { DialogService } from '../../services/dialog/dialog.service';
+import { AbstractOnDestroy } from '../../services/abstract.ondestroy';
+import { StoryAddDialogComponent } from 'src/app/pages/story/story-add-dialog/story-add-dialog.component';
+import { StoryService } from '../../services/database/story.service';
+import { IAuthResponse, IResponseType } from 'src/app/shared/interfaces';
 
 @Component({
   selector: 'jiki-top-menu',
   templateUrl: './top-menu.component.html',
   styleUrls: ['./top-menu.component.css']
 })
-export class TopMenuComponent implements OnInit, OnDestroy {
+export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
 
   isCollapsed: boolean;
-  sub: Subscription;
   searchForm: FormGroup;
   searchText: string;
   isLoggedIn = false;
@@ -38,16 +36,16 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   project: IProject;
   emptySprint: ISprint;
   emptyStory: IStory;
-  dataSource = new MatTableDataSource<ISprint>();
   
   constructor(private formBuilder: FormBuilder, 
-              private router: Router, 
-              public dialogConfirm: MatDialog,
-              public dialog: MatDialog,
+              private router: Router,
               private authservice: AuthService,
+              private _storyService: StoryService,
               private _sprintService: SprintService,
+              private _dialogService: DialogService,
               private _storageService: StorageService,  
               private growler: GrowlerService,) {
+                super();
   }
 
   ngOnInit() {
@@ -60,16 +58,15 @@ export class TopMenuComponent implements OnInit, OnDestroy {
       searchText: ['', Validators.required]
     });
     
-    this.sub = this.authservice.isAuthenticatedSub().subscribe(state => {
+    const sub = this.authservice.isAuthenticatedSub().subscribe(state => {
                             this.setLoginLogoutText(state);
                             this.isLoggedIn = state;
                             this.isLoggedInAsAdmin = this.authservice.isUserAdmin();
                             if(state && this._storageService.isUserInStorage() && !this.isLoggedInAsAdmin){
                               this.project =  this._storageService.getProject();
                             }
-                            
     });
-
+    this.subscriptions.push(sub);
     this.initAuth();
 
    
@@ -99,10 +96,6 @@ export class TopMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
   login() {
     this.redirectToLogin();
   }
@@ -119,63 +112,28 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   }
 
   addStory(story: IStory) {
-    // Pop up create Story
-    // Redirect to view edit page after creation
-    // init on blacklog 
+    this._dialogService.showPopupComponent(story, StoryAddDialogComponent);    
   }
 
   addSprint(sprint: ISprint) {
-    const subscriptionSprint$ = this._sprintService.getSprintsByProjectId(this.project.id)
+    const subscriptionSprint$ = this._sprintService.findByProjectId(this.project.id)
                                 .subscribe((sprints: ISprint[]) => {                                
                                   if(sprints && sprints.length > 0){
                                     const created  = sprints.find(s => s.status === SprintStatusEnum.CREATED);
                                     const running  = sprints.find(s => s.status === SprintStatusEnum.RUNNING);
                                     if (created) {
-                                      this.showPopupError('A sprint is already created. Please start the sprint.');
+                                      this._dialogService.showPopupError('A sprint is already created. Please start the sprint.');
+                                      //this.showPopupError('A sprint is already created. Please start the sprint.');
                                     }else if (running) {
-                                      this.showPopupError('A sprint is in progress ...');
+                                      this._dialogService.showPopupError('A sprint is in progress ...');
                                     }else {
-                                      this.showPopupSprint(sprint);
+                                      this._dialogService.showPopupComponent(sprint, SprintAddDialogComponent);
                                     }                                    
                                   }else{                                   
-                                    this.showPopupSprint(sprint);
+                                    this._dialogService.showPopupComponent(sprint, SprintAddDialogComponent);
                                   }
                                 }
                               );
-   
-  }
-
-  showPopupError(body: string) {
-    const dialogData: IDialogData = {
-      title: 'Warning !',
-      body: body,
-      okColor: 'warn',
-      withActionButton: false,
-      cancelButtonText: 'Ok',
-      actionButtonText: 'Delete'
-    };
-
-    const dialogRef = this.dialogConfirm.open(ConfirmDialogComponent, {
-      data: dialogData,
-    });
-  }
-
-  showPopupSprint(sprint: ISprint) {
-    let dialogData: IDialogFormData<ISprint> = {
-      new: true,
-      entity: sprint
-    }
-    const dialogRef = this.dialog.open(SprintAddDialogComponent, {
-      data: dialogData,
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      if (result && result.new){
-        let data = this.dataSource.data;
-        data.push(result.entity);
-        this.dataSource.data = data;
-      }
-    });
-  }
-
+    this.subscriptions.push(subscriptionSprint$);
+  }  
 }

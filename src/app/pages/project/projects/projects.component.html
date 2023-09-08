@@ -17,19 +17,24 @@
         <mat-cell *matCellDef="let project"> {{project.id}} </mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="shortname">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Shortname </mat-header-cell>
+        <mat-cell *matCellDef="let project"> {{project.shortname}} </mat-cell>
+      </ng-container>
+
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
         <mat-cell *matCellDef="let project"> {{project.name}} </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="description">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Description </mat-header-cell>
-        <mat-cell *matCellDef="let project"> {{project.description}} </mat-cell>
-      </ng-container>
-
       <ng-container matColumnDef="status">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
-        <mat-cell *matCellDef="let project"> {{project.status}} </mat-cell>
+        <mat-cell *matCellDef="let project"> {{statuses | constantType: project.status}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="team">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Team </mat-header-cell>
+        <mat-cell *matCellDef="let project"> {{project.team.name}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="actions">

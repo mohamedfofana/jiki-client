@@ -2,9 +2,10 @@ import { IStory } from '../../../shared/model/story.model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 import { AppConfigService } from '../../config/appconfig-service';
+import { IResponseType } from 'src/app/shared/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -12,27 +13,46 @@ import { AppConfigService } from '../../config/appconfig-service';
 export class StoryService {
     private storyUrl:string = "/story"
     constructor(private http: HttpClient,
-      private _appConfigService: AppConfigService) { }
+    private _appConfigService: AppConfigService) { }
 
+    create(story: IStory): Observable <IResponseType<IStory>> {
+      story.creationDate = this._appConfigService.currentTimestamp();
+      story.updateDate = this._appConfigService.currentTimestamp();
+      
+      return this.http.post<IResponseType<IStory>>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/create', story)
+      .pipe(
+        map(response => {
+            return response;
+        })
+      );
+    }
     /*
      * Return stories on project backlogs
      */
-    getStoriesOnBacklogsByProjectId(projectId:number): Observable<IStory[]> {
+    findOnBacklogsByProjectId(projectId:number): Observable<IStory[]> {
       return this.http.get<IStory[]>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/backlogs/project/'+projectId);
     }
 
     /*
      * Find stories by id
     */
-     getStoryById(storyId:number): Observable<IStory> {
+     findById(storyId:number): Observable<IStory> {
       return this.http.get<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/'+storyId);
     }
     /*
      * Find stories by sprint
     */
-    getStoriesBySprint(sprintId:number): Observable<IStory[]> {
+    findBySprint(sprintId:number): Observable<IStory[]> {
       return this.http.get<IStory[]>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/sprint/'+sprintId);
     }
+
+    /*
+     * Find stories by project
+    */
+    findByProject(projectId: number): Observable<IStory[]> {
+      return this.http.get<IStory[]>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/project/'+projectId);
+    }
+    
 
     /*
      * Update story status

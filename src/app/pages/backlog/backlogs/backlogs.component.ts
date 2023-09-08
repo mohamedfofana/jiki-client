@@ -1,5 +1,5 @@
 import { SprintService } from './../../../core/services/database/sprint.service';
-import { filter, map, mergeMap } from 'rxjs';
+import { Observable, filter, map, mergeMap, of } from 'rxjs';
 import { IProject } from '../../../shared/model/project.model';
 import { ProjectService } from './../../../core/services/database/project.service';
 import { ISprint } from '../../../shared/model/sprint.model';
@@ -23,7 +23,7 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
   currentSprint: ISprint;
   currentProject: IProject;
   sprints: ISprint[];
-  projects: IProject[];
+  projects: IProject[]=[];
   stories: IStory[];
   filterText:string;
   filterAssignee:IUser[];
@@ -58,7 +58,7 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
   ngOnInit() {
     if(!this._authservice.isUserAdmin()){
       this.currentProject = this._storageService.getProject();
-      const subscriptionSprint$ = this._sprintService.getCurrentByProjectId(this.currentProject.id)
+      const subscriptionSprint$ = this._sprintService.findCurrentByProjectId(this.currentProject.id)
                                 .pipe(
                                 map((sprint: ISprint) => { 
                                     if(sprint){
@@ -66,8 +66,11 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
                                     }
                                   }
                                 ),
-                                mergeMap(() => 
-                                  this._projectService.findAll()
+                                mergeMap(() => {
+                                  //this._projectService.findAll()
+                                  this.projects.push(this.currentProject);
+                                  return of(this.projects)
+                                }
                                 ),
                                 map((projects: IProject[]) => {
                                   if(projects){
@@ -79,7 +82,7 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
                                   }
                                 }),
                                 mergeMap(()=> 
-                                  this._userService.findAll()
+                                  this._userService.findByTeam(this._storageService.getUser().team.id)
                                 )
                               ).subscribe((users: IUser[]) => {
                                 if(users){

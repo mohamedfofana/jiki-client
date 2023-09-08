@@ -6,6 +6,7 @@ import { ITeam } from './team.model';
 
 export interface IStory{
     id: number;
+    shortTitle: string;
     title: string;
     description: string;
     workflow: string;
