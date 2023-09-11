@@ -23,7 +23,7 @@ export class ProjectsComponent extends AbstractOnDestroy implements OnInit, Afte
   projects: IProject[] = [];
   emptyProject: IProject;
   currentProject: IProject;
-  displayedColumns: string[] = ['id', 'shortname', 'name', 'status', 'team', 'actions'];
+  displayedColumns: string[] = ['id', 'shortname', 'name', 'status', 'actions'];
   dataSource = new MatTableDataSource<IProject>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -79,12 +79,12 @@ export class ProjectsComponent extends AbstractOnDestroy implements OnInit, Afte
           data.push(newProject);
           this.dataSource.data = data;
         }else {
-          this.dataSource.data.forEach( t => {
-            if (t.id === newProject.id) {
-              t.name = newProject.name;
-              t.shortname = newProject.shortname;
-              t.description = newProject.description;
-              t.status = newProject.status;
+          this.dataSource.data.forEach( project => {
+            if (project.id === newProject.id) {
+              project.name = newProject.name;
+              project.shortname = newProject.shortname;
+              project.description = newProject.description;
+              project.status = newProject.status;
             }
           });
           this.dataSource.data = data;

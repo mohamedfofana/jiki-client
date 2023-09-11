@@ -7,6 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { ITeam } from 'src/app/shared/model/team.model';
 import { AppConfigService } from '../../config/appconfig-service';
 import { IResponseType } from 'src/app/shared/interfaces';
+import { DateService } from '../local/date.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,8 @@ export class TeamService {
     private teamUrl:string = "/team"
     constructor(
       private http: HttpClient,
-      private _appConfigService: AppConfigService
+      private _appConfigService: AppConfigService,
+      private _dateService: DateService
     ) { }
 
     findAll(): Observable<ITeam[]> {
@@ -35,7 +37,7 @@ export class TeamService {
     }
 
     create(team: ITeam): Observable<IResponseType<ITeam>> {
-      team.creationDate = this._appConfigService.currentTimestamp();
+      team.creationDate = this._dateService.currentTimestamp();
       return this.http.post<IResponseType<ITeam>>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/create', team)
       .pipe(
         map(response => {
@@ -45,7 +47,7 @@ export class TeamService {
     }
 
     update(team: ITeam): Observable<IResponseType<ITeam>> {
-      team.updateDate = this._appConfigService.currentTimestamp();
+      team.updateDate = this._dateService.currentTimestamp();
       return this.http.put<IResponseType<ITeam>>(this._appConfigService.apiConfig().apiEndpoint + this.teamUrl + '/update', team);
     }
 

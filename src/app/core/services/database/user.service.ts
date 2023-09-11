@@ -7,6 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { IUser } from 'src/app/shared/model/user.model';
 import { AppConfigService } from '../../config/appconfig-service';
 import { IResponseType } from 'src/app/shared/interfaces';
+import { DateService } from '../local/date.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,8 @@ import { IResponseType } from 'src/app/shared/interfaces';
 export class UserService {
     private userUrl:string = "/user"
     constructor(private http: HttpClient,
-      private _appConfigService: AppConfigService) { }
+      private _appConfigService: AppConfigService,
+      private _dateService: DateService) { }
 
     findAll(): Observable<IUser[]> {
         return this.http.get<IUser[]>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/all');
@@ -25,7 +27,7 @@ export class UserService {
     }
 
     register(user: IUser): Observable<IResponseType<IUser>> {
-      user.creationDate = this._appConfigService.currentTimestamp();
+      user.creationDate = this._dateService.currentTimestamp();
       return this.http.post<IResponseType<IUser>>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/register', user)
       .pipe(
         map(response => {
@@ -35,7 +37,7 @@ export class UserService {
     }
 
     update(user: IUser): Observable<IResponseType<IUser>> {
-      user.updateDate = this._appConfigService.currentTimestamp();
+      user.updateDate = this._dateService.currentTimestamp();
       return this.http.put<IResponseType<IUser>>(this._appConfigService.apiConfig().apiEndpoint + this.userUrl + '/update', user);
     }
 

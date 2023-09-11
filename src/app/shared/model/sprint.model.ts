@@ -6,6 +6,9 @@ import { IStory } from './story.model';
 export interface ISprint{
     id: number;
     title: string;
+    name: string;
+    goal: string;
+    duration: string;
     description: string;
     status: string;
     businessValue: number;

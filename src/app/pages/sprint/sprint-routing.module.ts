@@ -2,6 +2,7 @@ import { SprintsComponent } from './sprints/sprints.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SprintAddDialogComponent } from './sprint-add-dialog/sprint-add-dialog.component';
+import { SprintStartDialogComponent } from './sprint-start-dialog/sprint-start-dialog.component';
 
 
 const routes: Routes = [
@@ -13,5 +14,5 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class SprintRoutingModule {
-  static components = [SprintsComponent, SprintAddDialogComponent];
+  static components = [SprintsComponent, SprintAddDialogComponent, SprintStartDialogComponent];
 }

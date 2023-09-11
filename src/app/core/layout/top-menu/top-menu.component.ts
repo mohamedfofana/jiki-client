@@ -84,8 +84,7 @@ export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
   setLoginLogoutText(state: boolean) {
     if(state){
       const user = this._storageService.getUser();
-      let role = findEnumValueByKey(UserRoleEnum, user.role);
-      this.isLoggedInAsAdmin = (role === UserRoleEnum.ADMIN) ? true : false;
+      this.isLoggedInAsAdmin = (user.role === UserRoleEnum.ADMIN) ? true : false;
     }
   }
 
@@ -120,11 +119,11 @@ export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
                                 .subscribe((sprints: ISprint[]) => {                                
                                   if(sprints && sprints.length > 0){
                                     const created  = sprints.find(s => s.status === SprintStatusEnum.CREATED);
-                                    const running  = sprints.find(s => s.status === SprintStatusEnum.RUNNING);
+                                    const inProgress  = sprints.find(s => s.status === SprintStatusEnum.IN_PROGRESS);
                                     if (created) {
                                       this._dialogService.showPopupError('A sprint is already created. Please start the sprint.');
                                       //this.showPopupError('A sprint is already created. Please start the sprint.');
-                                    }else if (running) {
+                                    }else if (inProgress) {
                                       this._dialogService.showPopupError('A sprint is in progress ...');
                                     }else {
                                       this._dialogService.showPopupComponent(sprint, SprintAddDialogComponent);

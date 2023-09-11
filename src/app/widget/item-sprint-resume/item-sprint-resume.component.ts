@@ -6,12 +6,11 @@ import { IStory } from '../../shared/model/story.model';
 import { ISprint } from '../../shared/model/sprint.model';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
-import { MatTableDataSource } from '@angular/material/table';
 import { Observable, map } from 'rxjs';
 import { SprintStatusEnum } from 'src/app/shared/enum/sprint-status.enum';
-import { SprintService } from 'src/app/core/services/database/sprint.service';
-import { Router } from '@angular/router';
 import { DialogService } from 'src/app/core/services/dialog/dialog.service';
+import { SprintStartDialogComponent } from 'src/app/pages/sprint/sprint-start-dialog/sprint-start-dialog.component';
+import { SprintStatusConstant } from 'src/app/shared/constants/sprint-status.constant';
 
 
 @Component({
@@ -29,38 +28,28 @@ export class ItemSprintResumeComponent extends AbstractOnDestroy implements OnIn
   stories$: Observable<IStory[]>;
   filteredStories$: Observable<IStory[]>;
   notStarted: boolean = false;
+  title: string = 'Sprint';
   readonly MAX_SPRINT_BUSINESS_VALUE: number = 24; // 2*8 // 8 = 1 weeks 
+  statuses = SprintStatusConstant;
 
   constructor(private _dialogService: DialogService,
-              private _storyService: StoryService,
-              private _sprintService: SprintService,              
-              private router: Router) {
+              private _storyService: StoryService,) {
     super();
   }
 
   ngOnInit(): void {
     this.stories$ = this.filteredStories$ = this._storyService.findBySprint(this.sprint.id); 
     this.notStarted = (this.sprint.status === SprintStatusEnum.CREATED); 
+    this.title += ' ' + this.sprint.id;
 
   }
 
   startSprint(): void {
-    let theBusinessValue = 0; // all
     this.stories$.subscribe((stories: IStory[]) => {
-      theBusinessValue = stories.reduce((s1, s2) => s1 + s2.businessValue, 0);
-      if(theBusinessValue < this.MAX_SPRINT_BUSINESS_VALUE) {
-        this._dialogService.showPopupError('You do not have engough business value on the sprint.')
+      if(!stories || stories.length == 0) {
+        this._dialogService.showPopupError('You cannot start a sprint without story.')
       }else {
-        this.sendStart(theBusinessValue);
-      }
-    });
-  }
-
-  sendStart(theBusinessValue: number){ 
-    this.sprint.businessValue =  theBusinessValue;
-    this._sprintService.start(this.sprint).subscribe(sprint => {
-      if (sprint) {
-        this.router.navigate(['/board']);
+        this._dialogService.showPopupComponent(this.sprint, SprintStartDialogComponent);
       }
     });
   }

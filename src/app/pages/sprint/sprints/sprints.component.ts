@@ -6,15 +6,12 @@ import { ISprint } from '../../../shared/model/sprint.model';
 import { AppConfigService } from '../../../core/config/appconfig-service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { StorageService } from 'src/app/core/services/local/storage.service';
-import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
-import { SprintAddDialogComponent } from '../sprint-add-dialog/sprint-add-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { IProject } from 'src/app/shared/model/project.model';
-import { filter, map, mergeMap } from 'rxjs';
-import { ProjectService } from 'src/app/core/services/database/project.service';
+import { map, mergeMap } from 'rxjs';
 import { AuthService } from 'src/app/core/services/database/auth.service';
 
 @Component({
@@ -49,9 +46,8 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
     StoryStatusEnum.DONE,
     StoryStatusEnum.BLOCKED
   ];
-  constructor(public dialog: MatDialog,
+  constructor(public _dialog: MatDialog,
               private _appConfigService: AppConfigService,
-              private _projectService: ProjectService,
               private _sprintService: SprintService,
               private _userService: UserService,
               private _authservice: AuthService,

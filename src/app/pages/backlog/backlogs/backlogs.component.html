@@ -102,6 +102,21 @@
         ></jiki-item-project-resume>
         </div>
       </div>
+      <div class="sprints-row">
+        <div class="m-0">
+        <jiki-item-project-resume
+          *ngFor="let project of projects"
+          [projects]="projects"
+          [project]="project"
+          [currentSprint]="currentSprint"
+          [filterText]="filterText"
+          [filterAssignee]="filterAssignee"
+          [filterReporter]="filterReporter"
+          [filterStatus]="filterStatus"
+          [isBacklog]=true
+        ></jiki-item-project-resume>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -1,6 +1,5 @@
 export enum SprintStatusEnum {
   CREATED = "CREATED",
-  RUNNING = "RUNNING",
-  FINISHED = "FINISHED",
+  IN_PROGRESS = "IN_PROGRESS",
   CLOSED = "CLOSED"
 }

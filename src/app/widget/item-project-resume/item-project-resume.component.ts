@@ -7,10 +7,13 @@ import { IProject } from 'src/app/shared/model/project.model';
 
 import { MatMenuTrigger } from '@angular/material/menu';
 import { ISprint } from 'src/app/shared/model/sprint.model';
-import { BacklogService } from 'src/app/core/services/database/backlog.service';
 import { IBacklog } from 'src/app/shared/model/backlog.model';
-import { BehaviorSubject, Observable, filter, forkJoin, map, of, switchMap } from 'rxjs';
+import { Observable, map, of, switchMap } from 'rxjs';
 import { NotifierService } from 'src/app/core/services/notification/notifier.service';
+import { DialogService } from 'src/app/core/services/dialog/dialog.service';
+import { SprintStartDialogComponent } from 'src/app/pages/sprint/sprint-start-dialog/sprint-start-dialog.component';
+import { SprintStatusEnum } from 'src/app/shared/enum/sprint-status.enum';
+import { SprintStatusConstant } from 'src/app/shared/constants/sprint-status.constant';
 
 @Component({
   selector: 'jiki-item-project-resume',
@@ -34,32 +37,35 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
   filteredStories: IStory[];
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
+  sprintTitle: string = 'Sprint';
+  notStarted: boolean = false;
+  statuses = SprintStatusConstant;
 
   constructor(private _storyService: StoryService,
-              private _backlogService: BacklogService,
+    private _dialogService: DialogService,
               private _notifierService: NotifierService) {
     super();
   }
 
   ngOnInit(): void {
-    if(this.currentSprint){
-     this.stories$ = this.filteredStories$ = this._notifierService.storiesNotifier().pipe(
-                                                                                          switchMap( _ => this.initStories())
-                                                                                         );
-      this.initBackog();
+    this.stories$ = this.filteredStories$ = this._notifierService.storiesNotifier().pipe(
+      switchMap( _ => this.initStories())
+    );    
+    if (!this.isBacklog && this.currentSprint) {
+      this.notStarted = (this.currentSprint.status === SprintStatusEnum.CREATED); 
+      this.sprintTitle += ' ' + this.currentSprint.id; 
     }
   }
-initBackog(){
-  let subscriptionBacklogs = this._backlogService.getBacklogs()
-      .subscribe((backlogs: IBacklog[]) => {
-        if (backlogs) {
-          this.backlogs = backlogs;
-        }
-      });
-    this.subscriptions.push(subscriptionBacklogs);
-}
+
   initStories(){
-   return this._storyService.findOnBacklogsByProjectId(this.project.id);    
+    if(this.isBacklog){
+      return this._storyService.findOnBacklogsByProjectId(this.project.id);    
+    }else{
+      if(this.currentSprint){
+        return this._storyService.findBySprint(this.currentSprint.id);          
+      }
+    }
+    return of<IStory[]>([]);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -161,10 +167,13 @@ initBackog(){
 
   onContextMenu(event: MouseEvent, story: IStory) {
     event.preventDefault();
-    this.contextMenuPosition.x = event.clientX + 'px';
-    this.contextMenuPosition.y = event.clientY + 'px';
-    this.contextMenu.menuData = story;
-    this.contextMenu.openMenu();
+    //if((this.isBacklog && this.currentSprint) || (this.isBacklog)){
+      this.contextMenuPosition.x = event.clientX + 'px';
+      this.contextMenuPosition.y = event.clientY + 'px';
+      this.contextMenu.menuData = story;
+      this.contextMenu.menu?.focusFirstItem('mouse');
+      this.contextMenu.openMenu();
+    //}
   }
 
   moveToSprint() {
@@ -180,10 +189,10 @@ initBackog(){
 
   }
 
-  moveToBacklog(project: IProject) {
+  moveToBacklog() {
     let story =  this.contextMenu.menuData;
-    story.project.id = project.id;
-    story.backlog.id = project.backlog.id
+    story.project = this.project;
+    story.backlog = this.project.backlog;
     story.sprint = null;
 
     const subs = this._storyService.updateSprintAndBacklog(story).subscribe(s =>
@@ -191,4 +200,15 @@ initBackog(){
     );
     this.subscriptions.push(subs)
  }
+
+ startSprint(): void {
+  this.stories$.subscribe((stories: IStory[]) => {
+    console.log(stories);
+    if(!stories || stories.length == 0) {
+      this._dialogService.showPopupError('You cannot start a sprint without story.')
+    }else {
+      this._dialogService.showPopupComponent(this.currentSprint, SprintStartDialogComponent);
+    }
+  });
+}
 }

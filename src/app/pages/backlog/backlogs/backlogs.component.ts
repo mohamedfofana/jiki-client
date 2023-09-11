@@ -62,12 +62,13 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
                                 .pipe(
                                 map((sprint: ISprint) => { 
                                     if(sprint){
+                                      sprint.iconStatus = this.getStatusConfigKey(sprint);
+                                      sprint.iconStatusColor = this.getStatusColorConfigKey(sprint);
                                       this.currentSprint = sprint;
                                     }
                                   }
                                 ),
                                 mergeMap(() => {
-                                  //this._projectService.findAll()
                                   this.projects.push(this.currentProject);
                                   return of(this.projects)
                                 }
@@ -75,10 +76,6 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
                                 map((projects: IProject[]) => {
                                   if(projects){
                                     this.projects = projects.sort((s1, s2)=> s1.name>s2.name? -1:1);
-                                    this.projects.forEach(project=> {
-                                      project.iconStatus = this.getStatusConfigKey(project);
-                                      project.iconStatusColor = this.getStatusColorConfigKey(project);
-                                    });
                                   }
                                 }),
                                 mergeMap(()=> 
@@ -132,10 +129,10 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
     this.filterStatus = statuses.filter(st => st !== status);
     this.selectStatusFormControl.setValue(this.filterStatus);
   }
-  getStatusConfigKey(project:IProject){
-    return this._appConfigService.getSprintStatusIcon(project.status);
+  getStatusConfigKey(sprint:ISprint){
+    return this._appConfigService.getSprintStatusIcon(sprint.status);
   }
-  getStatusColorConfigKey(project:IProject){
-    return this._appConfigService.getSprintStatusIconColor(project.status);
+  getStatusColorConfigKey(sprint:ISprint){
+    return this._appConfigService.getSprintStatusIconColor(sprint.status);
   }
       }

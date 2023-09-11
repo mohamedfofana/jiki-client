@@ -12,9 +12,6 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { IProject } from 'src/app/shared/model/project.model';
 import { filter, map, mergeMap } from 'rxjs';
-import { TeamService } from 'src/app/core/services/database/team.service';
-import { ITeam } from 'src/app/shared/model/team.model';
-import { ProjectService } from 'src/app/core/services/database/project.service';
 import { AuthService } from 'src/app/core/services/database/auth.service';
 
 @Component({
@@ -55,7 +52,7 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
     if(!this._authservice.isUserAdmin()){
       this.currentProject = this._storageService.getProject();
       this.projects.push(this.currentProject);
-      const subscriptionSprint$ = this._sprintService.findCurrentByProjectId(this.currentProject.id)
+      const subscriptionSprint$ = this._sprintService.findRunningByProjectId(this.currentProject.id)
                 .pipe(                  
                   filter(sprint => {
                     if(sprint)
@@ -66,7 +63,7 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
                   ),
                   map((sprint: ISprint) => {
                     this.currentSprint = sprint;
-                    this.boardTitle = sprint.project.name + ' - ' + sprint.title;
+                    this.boardTitle += ' Sprint - ' + sprint.id;
                     return sprint;
                   }),
                   mergeMap(sprint => {                    

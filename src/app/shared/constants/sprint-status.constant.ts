@@ -1,16 +1,17 @@
+import { SprintStatusEnum } from "../enum/sprint-status.enum";
 import { ConstantType } from "./constant.type";
 
 export const SprintStatusConstant: ConstantType[] = [
     {
-        code: 'CREATED',
+        code: SprintStatusEnum.CREATED,
         value: 'Created'
     },
     {
-        code: 'IN_PROGRESS',
+        code: SprintStatusEnum.IN_PROGRESS,
         value: 'In progress'
     },
     {
-        code: 'CLOSED',
+        code: SprintStatusEnum.CLOSED,
         value: 'Closed'
     }
 ];

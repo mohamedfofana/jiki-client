@@ -6,6 +6,7 @@ import { Observable, map } from 'rxjs';
 
 import { AppConfigService } from '../../config/appconfig-service';
 import { IResponseType } from 'src/app/shared/interfaces';
+import { DateService } from '../local/date.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,11 +14,12 @@ import { IResponseType } from 'src/app/shared/interfaces';
 export class StoryService {
     private storyUrl:string = "/story"
     constructor(private http: HttpClient,
-    private _appConfigService: AppConfigService) { }
+    private _appConfigService: AppConfigService,
+    private _dateService: DateService) { }
 
     create(story: IStory): Observable <IResponseType<IStory>> {
-      story.creationDate = this._appConfigService.currentTimestamp();
-      story.updateDate = this._appConfigService.currentTimestamp();
+      story.creationDate = this._dateService.currentTimestamp();
+      story.updateDate = this._dateService.currentTimestamp();
       
       return this.http.post<IResponseType<IStory>>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/create', story)
       .pipe(

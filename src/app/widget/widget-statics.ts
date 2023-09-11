@@ -16,5 +16,6 @@ export class WidgetStatics {
                         ItemStorySprintComponent, 
                         ItemBoardComponent, 
                         ItemStoryPreviewComponent,
+                        EditableInputComponent,
                         EditableInputComponent ]
 }

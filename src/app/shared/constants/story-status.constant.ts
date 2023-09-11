@@ -1,20 +1,21 @@
+import { StoryStatusEnum } from "../enum/story-status.enum";
 import { ConstantType } from "./constant.type";
 
 export const StoryStatusConstant: ConstantType[] = [
     {
-        code: 'TODO',
+        code: StoryStatusEnum.TODO,
         value: 'Todo'
     },
     {
-        code: 'IN_PROGRESS',
+        code: StoryStatusEnum.IN_PROGRESS,
         value: 'In progress'
     },
     {
-        code: 'BLOCKED',
+        code: StoryStatusEnum.BLOCKED,
         value: 'Blocked'
     },
     {
-        code: 'DONE',
+        code: StoryStatusEnum.DONE,
         value: 'Done'
     }
 ];

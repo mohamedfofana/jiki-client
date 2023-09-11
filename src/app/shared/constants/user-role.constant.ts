@@ -1,16 +1,17 @@
+import { UserRoleEnum } from "../enum/user-role-enum";
 import { ConstantType } from "./constant.type";
 
 export const UserRoleConstant: ConstantType[] = [
     {
-        code: 'ADMIN',
+        code: UserRoleEnum.ADMIN,
         value: 'Admin'
     },
     {
-        code: 'USER',
+        code: UserRoleEnum.USER,
         value: 'User'
     },
     {
-        code: 'QA',
+        code: UserRoleEnum.QA,
         value: 'QA'
     }
 ];

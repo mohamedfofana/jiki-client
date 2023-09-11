@@ -13,9 +13,6 @@ import { IDialogData } from 'src/app/shared/model/dialog-data.model';
 import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { ITeam } from 'src/app/shared/model/team.model';
 import { TeamAddEditDialogComponent } from '../team-add-edit-dialog/team-add-edit-dialog.component';
-import { TeamStatusEnum } from 'src/app/shared/enum/team-status.enum';
-import { findEnumValueByKey } from 'src/app/core/helpers/enum.helpers';
-import { ItemPageTitleComponent } from 'src/app/widget/item-page-title/item-page-title.component';
 import { TeamStatusConstant } from 'src/app/shared/constants/team-status.constant';
 
 @Component({

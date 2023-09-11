@@ -44,9 +44,8 @@ export class AuthService {
     isUserAdmin(){
       if(this.isAuthenticatedValue()){
         const user = this._storageService.getUser();
-        let role = findEnumValueByKey(UserRoleEnum, user.role);
         
-        return (role === UserRoleEnum.ADMIN) ? true : false;
+        return (user.role === UserRoleEnum.ADMIN) ? true : false;
       }
 
       return false;

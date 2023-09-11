@@ -1,16 +1,19 @@
 <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
   <mat-expansion-panel-header>
-    <mat-panel-title>
-    {{project.name}}
+    <mat-panel-title *ngIf="isBacklog">
+    Backlog
     </mat-panel-title>
+    <mat-panel-title *ngIf="!isBacklog">
+      {{sprintTitle}}
+      </mat-panel-title>
     <mat-panel-description style="flex-grow: 0;">
-        <span *ngIf="isBacklog">
-        BACKLOG
-        </span>
-      <mat-chip-listbox *ngIf="!isBacklog">
-        <mat-chip [ngStyle]="{'backgroundColor': project.iconStatusColor, 'color':'white'}">{{project.status}}</mat-chip>
+      <mat-chip-listbox *ngIf="!isBacklog && currentSprint">
+        <mat-chip [ngStyle]="{'backgroundColor': currentSprint.iconStatusColor, 'color':'white'}">{{statuses | constantType: currentSprint.status}}</mat-chip>
       </mat-chip-listbox>
     </mat-panel-description>
+    <button mat-raised-button class="float-start me-2" color="primary" (click)="startSprint()" *ngIf="notStarted">
+      Start sprint
+    </button>
   </mat-expansion-panel-header>
   <jiki-item-story-preview *ngFor="let story of filteredStories$ | async" [story]='story' (contextmenu)="onContextMenu($event, story)"></jiki-item-story-preview>
 </mat-expansion-panel>
@@ -22,13 +25,8 @@
 </div>
 <mat-menu #contextMenu="matMenu">
 	<ng-template matMenuContent let-item="item">
-   <span class="p-1">Move to</span>
-   <div>
-     <button class="btn-light" mat-menu-item (click)="moveToSprint()">{{currentSprint.title}}</button>
-    </div>
-   <div *ngIf="!isBacklog">
-   <hr class="m-1">
-    <button mat-menu-item class="btn-light" *ngFor="let project of projects" (click)="moveToBacklog(project)">{{project.name}}</button>
-	</div>
+   <span class="p-2">Move to</span>
+   <button *ngIf="isBacklog" class="btn-light" mat-menu-item (click)="moveToSprint()">Sprint</button>   
+   <button *ngIf="!isBacklog " class="btn-light" mat-menu-item (click)="moveToBacklog()">Backlog</button>   
   </ng-template>
 </mat-menu>
