@@ -63,6 +63,14 @@ export class StoryService {
       return this.http.put<IStory>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/updateStatus', story);
     }
 
+    moveToBacklog(backlogId: number, stories:IStory[]): Observable<IResponseType<boolean>> {
+      return this.http.put<IResponseType<boolean>>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/moveToBacklog/' + backlogId, stories);
+    }
+
+    moveToSprint(sprintId: number, stories:IStory[]): Observable<IResponseType<boolean>> {
+      return this.http.put<IResponseType<boolean>>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/moveToSprint/' + sprintId, stories);
+    }
+
     /*
      * Update story backlog or sprint
      */

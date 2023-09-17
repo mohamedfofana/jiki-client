@@ -119,12 +119,8 @@ export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
                                 .subscribe((sprints: ISprint[]) => {                                
                                   if(sprints && sprints.length > 0){
                                     const created  = sprints.find(s => s.status === SprintStatusEnum.CREATED);
-                                    const inProgress  = sprints.find(s => s.status === SprintStatusEnum.IN_PROGRESS);
                                     if (created) {
-                                      this._dialogService.showPopupError('A sprint is already created. Please start the sprint.');
-                                      //this.showPopupError('A sprint is already created. Please start the sprint.');
-                                    }else if (inProgress) {
-                                      this._dialogService.showPopupError('A sprint is in progress ...');
+                                      this._dialogService.showPopupError('A sprint is already created. Please start the sprint or close the current.');
                                     }else {
                                       this._dialogService.showPopupComponent(sprint, SprintAddDialogComponent);
                                     }                                    

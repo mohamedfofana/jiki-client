@@ -23,7 +23,6 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
   currentSprint: ISprint;
   currentProject: IProject;
   sprints: ISprint[];
-  projects: IProject[]=[];
   stories: IStory[];
   filterText:string;
   filterAssignee:IUser[];
@@ -60,24 +59,14 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
       this.currentProject = this._storageService.getProject();
       const subscriptionSprint$ = this._sprintService.findCurrentByProjectId(this.currentProject.id)
                                 .pipe(
-                                map((sprint: ISprint) => { 
+                                map((sprint: ISprint) => {
                                     if(sprint){
                                       sprint.iconStatus = this.getStatusConfigKey(sprint);
                                       sprint.iconStatusColor = this.getStatusColorConfigKey(sprint);
                                       this.currentSprint = sprint;
                                     }
                                   }
-                                ),
-                                mergeMap(() => {
-                                  this.projects.push(this.currentProject);
-                                  return of(this.projects)
-                                }
-                                ),
-                                map((projects: IProject[]) => {
-                                  if(projects){
-                                    this.projects = projects.sort((s1, s2)=> s1.name>s2.name? -1:1);
-                                  }
-                                }),
+                                ),                               
                                 mergeMap(()=> 
                                   this._userService.findByTeam(this._storageService.getUser().team.id)
                                 )

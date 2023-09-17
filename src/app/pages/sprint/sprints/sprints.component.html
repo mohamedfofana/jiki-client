@@ -91,14 +91,16 @@
       <hr>
       <div class="sprints-row">
         <div class="m-0">
-        <jiki-item-sprint-resume
+        <jiki-item-project-resume
           *ngFor="let sprint of sprints"
           [sprint]="sprint"
+          [project]="project"
           [filterText]="filterText"
           [filterAssignee]="filterAssignee"
           [filterReporter]="filterReporter"
           [filterStatus]="filterStatus"
-        ></jiki-item-sprint-resume>
+          [isBacklog]=false
+        ></jiki-item-project-resume>
         </div>
       </div>
     </div>

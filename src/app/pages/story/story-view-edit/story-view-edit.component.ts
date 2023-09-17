@@ -75,18 +75,13 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
   
     this._storyService.findById(this.idStory)
           .pipe(
-            map((story: IStory) =>{     
-                console.log(story);          
+            map((story: IStory) =>{           
                 this.initStories(story);
               }
               ),
               mergeMap(() => 
               this.filteredAssignees$ = this.users$ = this._userService.findByTeam(this._storageService.getUser().team.id)
               ),
-            //   map(() =>   
-            //     //console.log(story);
-            //   this.filteredAssignees$ = this.users$
-            // ),
             mergeMap(() =>
                 this.versions$ = this._versionService.findByProject(this.story.project.id)
             )
@@ -157,7 +152,6 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
 
   onSelectionChange(event: any){   
     const field = event.source.ngControl.name;
-    console.log('field = ' + field);
     if(field === Fields.appliVersion){ 
       if(this.newStory.appliVersion !== this.story.appliVersion){
         this.updateField(field, this.newStory.appliVersion);
@@ -207,12 +201,8 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
     let fieldValueMap = new Map<string, Object>();
     let updatedField: any = this.fieldMap.get(field);
     fieldValueMap.set(updatedField, value);
-    console.log('updated = ' + field);
-    console.log('value = ' + value);
     let sub = this._storyService.patch(this.newStory.id, fieldValueMap)
-                                .subscribe(() => {
-                                    console.log('updated = ' + field);
-                               });
+                                .subscribe(() => {});
    this.subscriptions.push(sub);
 
   }

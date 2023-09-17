@@ -33,6 +33,9 @@ export class SprintService {
       return this.http.get<ISprint>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/running/project/' + id);
     }
 
+    findByStatusInProject(id:number, status: string): Observable<ISprint[]> {
+      return this.http.get<ISprint[]>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/project/' + id + '/status/' + status);
+    }
 
   /*
 	 * find sprints by project
@@ -57,6 +60,10 @@ export class SprintService {
             return response;
         })
       );
+    }
+
+    close(sprint: ISprint): Observable<IResponseType<ISprint>> {
+      return this.http.put<IResponseType<ISprint>>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/close', sprint);
     }
 
     start(sprint: ISprint): Observable<IResponseType<ISprint>> {

@@ -7,15 +7,23 @@
       {{sprintTitle}}
       </mat-panel-title>
     <mat-panel-description style="flex-grow: 0;">
-      <mat-chip-listbox *ngIf="!isBacklog && currentSprint">
-        <mat-chip [ngStyle]="{'backgroundColor': currentSprint.iconStatusColor, 'color':'white'}">{{statuses | constantType: currentSprint.status}}</mat-chip>
+      <mat-chip-listbox *ngIf="!isBacklog && sprint">
+        <mat-chip [ngStyle]="{'backgroundColor': sprint.iconStatusColor, 'color':'white'}">{{statuses | constantType: sprint.status}}</mat-chip>
       </mat-chip-listbox>
     </mat-panel-description>
-    <button mat-raised-button class="float-start me-2" color="primary" (click)="startSprint()" *ngIf="notStarted">
+    <button mat-raised-button class="float-start me-2" color="primary" (click)="startSprint()" *ngIf="notStarted && movable">
       Start sprint
     </button>
+    <button mat-raised-button class="float-start me-2" color="warn" (click)="closeSprint()" *ngIf="closable">
+      Close sprint
+    </button>
   </mat-expansion-panel-header>
-  <jiki-item-story-preview *ngFor="let story of filteredStories$ | async" [story]='story' (contextmenu)="onContextMenu($event, story)"></jiki-item-story-preview>
+  <ng-template [ngIf]="movable" [ngIfElse]="readableItem">
+    <jiki-item-story-preview *ngFor="let story of filteredStories$ | async" [story]='story' (contextmenu)="onContextMenu($event, story)"></jiki-item-story-preview>
+  </ng-template>
+  <ng-template #readableItem>
+    <jiki-item-story-preview *ngFor="let story of filteredStories$ | async" [story]='story'></jiki-item-story-preview>
+  </ng-template>
 </mat-expansion-panel>
 <br>
 <div style="visibility: hidden; position: fixed"
@@ -26,7 +34,7 @@
 <mat-menu #contextMenu="matMenu">
 	<ng-template matMenuContent let-item="item">
    <span class="p-2">Move to</span>
-   <button *ngIf="isBacklog" class="btn-light" mat-menu-item (click)="moveToSprint()">Sprint</button>   
+   <button *ngIf="isBacklog" class="btn-light" mat-menu-item (click)="moveToSprint()">Sprint {{sprint.id}}</button>   
    <button *ngIf="!isBacklog " class="btn-light" mat-menu-item (click)="moveToBacklog()">Backlog</button>   
   </ng-template>
 </mat-menu>

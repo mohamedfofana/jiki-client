@@ -77,7 +77,7 @@ export class SprintStartDialogComponent extends AbstractOnDestroy implements OnI
     this.newSprint.startDate = this._dateService.toTimestamp(new Date(this.newSprint.startDate));
     this.newSprint.endDate = this._dateService.toTimestamp(new Date(this.newSprint.endDate));
 
-    let subscriptionUserAdd = this._sprintService.start(this.newSprint)
+    const subscription = this._sprintService.start(this.newSprint)
         .subscribe((response: IResponseType<ISprint>) => {
               if(response.status === "OK"){
                 this._growler.growl('Sprint Started', GrowlerMessageType.Success);
@@ -88,7 +88,7 @@ export class SprintStartDialogComponent extends AbstractOnDestroy implements OnI
                 this.setFormError(true, "Unable to start sprint");
               }
     });
-    this.subscriptions.push(subscriptionUserAdd);
+    this.subscriptions.push(subscription);
 
   }
 

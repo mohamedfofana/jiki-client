@@ -176,6 +176,5 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
     }{
       dialogFormData.entity = newT;
     }
-    console.log(dialogFormData.entity);
   }
 }

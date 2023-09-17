@@ -132,8 +132,7 @@ export class StoryAddDialogComponent extends AbstractOnDestroy implements OnInit
   onSubmitClick(): void {
     this.setFormError(false, '');
     this.updateNewStoryProperties();
-
-    console.log(this.newStory);
+    
     const subscriptionUserAdd = this._storyService.create(this.newStory)
         .subscribe((response: IResponseType<IStory>) => {
               if(response.status === "OK"){

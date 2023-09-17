@@ -43,6 +43,6 @@ export class DialogService {
         data.push(result.entity);
         this.dataSource.data = data;
       }
-    });
+    });  
   }
 }

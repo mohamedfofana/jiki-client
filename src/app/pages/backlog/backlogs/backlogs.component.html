@@ -89,31 +89,29 @@
       <hr>
       <div class="sprints-row">
         <div class="m-0">
-        <jiki-item-project-resume
-          *ngFor="let project of projects"
-          [projects]="projects"
-          [project]="project"
-          [currentSprint]="currentSprint"
+        <jiki-item-project-resume *ngIf="currentSprint"
+          [project]="currentProject"
+          [sprint]="currentSprint"
           [filterText]="filterText"
           [filterAssignee]="filterAssignee"
           [filterReporter]="filterReporter"
           [filterStatus]="filterStatus"
           [isBacklog]=false
+          [movable]=true
         ></jiki-item-project-resume>
         </div>
       </div>
       <div class="sprints-row">
         <div class="m-0">
         <jiki-item-project-resume
-          *ngFor="let project of projects"
-          [projects]="projects"
-          [project]="project"
-          [currentSprint]="currentSprint"
+          [project]="currentProject"
+          [sprint]="currentSprint"
           [filterText]="filterText"
           [filterAssignee]="filterAssignee"
           [filterReporter]="filterReporter"
           [filterStatus]="filterStatus"
           [isBacklog]=true
+          [movable]=true
         ></jiki-item-project-resume>
         </div>
       </div>

@@ -1,0 +1,14 @@
+.sprint-dialog form {
+    margin-bottom: 20px;
+  }
+  .sprint-dialog form > * {
+    margin: 5px 0;
+  }
+  
+   .form-field-businessValue{
+    width: 14em;
+   }
+  .form-error{
+  font-size:75%;
+  }
+  
