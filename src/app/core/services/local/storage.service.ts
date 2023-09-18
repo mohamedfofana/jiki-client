@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { IProject } from 'src/app/shared/model/project.model';
 import * as CryptoJS from 'crypto-js';
 import { ITeam } from 'src/app/shared/model/team.model';
+import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
 
 enum StorageKeyEnum {
   TOKEN_ID_KEY = 'top_token',
@@ -50,6 +51,10 @@ export class StorageService {
     const user = <IUser> JSON.parse(userEncrypt);
 
     return user;
+  }
+
+  isUserSubroleAdmin(): boolean {
+    return  UserRoleEnum.ADMIN === this.getUser().subrole;
   }
 
   getProject():IProject {

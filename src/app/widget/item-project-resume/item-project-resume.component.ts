@@ -4,7 +4,6 @@ import { IStory } from '../../shared/model/story.model';
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
 import { IProject } from 'src/app/shared/model/project.model';
-
 import { MatMenuTrigger } from '@angular/material/menu';
 import { ISprint } from 'src/app/shared/model/sprint.model';
 import { IBacklog } from 'src/app/shared/model/backlog.model';
@@ -14,14 +13,9 @@ import { DialogService } from 'src/app/core/services/dialog/dialog.service';
 import { SprintStartDialogComponent } from 'src/app/pages/sprint/sprint-start-dialog/sprint-start-dialog.component';
 import { SprintStatusEnum } from 'src/app/shared/enum/sprint-status.enum';
 import { SprintStatusConstant } from 'src/app/shared/constants/sprint-status.constant';
-import { SprintService } from 'src/app/core/services/database/sprint.service';
 import { SprintCloseDialogComponent } from 'src/app/pages/sprint/sprint-close-dialog/sprint-close-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { IDialogData } from 'src/app/shared/model/dialog-data.model';
-import { ConfirmDialogComponent } from 'src/app/core/confirm-dialog/confirm-dialog.component';
-import { ComponentType } from '@angular/cdk/portal';
-import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { MatTableDataSource } from '@angular/material/table';
+import { StorageService } from 'src/app/core/services/local/storage.service';
 
 @Component({
   selector: 'jiki-item-project-resume',
@@ -54,6 +48,7 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
 
   constructor(  private _storyService: StoryService,
                 private _dialogService: DialogService,
+                private _storageService: StorageService,
                 private _notifierService: NotifierService) {
     super();
   }
@@ -62,10 +57,10 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
     this.stories$ = this.filteredStories$ = this._notifierService.storiesNotifier().pipe(
       switchMap( _ => this.initStories())
     );    
-
+    
     if (!this.isBacklog && this.sprint) {
-      this.notStarted = (this.sprint.status === SprintStatusEnum.CREATED); 
-      this.closable = (this.sprint.status === SprintStatusEnum.IN_PROGRESS); 
+      this.notStarted = (this.sprint.status === SprintStatusEnum.CREATED)  && this.movable && this._storageService.isUserSubroleAdmin(); 
+      this.closable = (this.sprint.status === SprintStatusEnum.IN_PROGRESS) && this._storageService.isUserSubroleAdmin(); 
       this.sprintTitle += ' ' + this.sprint.id; 
     }
   }

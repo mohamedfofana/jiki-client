@@ -32,7 +32,7 @@
        <button mat-raised-button color="primary" [matMenuTriggerFor]="menu" *ngIf="isLoggedIn && !isLoggedInAsAdmin " >Create</button>
        <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="addStory(emptyStory)">Story / Bug</button>
-        <button mat-menu-item (click)="addSprint(emptySprint)">Sprint</button>
+        <button mat-menu-item (click)="addSprint(emptySprint)" *ngIf="canCreateSprint">Sprint</button>
       </mat-menu>
     </div>    
 

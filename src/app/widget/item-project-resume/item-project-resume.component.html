@@ -11,7 +11,7 @@
         <mat-chip [ngStyle]="{'backgroundColor': sprint.iconStatusColor, 'color':'white'}">{{statuses | constantType: sprint.status}}</mat-chip>
       </mat-chip-listbox>
     </mat-panel-description>
-    <button mat-raised-button class="float-start me-2" color="primary" (click)="startSprint()" *ngIf="notStarted && movable">
+    <button mat-raised-button class="float-start me-2" color="primary" (click)="startSprint()" *ngIf="notStarted">
       Start sprint
     </button>
     <button mat-raised-button class="float-start me-2" color="warn" (click)="closeSprint()" *ngIf="closable">
