@@ -36,6 +36,7 @@ export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
   project: IProject;
   emptySprint: ISprint;
   emptyStory: IStory;
+  canCreateSprint: boolean = false;
   
   constructor(private formBuilder: FormBuilder, 
               private router: Router,
@@ -49,6 +50,7 @@ export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
   }
 
   ngOnInit() {
+    this.canCreateSprint = this._storageService.isUserSubroleAdmin();
     $('.navbar-nav-top a').on('click', () => {
       $('.navbar-nav-top').find('li.active').removeClass('active');
       $(this).parent('li').addClass('active');
@@ -67,9 +69,7 @@ export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
                             }
     });
     this.subscriptions.push(sub);
-    this.initAuth();
-
-   
+    this.initAuth(); 
   }
 
   initAuth(): void{
