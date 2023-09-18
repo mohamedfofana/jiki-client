@@ -7,6 +7,10 @@ import { BoardRoutingModule } from './board-routing.module';
 
 @NgModule({
   declarations: [BoardRoutingModule.components],
-  imports: [BoardRoutingModule, WidgetModule, CommonModule, MyMaterialModule, ReactiveFormsModule]
+  imports: [ BoardRoutingModule, 
+             WidgetModule, 
+             CommonModule, 
+             MyMaterialModule, 
+             ReactiveFormsModule]
 })
 export class BoardModule { }

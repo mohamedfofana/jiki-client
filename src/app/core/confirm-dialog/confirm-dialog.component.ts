@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IDialogData } from 'src/app/shared/model/dialog-data.model';
 
@@ -8,9 +8,9 @@ import { IDialogData } from 'src/app/shared/model/dialog-data.model';
   styleUrls: ['./confirm-dialog.component.css']
 })
 export class ConfirmDialogComponent {
+
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IDialogData){
-      this.data.confirmed = false;
-    }
+    @Inject(MAT_DIALOG_DATA) public data: IDialogData){    
+    }     
 }

@@ -1,0 +1,21 @@
+.story-dialog form {
+    margin-bottom: 20px;
+  }
+  .story-dialog form > * {
+    margin: 5px 0;
+  }
+  
+  .story-dialog .mat-form-field + .mat-form-field {
+    margin-left: 8px;
+  }
+  
+  .form-field-story-title, .form-field-story-description{
+    width: -webkit-fill-available;
+   }
+   .form-field-businessValue{
+    width: 14em;
+   }
+  .form-error{
+  font-size:75%;
+  }
+  

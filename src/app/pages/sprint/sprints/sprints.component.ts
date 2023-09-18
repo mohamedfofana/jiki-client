@@ -6,14 +6,13 @@ import { ISprint } from '../../../shared/model/sprint.model';
 import { AppConfigService } from '../../../core/config/appconfig-service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { StorageService } from 'src/app/core/services/local/storage.service';
-import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
-import { SprintAddEditDialogComponent } from '../sprint-add-edit-dialog/sprint-add-edit-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { IProject } from 'src/app/shared/model/project.model';
 import { map, mergeMap } from 'rxjs';
+import { AuthService } from 'src/app/core/services/database/auth.service';
 
 @Component({
   selector: 'jiki-sprints',
@@ -21,6 +20,7 @@ import { map, mergeMap } from 'rxjs';
   styleUrls: ['./sprints.component.css']
 })
 export class SprintsComponent extends AbstractOnDestroy implements OnInit {
+  title = 'Sprints';
   sprints: ISprint[];
   filterText:string;
   filterAssignee:IUser[];
@@ -46,19 +46,23 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
     StoryStatusEnum.DONE,
     StoryStatusEnum.BLOCKED
   ];
-  constructor(public dialog: MatDialog,private _appConfigService: AppConfigService,
-    private _sprintService: SprintService,
-    private _userService: UserService,
-    private _storageService: StorageService) {
+  constructor(public _dialog: MatDialog,
+              private _appConfigService: AppConfigService,
+              private _sprintService: SprintService,
+              private _userService: UserService,
+              private _authservice: AuthService,
+              private _storageService: StorageService) {
       super();
     }
 
   ngOnInit() {
-    this.project = this._storageService.getProject();
-    let subscriptionSprint$ = this._sprintService.getSprintsByProjectId(this.project.id)
+    if(!this._authservice.isUserAdmin()){
+      this.project = this._storageService.getProject();
+      this.title =this.project.name +  '- Sprints'
+      const subscriptionSprint$ = this._sprintService.findByProjectId(this.project.id)
                               .pipe(
                                 map((sprints: ISprint[]) => {
-                                  if(sprints){
+                                  if(sprints  && sprints.length > 0){
                                     this.sprints = sprints.sort((s1, s2)=> s1.id>s2.id? -1:1);
                                     this.sprints.forEach(sprint=> {
                                       sprint.iconStatus = this.getStatusConfigKey(sprint);
@@ -67,7 +71,7 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
                                   }
                                 }),
                                 mergeMap(() => 
-                                  this._userService.findAll()
+                                  this._userService.findByTeam(this._storageService.getUser().team.id)
                                 )
                               ).subscribe((users: IUser[]) => {
                                 if(users){
@@ -75,7 +79,8 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
                                   this.reporterList = this.assigneeList;
                                 }
                               });
-    this.subscriptions.push(subscriptionSprint$);                     
+      this.subscriptions.push(subscriptionSprint$);      
+    }                   
   }
 
   filterTextChanged(event: any) {
@@ -121,20 +126,5 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
   getStatusColorConfigKey(sprint:ISprint){
     return this._appConfigService.getSprintStatusIconColor(sprint.status);
   }
-  addEditProject(project: ISprint) {
-    let dialogData: IDialogFormData<ISprint> = {
-      new: project?false:true,
-      entity: project
-    }
-    const dialogRef = this.dialog.open(SprintAddEditDialogComponent, {
-      data: dialogData,
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result.new){
-        let data = this.dataSource.data;
-        data.push(result.entity);
-        this.dataSource.data = data;
-      }
-    });
-  }
+
 }

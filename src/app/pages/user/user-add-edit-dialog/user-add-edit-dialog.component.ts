@@ -2,18 +2,17 @@ import { AfterContentChecked, ChangeDetectorRef, Component, Inject, OnInit } fro
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GrowlerMessageType, GrowlerService } from 'src/app/core/growler/growler.service';
-import { ProjectService } from 'src/app/core/services/database/project.service';
 import { TeamService } from 'src/app/core/services/database/team.service';
 import { UserService } from 'src/app/core/services/database/user.service';
-import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
-import { UserStatusEnum } from 'src/app/shared/enum/user-status-enum';
 import { IResponseType } from 'src/app/shared/interfaces';
 import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
-import { IProject } from 'src/app/shared/model/project.model';
 import { ITeam } from 'src/app/shared/model/team.model';
 import { IUser } from 'src/app/shared/model/user.model';
 import { errorMessages, MyErrorStateMatcher, regExps } from 'src/app/shared/validators/custom.validators';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
+import { UserStatusConstant } from 'src/app/shared/constants/user-status.constant';
+import { UserRoleConstant } from 'src/app/shared/constants/user-role.constant';
+import { findConstantValueByCode } from 'src/app/core/helpers/enum.helpers';
 
 @Component({
   selector: 'jiki-user-add-edit-dialog',
@@ -31,17 +30,14 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
   roleFormControl: FormControl<string|null>;
   statusFormControl: FormControl<string|null>;
   teamFormControl: FormControl<number|null>;
-  projectFormControl: FormControl<number|null>;
   errors = errorMessages;
   formError:boolean;
   formErrorMessage:string;
   matcher = new MyErrorStateMatcher();
   newUser: IUser;
-  statuses = UserStatusEnum;
-  roles = UserRoleEnum;
+  statuses = UserStatusConstant;
+  roles = UserRoleConstant;
   teams: ITeam[];
-  projects: IProject[];
-  enumKeys = Object.keys;
   differentPassword:boolean = false;
 
   constructor(
@@ -49,14 +45,12 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
     @Inject(MAT_DIALOG_DATA) public dialogFormData: IDialogFormData<IUser>,
     private _formBuilder: FormBuilder,
     private _userService: UserService,
-    private _projectService: ProjectService,
     private _teamService: TeamService,
     private _growler: GrowlerService,
     private _changeDedectionRef: ChangeDetectorRef) {
     super();
   }
   ngOnInit(){
-    this.initProjects();
     this.initTeams();
     this.initForm();
   }
@@ -70,11 +64,9 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
         this.passwordFormControl = new FormControl('',);
         this.passwordConfirmFormControl = new FormControl('',);
         this.roleFormControl = new FormControl(this.dialogFormData.entity.role, [Validators.required]);
-        this.statusFormControl = new FormControl(this.dialogFormData.entity.status, [Validators.required]);
+        this.statusFormControl = new FormControl(findConstantValueByCode(this.statuses, this.dialogFormData.entity.status), [Validators.required]);
         this.teamFormControl = new FormControl(this.dialogFormData.entity.team? this.dialogFormData.entity.team.id:null, [Validators.required]);
-        this.projectFormControl = new FormControl(this.dialogFormData.entity.project?this.dialogFormData.entity.project.id:null, [Validators.required]);
-
-     }else{
+    }else{
         this.emailFormControl = new FormControl('', [Validators.required, Validators.email]);
         this.usernameFormControl = new FormControl('', [Validators.required]);
         this.firstnameFormControl = new FormControl('', [Validators.required]);
@@ -82,9 +74,8 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
         this.passwordFormControl = new FormControl('', [Validators.required, Validators.pattern(regExps['password'])]);
         this.passwordConfirmFormControl = new FormControl('', [Validators.required]);
         this.roleFormControl = new FormControl('', [Validators.required]);
-        this.statusFormControl = new FormControl('', [Validators.required]);
+        this.statusFormControl = new FormControl('');
         this.teamFormControl = new FormControl(null, [Validators.required]);
-        this.projectFormControl = new FormControl(null, [Validators.required]);
      }
      this.userForm = this._formBuilder.group({
       email : this.emailFormControl,
@@ -97,8 +88,6 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
       status : this.statusFormControl,
       team : this._formBuilder.group({
           id: this.teamFormControl}),
-      project : this._formBuilder.group({
-          id: this.projectFormControl})
     });
   }
   initTeams(){
@@ -109,16 +98,6 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
       }
     });
   this.subscriptions.push(subscriptionTeams);
-  }
-
-  initProjects(){
-    let subscriptionProjects = this._projectService.findAll()
-    .subscribe((projects: IProject[]) => {
-      if(projects){
-        this.projects = projects;
-      }
-    });
-  this.subscriptions.push(subscriptionProjects);
   }
 
   ngAfterContentChecked(): void {

@@ -19,9 +19,4 @@ export class BacklogService {
         return this.http.get<IBacklog[]>(this._appConfigService.apiConfig().apiEndpoint + this.backlogUrl + '/all');
     }
 
-
-    getCurrentBacklog(): Observable<IBacklog[]> {
-      return this.http.get<IBacklog[]>(this._appConfigService.apiConfig().apiEndpoint + this.backlogUrl + '/current');
-    }
-
 }

@@ -7,6 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { ISprint } from 'src/app/shared/model/sprint.model';
 import { AppConfigService } from '../../config/appconfig-service';
 import { IResponseType } from 'src/app/shared/interfaces';
+import { DateService } from '../local/date.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,30 +15,45 @@ import { IResponseType } from 'src/app/shared/interfaces';
 export class SprintService {
     private sprintUrl:string = "/sprint"
     constructor(private http: HttpClient,
-      private _appConfigService: AppConfigService) { }
+                private _appConfigService: AppConfigService,
+                private _dateService: DateService
+      ) { }
 
    /*
      Return current sprint of a project
     */
-    getCurrentByProjectId(id:number): Observable<ISprint> {
+    findCurrentByProjectId(id:number): Observable<ISprint> {
       return this.http.get<ISprint>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/current/project/' + id);
+    }
+
+     /*
+     Return current sprint of a project
+    */
+     findRunningByProjectId(id:number): Observable<ISprint> {
+      return this.http.get<ISprint>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/running/project/' + id);
+    }
+
+    findByStatusInProject(id:number, status: string): Observable<ISprint[]> {
+      return this.http.get<ISprint[]>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/project/' + id + '/status/' + status);
     }
 
   /*
 	 * find sprints by project
 	 */
-    getSprintsByProjectId(id:number): Observable<ISprint[]> {
+    findByProjectId(id:number): Observable<ISprint[]> {
       return this.http.get<ISprint[]>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/project/' + id);
     }
   /*
-	 * find sprint by status = RUNNING
+	 * find sprint by status = IN_PROGRESS
 	 */
-    getCurrentSprint(): Observable<ISprint[]> {
+    findCurrentSprint(): Observable<ISprint[]> {
       return this.http.get<ISprint[]>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/current');
     }
 
     create(sprint: ISprint): Observable<IResponseType<ISprint>> {
-      sprint.creationDate = this._appConfigService.currentTimestamp();
+      sprint.creationDate = this._dateService.currentTimestamp();
+      sprint.updateDate = this._dateService.currentTimestamp();
+      
       return this.http.post<IResponseType<ISprint>>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/create', sprint)
       .pipe(
         map(response => {
@@ -46,9 +62,14 @@ export class SprintService {
       );
     }
 
-    update(team: ISprint): Observable<IResponseType<ISprint>> {
-      team.updateDate = this._appConfigService.currentTimestamp();
-      return this.http.put<IResponseType<ISprint>>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/update', team);
+    close(sprint: ISprint): Observable<IResponseType<ISprint>> {
+      return this.http.put<IResponseType<ISprint>>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/close', sprint);
+    }
+
+    start(sprint: ISprint): Observable<IResponseType<ISprint>> {
+      sprint.updateDate = this._dateService.currentTimestamp();
+
+      return this.http.put<IResponseType<ISprint>>(this._appConfigService.apiConfig().apiEndpoint + this.sprintUrl + '/start', sprint);
     }
 
     delete(id: number): Observable<IResponseType<ISprint>> {

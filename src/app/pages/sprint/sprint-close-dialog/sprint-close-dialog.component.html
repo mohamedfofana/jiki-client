@@ -1,0 +1,36 @@
+<h1 mat-dialog-title class="text-center">Close Sprint</h1>
+<div class="spint-dialog" mat-dialog-content>
+<span class="badge bg-success">{{doneStoriesCount}}</span><span color="black"> terminated stories.</span>
+<br>
+<span class="badge bg-warning">{{remainingStoriesCount}}</span><span> remaining stories.</span>
+<br><br>
+  <form [formGroup]="sprintForm"class="sprintForm" (submit)="onSubmitClick()" novalidate>
+    <table  *ngIf="remainingStoriesCount > 0" >      
+      <tr>
+        <td formGroupName="sprint" class="float-end">
+          <mat-form-field appearance="fill">
+            <mat-label>Move to</mat-label>
+            <mat-select [formControl]="sprintFormControl">
+              <mat-option [value]="CODE_BACKLOG">Backlog</mat-option>
+              <mat-option *ngFor="let sprint of sprints" [value]="sprint.id">
+                Sprint {{sprint.id}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </tr>           
+      <tr *ngIf="formError">
+        <td>
+          <span class="mat-error">{{formErrorMessage}}</span>
+        </td>
+      </tr>
+    </table>  
+    <span *ngIf="!sprints && stories"> {{infoMessage}}</span>
+    <br>
+    <div mat-dialog-actions class="float-end">
+      <button mat-raised-button type="submit" *ngIf="remainingStoriesCount > 0" [disabled]="!sprintForm.valid">Close</button>
+      <button mat-raised-button type="submit" *ngIf="remainingStoriesCount == 0">Close</button>
+      <button mat-button [mat-dialog-close]="">Cancel</button>
+    </div>
+  </form>
+</div>

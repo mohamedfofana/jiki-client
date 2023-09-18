@@ -5,7 +5,7 @@ import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
 import { ProjectService } from 'src/app/core/services/database/project.service';
 import { TeamService } from 'src/app/core/services/database/team.service';
-import { ProjectStatusEnum } from 'src/app/shared/enum/project-status.enum';
+import { ProjectStatusConstant } from 'src/app/shared/constants/project-status.constant';
 import { IResponseType } from 'src/app/shared/interfaces';
 import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { IProject } from 'src/app/shared/model/project.model';
@@ -20,6 +20,7 @@ import { errorMessages, MyErrorStateMatcher, regExps } from 'src/app/shared/vali
 export class ProjectAddEditDialogComponent extends AbstractOnDestroy implements OnInit, AfterContentChecked {
   projectForm: FormGroup;
   nameFormControl: FormControl<string|null>;
+  shortnameFormControl: FormControl<string|null>;
   descriptionFormControl: FormControl<string|null>;
   statusFormControl: FormControl<string|null>;
   teamFormControl: FormControl<number|null>;
@@ -28,9 +29,8 @@ export class ProjectAddEditDialogComponent extends AbstractOnDestroy implements 
   formErrorMessage:string;
   matcher = new MyErrorStateMatcher();
   newProject: IProject;
-  statuses = ProjectStatusEnum;
+  statuses = ProjectStatusConstant;
   teams: ITeam[];
-  enumKeys = Object.keys;
   differentPassword:boolean = false;
 
   constructor(
@@ -51,18 +51,21 @@ export class ProjectAddEditDialogComponent extends AbstractOnDestroy implements 
   initForm(){
     if (this.dialogFormData.entity){
         this.nameFormControl = new FormControl(this.dialogFormData.entity.name, [Validators.required]);
+        this.shortnameFormControl = new FormControl(this.dialogFormData.entity.shortname, [Validators.required]);
         this.descriptionFormControl = new FormControl(this.dialogFormData.entity.description, [Validators.required]);
         this.statusFormControl = new FormControl(this.dialogFormData.entity.status, [Validators.required]);
         this.teamFormControl = new FormControl(this.dialogFormData.entity.team.id, [Validators.required]);
 
      }else{
         this.nameFormControl = new FormControl('', [Validators.required]);
+        this.shortnameFormControl = new FormControl('', [Validators.required]);
         this.descriptionFormControl = new FormControl('', [Validators.required]);
-        this.statusFormControl = new FormControl('', [Validators.required]);
+        this.statusFormControl = new FormControl('');
         this.teamFormControl = new FormControl(null, [Validators.required]);
      }
      this.projectForm = this._formBuilder.group({
       name : this.nameFormControl,
+      shortname : this.shortnameFormControl,
       description : this.descriptionFormControl,
       status : this.statusFormControl,
       team : this._formBuilder.group({
@@ -70,7 +73,8 @@ export class ProjectAddEditDialogComponent extends AbstractOnDestroy implements 
     });
   }
   initTeams(){
-    let subscriptionTeams = this._teamService.findAll()
+    const projectId = this.dialogFormData.entity?.id;
+    let subscriptionTeams = this._teamService.findAllAvailableForProject(projectId)
     .subscribe((teams: ITeam[]) => {
       if(teams){
         this.teams = teams;
@@ -87,6 +91,7 @@ export class ProjectAddEditDialogComponent extends AbstractOnDestroy implements 
     this.differentPassword = false;
     this.setFormError(false, '');
     this.newProject = this.projectForm.value;
+    this.newProject.shortname = this.newProject.shortname.toUpperCase();
    if (this.dialogFormData.entity){
       this.newProject.id=this.dialogFormData.entity.id;
       let subscriptionProjectAdd = this._projectService.update(this.newProject)
@@ -129,8 +134,8 @@ export class ProjectAddEditDialogComponent extends AbstractOnDestroy implements 
     if(dialogFormData.entity){
       dialogFormData.entity.id = newT.id;
       dialogFormData.entity.name= newT.name;
+      dialogFormData.entity.shortname= newT.shortname;
       dialogFormData.entity.description = newT.description;
-      dialogFormData.entity.status = newT.status;
       dialogFormData.entity.team.id = newT.team.id;
       dialogFormData.entity.creationDate =  newT.creationDate;
       dialogFormData.entity.updateDate = newT.updateDate;

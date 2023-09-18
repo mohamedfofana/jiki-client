@@ -2,21 +2,26 @@ import { IUser } from '../../../shared/model/user.model';
 import { Injectable } from '@angular/core';
 import { IProject } from 'src/app/shared/model/project.model';
 import * as CryptoJS from 'crypto-js';
+import { ITeam } from 'src/app/shared/model/team.model';
+
+enum StorageKeyEnum {
+  TOKEN_ID_KEY = 'top_token',
+  USER_KEY = 'user',
+  PROJECT_KEY = 'project'
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class StorageService {
-  readonly TOKEN_ID_KEY = 'top_token';
-  readonly USER_KEY = 'user';
-  readonly secret_key = '!@JikI';
+  readonly SECRECT_KEY = '!@JikI';
 
   private encrypt(value: string): string {
-    return CryptoJS.AES.encrypt(value, this.secret_key).toString();
+    return CryptoJS.AES.encrypt(value, this.SECRECT_KEY).toString();
   }
 
   private decrypt(value: string): string {
-    return CryptoJS.AES.decrypt(value, this.secret_key).toString(CryptoJS.enc.Utf8);
+    return CryptoJS.AES.decrypt(value, this.SECRECT_KEY).toString(CryptoJS.enc.Utf8);
   }
 
   storeItem(key: string, value:string){
@@ -36,36 +41,48 @@ export class StorageService {
   }
 
   getToken(): string{
-    const token = this.findItem(this.TOKEN_ID_KEY) || '{}';
+    const token = this.findItem(StorageKeyEnum.TOKEN_ID_KEY) || '{}';
     return token;
   }
 
   getUser(): IUser {
-    const userEncrypt = this.decrypt(this.findItem(this.USER_KEY) || '{}');
+    const userEncrypt = this.decrypt(this.findItem(StorageKeyEnum.USER_KEY) || '{}');
     const user = <IUser> JSON.parse(userEncrypt);
 
     return user;
   }
 
   getProject():IProject {
+    const projectEncrypt = this.decrypt(this.findItem(StorageKeyEnum.PROJECT_KEY) || '{}');
+    const project = <IProject> JSON.parse(projectEncrypt);
+
+    return project;
+  }
+
+  getTeam():ITeam {
     const user = this.getUser();
-    return user.project;
+    return user.team;
+  }
+  
+  setProject(project: IProject) {
+    this.storeItem(StorageKeyEnum.PROJECT_KEY, this.encrypt(JSON.stringify(project)));
   }
 
   login(user: IUser, token: string){
-    this.storeItem(this.TOKEN_ID_KEY, token);
-    this.storeItem(this.USER_KEY, this.encrypt(JSON.stringify(user)));
+    this.storeItem(StorageKeyEnum.TOKEN_ID_KEY, token);
+    this.storeItem(StorageKeyEnum.USER_KEY, this.encrypt(JSON.stringify(user)));
   }
 
   isUserInStorage(): boolean{
-    if(this.itemExists(this.TOKEN_ID_KEY) && this.itemExists(this.USER_KEY)){
+    if(this.itemExists(StorageKeyEnum.TOKEN_ID_KEY) && this.itemExists(StorageKeyEnum.USER_KEY)){
       return true;
     }
     return false;
   }
 
   logout(){
-    localStorage.removeItem(this.TOKEN_ID_KEY);
-    localStorage.removeItem(this.USER_KEY);
+    Object.values(StorageKeyEnum).forEach(value => {
+      localStorage.removeItem(value);
+    });
   }
 }

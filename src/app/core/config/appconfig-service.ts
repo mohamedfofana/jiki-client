@@ -92,15 +92,10 @@ export class AppConfigService {
     }
 
     public handleError(error: HttpErrorResponse) {
-      console.error('AppConfigService Global HTTP error handler');
       if (error.error instanceof Error) {
           const errMessage = error.error.message;
           return throwError(errMessage);
       }
       throw error;
     }
-
-  currentTimestamp(): string{
-    return <string> this._datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
-  }
 }

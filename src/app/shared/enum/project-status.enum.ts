@@ -1,4 +1,4 @@
 export enum ProjectStatusEnum {
-  OPEN = "OPEN",
-  CLOSED = "CLOSED"
+  CREATED = "Created",
+  CLOSED = "Closed"
 }

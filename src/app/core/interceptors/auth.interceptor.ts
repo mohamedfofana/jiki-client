@@ -15,7 +15,7 @@ export class AuthInterceptor implements HttpInterceptor {
     this._loaderService.requestStarted();
     
     const token: string = this._storageService.getToken();
-    if (this._authService.isLoggedIn()) {
+    if (this._authService.isUserAndTokenValid()) {
       request = request.clone({ headers: request.headers.set('Authorization', 'Bearer ' + token) });
     }
     if (!request.headers.has('Content-Type')) {

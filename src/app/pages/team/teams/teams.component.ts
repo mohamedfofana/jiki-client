@@ -13,6 +13,7 @@ import { IDialogData } from 'src/app/shared/model/dialog-data.model';
 import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { ITeam } from 'src/app/shared/model/team.model';
 import { TeamAddEditDialogComponent } from '../team-add-edit-dialog/team-add-edit-dialog.component';
+import { TeamStatusConstant } from 'src/app/shared/constants/team-status.constant';
 
 @Component({
   selector: 'app-teams',
@@ -20,7 +21,7 @@ import { TeamAddEditDialogComponent } from '../team-add-edit-dialog/team-add-edi
   styleUrls: ['./teams.component.css']
 })
 export class TeamsComponent  extends AbstractOnDestroy implements OnInit, AfterViewInit {
-  projects: ITeam[] = [];
+  teams: ITeam[] = [];
   emptyTeam: ITeam;
   displayedColumns: string[] = ['id', 'name', 'status', 'actions'];
   dataSource = new MatTableDataSource<ITeam>();
@@ -28,6 +29,7 @@ export class TeamsComponent  extends AbstractOnDestroy implements OnInit, AfterV
   @ViewChild(MatSort) sort: MatSort;
   formError: boolean;
   formErrorMessage: string;
+  statuses = TeamStatusConstant;
 
   constructor(public dialog: MatDialog,
     public dialogConfirm: MatDialog,
@@ -38,10 +40,10 @@ export class TeamsComponent  extends AbstractOnDestroy implements OnInit, AfterV
 
   ngOnInit() {
     let subscriptionTeams = this._projectService.findAll()
-      .subscribe((projects: ITeam[]) => {
-        if (projects) {
-          this.projects = projects;
-          this.dataSource.data = projects as ITeam[];
+      .subscribe((teams: ITeam[]) => {
+        if (teams) {
+          this.teams = teams;          
+          this.dataSource.data = teams as ITeam[];
         }
       });
     this.subscriptions.push(subscriptionTeams);
@@ -66,14 +68,28 @@ export class TeamsComponent  extends AbstractOnDestroy implements OnInit, AfterV
         entity: team
     }
     this.setFormError(false, '');
+
     const dialogRef = this.dialog.open(TeamAddEditDialogComponent, {
       data: dialogData,
     });
+
     dialogRef.afterClosed().subscribe(result => {
-      if (result && result.new){
+      if (result && result.entity){
+        const newTeam: ITeam = result.entity;
         let data = this.dataSource.data;
-        data.push(result.entity);
-        this.dataSource.data = data;
+        if (result.new){
+          data.push(newTeam);
+          this.dataSource.data = data;
+        }else {
+          this.dataSource.data.forEach( t => {
+            if (t.id === newTeam.id) {
+              t.name = newTeam.name;
+              t.description = newTeam.description;
+              t.status = newTeam.status;
+            }
+          });
+          this.dataSource.data = data;
+        }
       }
     });
   }
@@ -83,8 +99,9 @@ export class TeamsComponent  extends AbstractOnDestroy implements OnInit, AfterV
       title: 'Please Confirm',
       body: 'Are you sure you want to delete the team?',
       okColor: 'warn',
+      withActionButton: true,
       cancelButtonText: 'Cancel',
-      okButtonText: 'Delete'
+      actionButtonText: 'Delete'
     };
 
     const dialogRef = this.dialogConfirm.open(ConfirmDialogComponent, {

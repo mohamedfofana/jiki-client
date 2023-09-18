@@ -1,0 +1,32 @@
+<h1 mat-dialog-title class="text-center">Add Sprint</h1>
+<div class="spint-dialog" mat-dialog-content>
+  <form [formGroup]="sprintForm" class="sprintForm" (submit)="onSubmitClick()" novalidate>
+    <table>      
+      <tr>
+        <td colspan="2">
+          <mat-form-field  class="form-field-sprintTitle">
+            <mat-label>Tiltle</mat-label>
+            <input matInput [formControl]="titleFormControl" size="10">
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <mat-form-field  class="form-field-sprintDescription">
+            <mat-label>Description</mat-label>
+            <textarea matInput [formControl]="descriptionFormControl"></textarea>
+          </mat-form-field>
+        </td>
+      </tr>           
+      <tr *ngIf="formError">
+        <td>
+          <span class="mat-error">{{formErrorMessage}}</span>
+        </td>
+      </tr>
+    </table>
+    <div mat-dialog-actions class="float-end">
+      <button mat-raised-button type="submit" [disabled]="!sprintForm.valid">Save</button>
+      <button mat-button [mat-dialog-close]="">Cancel</button>
+    </div>
+  </form>
+</div>

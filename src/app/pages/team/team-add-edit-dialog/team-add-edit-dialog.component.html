@@ -11,12 +11,20 @@
         </td>
       </tr>
       <tr>
-        <td class="float-end">
+        <td>
+          <mat-form-field appearance="fill" class="form-field-description">
+            <mat-label>Description</mat-label>
+            <textarea matInput [formControl]="descriptionFormControl"></textarea>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td *ngIf="dialogFormData.entity" class="float-end">
           <mat-form-field appearance="fill">
             <mat-label>Status</mat-label>
             <mat-select [formControl]="statusFormControl">
-              <mat-option *ngFor="let status of enumKeys(statuses)" [value]="status">
-                {{status}}
+              <mat-option *ngFor="let status of statuses" [value]="status.code">
+                {{status.value}}
               </mat-option>
             </mat-select>
           </mat-form-field>

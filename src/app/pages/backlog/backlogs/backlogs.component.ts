@@ -1,5 +1,5 @@
 import { SprintService } from './../../../core/services/database/sprint.service';
-import { map, mergeMap } from 'rxjs';
+import { Observable, filter, map, mergeMap, of } from 'rxjs';
 import { IProject } from '../../../shared/model/project.model';
 import { ProjectService } from './../../../core/services/database/project.service';
 import { ISprint } from '../../../shared/model/sprint.model';
@@ -12,6 +12,7 @@ import { AppConfigService } from 'src/app/core/config/appconfig-service';
 import { UserService } from 'src/app/core/services/database/user.service';
 import { FormControl } from '@angular/forms';
 import { StoryStatusEnum } from 'src/app/shared/enum/story-status.enum';
+import { AuthService } from 'src/app/core/services/database/auth.service';
 
 @Component({
   selector: 'app-backlogs',
@@ -20,8 +21,8 @@ import { StoryStatusEnum } from 'src/app/shared/enum/story-status.enum';
 })
 export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
   currentSprint: ISprint;
+  currentProject: IProject;
   sprints: ISprint[];
-  projects: IProject[];
   stories: IStory[];
   filterText:string;
   filterAssignee:IUser[];
@@ -48,34 +49,26 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
     private _sprintService: SprintService,
     private _projectService: ProjectService,
     private _userService: UserService,
+    private _authservice: AuthService,
     private _storageService: StorageService) {
       super();
     }
 
   ngOnInit() {
-    let projectId = this._storageService.getProject().id;
-    let subscriptionSprint$ = this._sprintService.getCurrentByProjectId(projectId)
-                              .pipe(
+    if(!this._authservice.isUserAdmin()){
+      this.currentProject = this._storageService.getProject();
+      const subscriptionSprint$ = this._sprintService.findCurrentByProjectId(this.currentProject.id)
+                                .pipe(
                                 map((sprint: ISprint) => {
                                     if(sprint){
+                                      sprint.iconStatus = this.getStatusConfigKey(sprint);
+                                      sprint.iconStatusColor = this.getStatusColorConfigKey(sprint);
                                       this.currentSprint = sprint;
                                     }
                                   }
-                                ),
-                                mergeMap(() => 
-                                  this._projectService.findAll()
-                                ),
-                                map((projects: IProject[]) => {
-                                  if(projects){
-                                    this.projects = projects.sort((s1, s2)=> s1.name>s2.name? -1:1);
-                                    this.projects.forEach(project=> {
-                                      project.iconStatus = this.getStatusConfigKey(project);
-                                      project.iconStatusColor = this.getStatusColorConfigKey(project);
-                                    });
-                                  }
-                                }),
+                                ),                               
                                 mergeMap(()=> 
-                                  this._userService.findAll()
+                                  this._userService.findByTeam(this._storageService.getUser().team.id)
                                 )
                               ).subscribe((users: IUser[]) => {
                                 if(users){
@@ -84,7 +77,8 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
                                 }
                               });
 
-    this.subscriptions.push(subscriptionSprint$);
+      this.subscriptions.push(subscriptionSprint$);
+    }    
   }
 
   filterTextChanged(event: any) {
@@ -124,10 +118,10 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
     this.filterStatus = statuses.filter(st => st !== status);
     this.selectStatusFormControl.setValue(this.filterStatus);
   }
-  getStatusConfigKey(project:IProject){
-    return this._appConfigService.getSprintStatusIcon(project.status);
+  getStatusConfigKey(sprint:ISprint){
+    return this._appConfigService.getSprintStatusIcon(sprint.status);
   }
-  getStatusColorConfigKey(project:IProject){
-    return this._appConfigService.getSprintStatusIconColor(project.status);
+  getStatusColorConfigKey(sprint:ISprint){
+    return this._appConfigService.getSprintStatusIconColor(sprint.status);
   }
       }

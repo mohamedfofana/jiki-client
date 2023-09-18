@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { StoriesComponent } from './stories/stories.component';
 import { StoryViewEditComponent } from './story-view-edit/story-view-edit.component';
+import { StoryAddDialogComponent } from './story-add-dialog/story-add-dialog.component';
 
 
 const routes: Routes = [
-  { path: '', component: StoriesComponent },
   { path: 'viewEdit/:id', component: StoryViewEditComponent },
 ];
 
@@ -15,7 +14,6 @@ const routes: Routes = [
   ]
 })
 export class StoryRoutingModule {
-  static components = [StoriesComponent,
-                       StoryViewEditComponent
+  static components = [ StoryViewEditComponent, StoryAddDialogComponent
   ];
 }

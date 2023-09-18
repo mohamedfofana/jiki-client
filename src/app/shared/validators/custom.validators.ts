@@ -63,6 +63,27 @@ export const regExps1: { [key: string]: RegExp } = {
 export const StoryPointsSet:number[] = [1, 2, 3, 5, 8, 13];
 export const PrioritySet:string[] = ['1', '2', '3'];
 
+export const StoryPointsValues = [
+  {
+    value: 1, 
+  },
+  {
+    value: 2, 
+  },
+  {
+    value: 3, 
+  },
+  {
+    value: 5, 
+  },
+  {
+    value: 8, 
+  },
+  {
+    value: 13, 
+  }
+]
+
 export const regExps = {
   /*
   At least one digit [0-9]

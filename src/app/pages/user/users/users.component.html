@@ -34,12 +34,12 @@
 
     <ng-container matColumnDef="role">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Role </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.role}} </mat-cell>
+      <mat-cell *matCellDef="let user"> {{roles | constantType: user.role}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.status}} </mat-cell>
+      <mat-cell *matCellDef="let user"> {{statuses | constantType: user.status}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">

@@ -12,6 +12,8 @@ import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { IUser } from 'src/app/shared/model/user.model';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { UserAddEditDialogComponent } from '../user-add-edit-dialog/user-add-edit-dialog.component';
+import { UserRoleConstant } from 'src/app/shared/constants/user-role.constant';
+import { UserStatusConstant } from 'src/app/shared/constants/user-status.constant';
 
 @Component({
   selector: 'jiki-users',
@@ -28,6 +30,8 @@ export class UsersComponent extends AbstractOnDestroy implements OnInit, AfterVi
   @ViewChild(MatSort) sort: MatSort;
   formError: boolean;
   formErrorMessage: string;
+  roles = UserRoleConstant;
+  statuses = UserStatusConstant;
 
   constructor(public dialog: MatDialog,
     public dialogConfirm: MatDialog,
@@ -70,11 +74,30 @@ export class UsersComponent extends AbstractOnDestroy implements OnInit, AfterVi
       data: dialogData,
     });
     dialogRef.afterClosed().subscribe(result => {
-      if ( result && result.new){
+      if (result && result.entity){
+        const newUser: IUser = result.entity;
         let data = this.dataSource.data;
-        data.push(result.entity);
-        this.dataSource.data = data;
+        if (result.new){
+          data.push(newUser);
+          this.dataSource.data = data;
+        }else {
+          this.dataSource.data.forEach( t => {
+            if (t.id === newUser.id) {
+              t.username = newUser.username;
+              t.firstname = newUser.firstname;
+              t.lastname = newUser.lastname;
+              t.role = newUser.role;
+              t.status = newUser.status;
+            }
+          });
+          this.dataSource.data = data;
+        }
       }
+      // if ( result && result.new){
+      //   let data = this.dataSource.data;
+      //   data.push(result.entity);
+      //   this.dataSource.data = data;
+      // }
     });
   }
 
@@ -82,9 +105,10 @@ export class UsersComponent extends AbstractOnDestroy implements OnInit, AfterVi
     const dialogData: IDialogData = {
       title: 'Please Confirm',
       body: 'Are you sure you want to delete the user?',
+      withActionButton: true,
       okColor: 'warn',
       cancelButtonText: 'Cancel',
-      okButtonText: 'Delete'
+      actionButtonText: 'Delete'
     };
 
     const dialogRef = this.dialogConfirm.open(ConfirmDialogComponent, {

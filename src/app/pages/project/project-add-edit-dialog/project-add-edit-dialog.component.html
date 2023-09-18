@@ -1,7 +1,15 @@
-<h1 *ngIf="!dialogFormData.entity" mat-dialog-title class="text-center">Add new Project</h1>
+<h1 *ngIf="!dialogFormData.entity" mat-dialog-title class="text-center">Add Project</h1>
 <div class="project-dialog" mat-dialog-content>
   <form [formGroup]="projectForm" class="projectForm" (submit)="onSubmitClick()" novalidate>
     <table>
+      <tr>
+        <td colspan="2">
+          <mat-form-field appearance="fill" class="form-field-projectName">
+            <mat-label>Shortname</mat-label>
+            <input matInput [formControl]="shortnameFormControl" style="text-transform: uppercase;">
+          </mat-form-field>
+        </td>
+      </tr>
       <tr>
         <td colspan="2">
           <mat-form-field appearance="fill" class="form-field-projectName">
@@ -19,12 +27,12 @@
         </td>
       </tr>
       <tr>
-        <td>
+        <td *ngIf="dialogFormData.entity">
           <mat-form-field appearance="fill">
             <mat-label>Status</mat-label>
             <mat-select [formControl]="statusFormControl">
-              <mat-option *ngFor="let status of enumKeys(statuses)" [value]="status">
-                {{status}}
+              <mat-option *ngFor="let status of statuses" [value]="status.code">
+                {{status.value}}
               </mat-option>
             </mat-select>
           </mat-form-field>

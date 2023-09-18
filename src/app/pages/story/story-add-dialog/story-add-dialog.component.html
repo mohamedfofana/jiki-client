@@ -1,0 +1,130 @@
+<h1 mat-dialog-title class="text-center">Add Story</h1>
+<div class="story-dialog" mat-dialog-content>
+  <form [formGroup]="storyForm" class="storyForm" (submit)="onSubmitClick()" novalidate>
+    <table style="border-spacing: 20px 0; border-collapse: separate;">  
+      <tr>
+        <td>
+              <mat-form-field appearance="fill">
+                <mat-label>Sprint</mat-label>
+                <mat-select [formControl]="sprintFormControl">
+                  <mat-option *ngFor="let sprint of currentSprints" [value]="sprint.id">
+                    {{sprint.title}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        <td>
+            <mat-form-field appearance="fill">
+                <mat-label>Type</mat-label>
+                <mat-select [formControl]="typeFormControl">
+                  <mat-option *ngFor="let type of storyTypes" [value]="type.code">
+                    {{type.value}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <mat-form-field  class="form-field-story-title">
+            <mat-label>Tiltle</mat-label>
+            <input matInput [formControl]="titleFormControl" size="18">
+          </mat-form-field>
+        </td>
+      </tr>      
+      <tr>
+        <td>
+            <mat-form-field appearance="fill">
+                <mat-label>Status</mat-label>
+                <mat-select [formControl]="statusFormControl">
+                  <mat-option *ngFor="let status of statuses" [value]="status.code">
+                    {{status.value}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </td>
+        <td>
+            <mat-form-field appearance="fill">
+                <mat-label>Story Points</mat-label>
+                <mat-select [formControl]="storyPointsFormControl">
+                  <mat-option *ngFor="let storyPoint of storyPoints" [value]="storyPoint.value">
+                    {{storyPoint.value}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </td>
+      </tr> 
+      <tr>
+        <td>
+            <mat-form-field appearance="fill">
+                <mat-label>Priority</mat-label>
+                <mat-select [formControl]="priorityFormControl">
+                  <mat-option *ngFor="let priority of priorities" [value]="priority.code">
+                    {{priority.value}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </td>
+        <!-- <td>
+            <mat-form-field appearance="fill">
+                <mat-label>Categories</mat-label>
+                <mat-select [formControl]="categoryFormControl">
+                    <mat-option *ngFor="let c of category$ | async" [value]="c.title">
+                        {{c.title}}
+                    </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </td> -->
+        <td>
+            <mat-form-field appearance="fill">
+                <mat-label>Version</mat-label>
+                <mat-select [formControl]="versionFormControl">
+                    <mat-option *ngFor="let v of versions$ | async" [value]="v.version">
+                        {{v.version}}
+                    </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </td>
+      </tr>       
+      <tr style="border: 1px solid black;">
+        <td>
+            <mat-form-field appearance="fill">
+                <mat-label>Related stories</mat-label>
+                <mat-select [formControl]="linkTypeFormControl">
+                  <mat-option *ngFor="let linkType of linkTypes" [value]="linkType.code">
+                    {{linkType.value}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </td>
+        <td>
+            <mat-form-field >
+                <mat-select  [formControl]="selectStoriesFormControl" (selectionChange)="filterStoryChanged($event)" multiple>
+                  <mat-select-trigger>
+                    <mat-chip-listbox>
+                      <mat-chip *ngFor="let st of selectStoriesFormControl.value" [style.font.size.px]="10"
+                        [removable]="true" (removed)="onStoryRemoved(st)">
+                        {{ st.title }}
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                      </mat-chip>
+                    </mat-chip-listbox>
+                  </mat-select-trigger>
+  
+                  <mat-option *ngFor="let st of storiesList" [value]="st">
+                    {{ st.title}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </td>
+      </tr>
+      <tr *ngIf="formError">
+        <td>
+          <span class="mat-error">{{formErrorMessage}}</span>
+        </td>
+      </tr>
+    </table>
+    <div mat-dialog-actions class="float-end">
+      <button mat-raised-button type="submit" [disabled]="!storyForm.valid">Save / Add description</button>
+      <button mat-button [mat-dialog-close]="">Cancel</button>
+    </div>
+  </form>
+</div>

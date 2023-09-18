@@ -5,8 +5,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from 'src/app/core/services/database/auth.service';
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
-import { IUserLogin } from 'src/app/shared/interfaces';
+import { IAuthResponse, IUserLogin } from 'src/app/shared/interfaces';
 import { AbstractOnDestroy } from '../../core/services/abstract.ondestroy';
+import { StorageService } from 'src/app/core/services/local/storage.service';
+import { ProjectService } from 'src/app/core/services/database/project.service';
+import { JwtTokenService } from 'src/app/core/services/database/jwt-token.service';
+import { map, mergeMap } from 'rxjs';
+import { IProject } from 'src/app/shared/model/project.model';
 
 @Component({
     selector: 'user-login',
@@ -16,11 +21,16 @@ import { AbstractOnDestroy } from '../../core/services/abstract.ondestroy';
 export class LoginComponent extends AbstractOnDestroy implements OnInit {
     loginForm: FormGroup;
     errorMessage: string = '';
+    status: boolean = false;
+    url: string;
 
-    constructor(private formBuilder: FormBuilder,
-                private router: Router,
-                private authService: AuthService,
-                private growler: GrowlerService,) {
+    constructor(private _formBuilder: FormBuilder,
+                private _router: Router,
+                private _authService: AuthService,                
+                private _projectService: ProjectService,
+                private _jwtTokenService: JwtTokenService,
+                private _storageService: StorageService,
+                private _growler: GrowlerService,) {
                   super();
                  }
 
@@ -29,7 +39,7 @@ export class LoginComponent extends AbstractOnDestroy implements OnInit {
     }
 
     buildForm() {
-        this.loginForm = this.formBuilder.group({
+        this.loginForm = this._formBuilder.group({
             username: ['', [ Validators.required ]],
             password: ['', [ Validators.required ]]
         });
@@ -41,28 +51,45 @@ export class LoginComponent extends AbstractOnDestroy implements OnInit {
     get password(): any {
       return this.loginForm.get('password');
     }
+
     submit({ value, valid }: { value: IUserLogin, valid: boolean }) {
       this.setError('');
-       let subscription = this.authService.login(value)
-            .subscribe((status: boolean) => {
-                if (status) {
-                    this.growler.growl('Logged in', GrowlerMessageType.Info);
-                    if (this.authService.redirectUrl) {
-                        const redirectUrl = this.authService.redirectUrl;
-                        this.authService.redirectUrl = '';
-                        this.router.navigate([redirectUrl]);
-                    } else {
-                        this.router.navigate(['/board']);
-                    }
-                } else {
-                    this.setError('Email or password incorrect.');
+       let subscription = this._authService.login(value).pipe(
+                map((response: IAuthResponse) => { 
+                  this.status = response.status;                                 
+                  if (response.status){
+                    this._storageService.login(response.user, response.token);
+                    this._jwtTokenService.initToken(response.token);
+                    
+                      this._growler.growl('Logged in', GrowlerMessageType.Info);
+                      if (this._authService.redirectUrl) {
+                          this.url = this._authService.redirectUrl;
+                      }if (this._storageService.getUser().role === 'ADMIN') {
+                          this.url = '/users'
+                      }
+                      else {
+                        this.url = '/board'
+                      }                                                                
+                  } else {
+                      this.setError('Email or password incorrect.');
+  
+                  }
+                }),
+                mergeMap(() => 
+                  this._projectService.findByTeam(this._storageService.getUser().team.id)
+                ),
+                map((project: IProject) => {
+                  if(project){
+                    this._storageService.setProject(project);           
+                  }    
+                })).subscribe(() => {         
+                  if(this.status) {
+                    this._authService.userAuthChanged(this.status);
+                    this._router.navigate([this.url]);
+                  }
+              });
 
-                }
-            },
-            (err: any) => {
-              this.setError('Email or password incorrect.');
-            });
-            this.subscriptions.push(subscription);
+      this.subscriptions.push(subscription);
     }
 
     setError(loginError:string){

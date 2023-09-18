@@ -16,11 +16,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
             ReactiveFormsModule,
             CommonModule,
             FormsModule,
-           MyMaterialModule,
-           HttpClientModule,
-           WidgetModule,
-           SharedModule,
-           NgxEditorModule
+            MyMaterialModule,
+            HttpClientModule,
+            WidgetModule,
+            SharedModule,
+            NgxEditorModule
            ]
 })
 export class StoryModule { }

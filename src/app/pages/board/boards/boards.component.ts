@@ -11,7 +11,8 @@ import { StoryService } from './../../../core/services/database/story.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { IProject } from 'src/app/shared/model/project.model';
-import { map, mergeMap } from 'rxjs';
+import { filter, map, mergeMap } from 'rxjs';
+import { AuthService } from 'src/app/core/services/database/auth.service';
 
 @Component({
   selector: 'jiki-boards',
@@ -20,8 +21,9 @@ import { map, mergeMap } from 'rxjs';
 })
 export class BoardsComponent extends AbstractOnDestroy implements OnInit {
   boardTitle: string;
+  currentUser: IUser = this._storageService.getUser();
   currentSprint: ISprint;
-  project: IProject;
+  currentProject: IProject;
   projects: IProject[]=[];
   stories: IStory[];
   todoStories: IStory[];
@@ -38,44 +40,60 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
   assigneeList: IUser[];
   reporterList: IUser[];
   constructor(private _storyService: StoryService,
-     private _sprintService: SprintService,
-    private _storageService: StorageService,
-    private _userService: UserService) {
+              private _sprintService: SprintService,
+              private _authservice: AuthService,
+              private _storageService: StorageService,
+              private _userService: UserService) {
       super();
     }
 
   ngOnInit() {
-    this.project = this._storageService.getUser().project;
-    let projectId = this.project.id;
-    this.projects.push(this.project);
-
-    const subscriptionSprint$ = this._sprintService.getCurrentByProjectId(projectId)
-                .pipe(
+    this.boardTitle ='Board';
+    if(!this._authservice.isUserAdmin()){
+      this.currentProject = this._storageService.getProject();
+      this.projects.push(this.currentProject);
+      const subscriptionSprint$ = this._sprintService.findRunningByProjectId(this.currentProject.id)
+                .pipe(                  
+                  filter(sprint => {
+                    if(sprint)
+                     return true;
+                    else
+                     return false;
+                    }
+                  ),
                   map((sprint: ISprint) => {
                     this.currentSprint = sprint;
-                    this.boardTitle = sprint.project.name + ' - ' + sprint.title;
+                    this.boardTitle += ' Sprint - ' + sprint.id;
                     return sprint;
                   }),
                   mergeMap(sprint => {                    
-                    return this._storyService.getStoriesBySprint(sprint.id);
+                    return this._storyService.findBySprint(sprint.id);
                   }),
-                  map((stories: IStory[]) => {
+                  filter(stories => {
+                    if(stories)
+                     return true;
+                    else
+                     return false;
+                    }
+                  ),
+                  map((stories: IStory[]) => { 
                     this.stories = stories;
                     if(stories){
                       this.setStoriesByStatus(stories);
                     }
                     }
                   ),
-                  mergeMap(() => {
-                    return this._userService.findAll();
-                  })
+                  mergeMap(() => 
+                    this._userService.findByTeam(this._storageService.getUser().team.id)
+                  )
                 ).subscribe((users: IUser[]) => {
                   if(users){
                     this.assigneeList = users.sort((s1, s2)=> s1.lastname>s2.lastname? -1:1);
                     this.reporterList = this.assigneeList;
                   }
                 });
-    this.subscriptions.push(subscriptionSprint$);
+      this.subscriptions.push(subscriptionSprint$);
+    }    
   }
 
   setStoriesByStatus(stories:IStory[]){
@@ -178,6 +196,9 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
     }
     if (listName.match("cdk-drop-list-2")){
       return StoryStatusEnum.DONE;
+    }
+    if (listName.match("cdk-drop-list-3")){
+      return StoryStatusEnum.BLOCKED;
     }
     return StoryStatusEnum.TODO;
   }

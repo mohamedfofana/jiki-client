@@ -13,8 +13,9 @@ export class AuthenticatedGuard  {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (this._authService.isLoggedIn()){
-      // TODO CHECK IF USER HAS ACCESS TO URL      
+    if (this._authService.isUserAndTokenValid()){
+      // TODO CHECK IF USER HAS ACCESS TO URL  
+      // TODO map with subrole and urlsaccessible    
         return true;
     }
     this._router.navigate(['login']);

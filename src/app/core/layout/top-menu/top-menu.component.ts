@@ -9,26 +9,43 @@ import { Subscription } from 'rxjs';
 import { findEnumValueByKey } from '../../helpers/enum.helpers';
 import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
 import { StorageService } from '../../services/local/storage.service';
+import { IProject } from 'src/app/shared/model/project.model';
+import { ISprint } from 'src/app/shared/model/sprint.model';
+import { SprintAddDialogComponent } from 'src/app/pages/sprint/sprint-add-dialog/sprint-add-dialog.component';
+import { IStory } from 'src/app/shared/model/story.model';
+import { SprintService } from '../../services/database/sprint.service';
+import { SprintStatusEnum } from 'src/app/shared/enum/sprint-status.enum';
+import { DialogService } from '../../services/dialog/dialog.service';
+import { AbstractOnDestroy } from '../../services/abstract.ondestroy';
+import { StoryAddDialogComponent } from 'src/app/pages/story/story-add-dialog/story-add-dialog.component';
+import { StoryService } from '../../services/database/story.service';
+import { IAuthResponse, IResponseType } from 'src/app/shared/interfaces';
 
 @Component({
   selector: 'jiki-top-menu',
   templateUrl: './top-menu.component.html',
   styleUrls: ['./top-menu.component.css']
 })
-export class TopMenuComponent implements OnInit, OnDestroy {
+export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
 
   isCollapsed: boolean;
-  sub: Subscription;
   searchForm: FormGroup;
   searchText: string;
   isLoggedIn = false;
   isLoggedInAsAdmin = false;
-
+  project: IProject;
+  emptySprint: ISprint;
+  emptyStory: IStory;
+  
   constructor(private formBuilder: FormBuilder, 
-              private router: Router, 
+              private router: Router,
               private authservice: AuthService,
-              private storageService: StorageService,
+              private _storyService: StoryService,
+              private _sprintService: SprintService,
+              private _dialogService: DialogService,
+              private _storageService: StorageService,  
               private growler: GrowlerService,) {
+                super();
   }
 
   ngOnInit() {
@@ -36,23 +53,38 @@ export class TopMenuComponent implements OnInit, OnDestroy {
       $('.navbar-nav-top').find('li.active').removeClass('active');
       $(this).parent('li').addClass('active');
     });
+    
     this.searchForm = this.formBuilder.group({
       searchText: ['', Validators.required]
     });
-    this.sub = this.authservice.authChanged
-    .subscribe((data: boolean) => {
-      this.setLoginLogoutText();
-    },
-    (err: any) => console.log(err));
+    
+    const sub = this.authservice.isAuthenticatedSub().subscribe(state => {
+                            this.setLoginLogoutText(state);
+                            this.isLoggedIn = state;
+                            this.isLoggedInAsAdmin = this.authservice.isUserAdmin();
+                            if(state && this._storageService.isUserInStorage() && !this.isLoggedInAsAdmin){
+                              this.project =  this._storageService.getProject();
+                            }
+    });
+    this.subscriptions.push(sub);
     this.initAuth();
+
+   
   }
 
   initAuth(): void{
-    // TODO change
-    if (localStorage.getItem('top_token')){
+    if (this._storageService.isUserInStorage()){
       this.authservice.userAuthChanged(true);
     }else{
       this.authservice.userAuthChanged(false);
+    }
+  }
+
+  
+  setLoginLogoutText(state: boolean) {
+    if(state){
+      const user = this._storageService.getUser();
+      this.isLoggedInAsAdmin = (user.role === UserRoleEnum.ADMIN) ? true : false;
     }
   }
 
@@ -63,38 +95,40 @@ export class TopMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
   login() {
     this.redirectToLogin();
   }
 
   logout() {
-    const isAuthenticated = this.authservice.isAuthenticated;
-    // No need to delete token on server. It will expire soon ?, Create a service to remove token when login out
-    if (isAuthenticated) {
-      this.growler.growl('Logged Out', GrowlerMessageType.Info);
-      this.authservice.logout();
-      this.router.navigate(['/login']);
-      this.authservice.isAuthenticated = false;
-      this.setLoginLogoutText();
-      return;
-    }
+    this.growler.growl('Logged Out', GrowlerMessageType.Info);
+    this.authservice.logout();
+    this.router.navigate(['/login']);
+    this.setLoginLogoutText(false);
   }
 
   redirectToLogin() {
     this.router.navigate(['/login']);
   }
 
-  setLoginLogoutText() {
-    this.isLoggedIn = (this.authservice.isAuthenticated) ? true : false;
-    if(this.isLoggedIn){
-      const user = this.storageService.getUser();
-      let role = findEnumValueByKey(UserRoleEnum, user.role);
-      this.isLoggedInAsAdmin = (role === UserRoleEnum.ADMIN) ? true : false;
-    }
+  addStory(story: IStory) {
+    this._dialogService.showPopupComponent(story, StoryAddDialogComponent);    
   }
 
+  addSprint(sprint: ISprint) {
+    const subscriptionSprint$ = this._sprintService.findByProjectId(this.project.id)
+                                .subscribe((sprints: ISprint[]) => {                                
+                                  if(sprints && sprints.length > 0){
+                                    const created  = sprints.find(s => s.status === SprintStatusEnum.CREATED);
+                                    if (created) {
+                                      this._dialogService.showPopupError('A sprint is already created. Please start the sprint or close the current.');
+                                    }else {
+                                      this._dialogService.showPopupComponent(sprint, SprintAddDialogComponent);
+                                    }                                    
+                                  }else{                                   
+                                    this._dialogService.showPopupComponent(sprint, SprintAddDialogComponent);
+                                  }
+                                }
+                              );
+    this.subscriptions.push(subscriptionSprint$);
+  }  
 }

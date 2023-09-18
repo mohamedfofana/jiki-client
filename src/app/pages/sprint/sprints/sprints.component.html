@@ -1,95 +1,108 @@
-<div class="m-0 px-4 pt-3" *ngIf="sprints">
-  <div class="filter-row pt-3">
-     <jiki-page-title title='{{project.name}} - Sprints'></jiki-page-title>
-     <button mat-mini-fab class="float-end">
-      <mat-icon (click)="addEditProject(emptySprint)">add</mat-icon>
-    </button>
+<div class="container-fluid px-4 pt-3">
+  <div class="row">
+    <div class="col-sm pb-3">
+      <jiki-page-title [title]='title'></jiki-page-title>     
+    </div>
   </div>
-  <div class="filter-row pt-5">
-    <mat-toolbar class="p-0" style="background: white">
-      <div class="ps-0">
-        <mat-form-field  [style.width.px]="300">
-          <mat-label>Search</mat-label>
-          <input matInput  (keyup)="filterTextChanged($event)"/>
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
+  <div class="row" *ngIf="!sprints">
+    <div class="col-sm">
+      <div class="box-container-dd">
+        <h2>There is no sprint ...</h2>
       </div>
-      <div class="ms-3">
-        <mat-form-field>
-          <mat-label>Reporter</mat-label>
-          <mat-select  [formControl]="selectReporterFormControl" (selectionChange)="filterReporterChanged($event)" multiple>
-
-            <mat-select-trigger>
-              <mat-chip-listbox [style.display]="'contents'">
-                <mat-chip *ngFor="let rep of selectReporterFormControl.value" [style.font.size.px]="10"
-                  [removable]="true" (removed)="onReporterRemoved(rep)">
-                  {{ rep.firstname }}
-                  <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-              </mat-chip-listbox>
-            </mat-select-trigger>
-
-            <mat-option *ngFor="let user of reporterList" [value]="user">
-              {{ user.firstname + ' ' + user.lastname.toUpperCase() }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="ms-3">
-        <mat-form-field >
-          <mat-label>Assigned To</mat-label>
-          <mat-select  [formControl]="selectAssigneeFormControl" (selectionChange)="filterAssigneeChanged($event)" multiple>
-
-            <mat-select-trigger>
-              <mat-chip-listbox>
-                <mat-chip *ngFor="let ass of selectAssigneeFormControl.value" [style.font.size.px]="10"
-                  [removable]="true" (removed)="onAssigneeRemoved(ass)">
-                  {{ ass.firstname }}
-                  <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-              </mat-chip-listbox>
-            </mat-select-trigger>
-
-            <mat-option *ngFor="let user of assigneeList" [value]="user">
-              {{ user.firstname + ' ' + user.lastname.toUpperCase() }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="ms-3">
-        <mat-form-field>
-          <mat-label>Status</mat-label>
-          <mat-select [formControl]="selectStatusFormControl"(selectionChange)="filterStatusChanged($event)" multiple>
-
-            <mat-select-trigger>
-              <mat-chip-listbox>
-                <mat-chip *ngFor="let status of selectStatusFormControl.value" [style.font.size.px]="10"
-                [removable]="true" (removed)="onStatusRemoved(status)">
-                {{ status.replace("_"," ") }}
-                <mat-icon matChipRemove>cancel</mat-icon>
-              </mat-chip>
-            </mat-chip-listbox>
-          </mat-select-trigger>
-
-          <mat-option *ngFor="let status of statusList" [value]="status" >
-            {{ status.replace("_"," ")}}
-          </mat-option>
-        </mat-select>
-        </mat-form-field>
-      </div>
-    </mat-toolbar>
+    </div>
   </div>
-  <hr>
-  <div class="sprints-row">
-    <div class="m-0">
-    <jiki-item-sprint-resume
-      *ngFor="let sprint of sprints"
-      [sprint]="sprint"
-      [filterText]="filterText"
-      [filterAssignee]="filterAssignee"
-      [filterReporter]="filterReporter"
-      [filterStatus]="filterStatus"
-    ></jiki-item-sprint-resume>
+
+  <div *ngIf="sprints">  
+    <div class="m-0 px-4 pt-3">
+      <div class="filter-row pt-5">
+        <mat-toolbar class="p-0" style="background: white">
+          <div class="ps-0">
+            <mat-form-field  [style.width.px]="300">
+              <mat-label>Search</mat-label>
+              <input matInput  (keyup)="filterTextChanged($event)"/>
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+          <div class="ms-3">
+            <mat-form-field>
+              <mat-label>Reporter</mat-label>
+              <mat-select  [formControl]="selectReporterFormControl" (selectionChange)="filterReporterChanged($event)" multiple>
+
+                <mat-select-trigger>
+                  <mat-chip-listbox [style.display]="'contents'">
+                    <mat-chip *ngFor="let rep of selectReporterFormControl.value" [style.font.size.px]="10"
+                      [removable]="true" (removed)="onReporterRemoved(rep)">
+                      {{ rep.firstname }}
+                      <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+                  </mat-chip-listbox>
+                </mat-select-trigger>
+
+                <mat-option *ngFor="let user of reporterList" [value]="user">
+                  {{ user.firstname + ' ' + user.lastname.toUpperCase() }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="ms-3">
+            <mat-form-field >
+              <mat-label>Assigned To</mat-label>
+              <mat-select  [formControl]="selectAssigneeFormControl" (selectionChange)="filterAssigneeChanged($event)" multiple>
+
+                <mat-select-trigger>
+                  <mat-chip-listbox>
+                    <mat-chip *ngFor="let ass of selectAssigneeFormControl.value" [style.font.size.px]="10"
+                      [removable]="true" (removed)="onAssigneeRemoved(ass)">
+                      {{ ass.firstname }}
+                      <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+                  </mat-chip-listbox>
+                </mat-select-trigger>
+
+                <mat-option *ngFor="let user of assigneeList" [value]="user">
+                  {{ user.firstname + ' ' + user.lastname.toUpperCase() }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="ms-3">
+            <mat-form-field>
+              <mat-label>Status</mat-label>
+              <mat-select [formControl]="selectStatusFormControl"(selectionChange)="filterStatusChanged($event)" multiple>
+
+                <mat-select-trigger>
+                  <mat-chip-listbox>
+                    <mat-chip *ngFor="let status of selectStatusFormControl.value" [style.font.size.px]="10"
+                    [removable]="true" (removed)="onStatusRemoved(status)">
+                    {{ status.replace("_"," ") }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                </mat-chip-listbox>
+              </mat-select-trigger>
+
+              <mat-option *ngFor="let status of statusList" [value]="status" >
+                {{ status.replace("_"," ")}}
+              </mat-option>
+            </mat-select>
+            </mat-form-field>
+          </div>
+        </mat-toolbar>
+      </div>
+      <hr>
+      <div class="sprints-row">
+        <div class="m-0">
+        <jiki-item-project-resume
+          *ngFor="let sprint of sprints"
+          [sprint]="sprint"
+          [project]="project"
+          [filterText]="filterText"
+          [filterAssignee]="filterAssignee"
+          [filterReporter]="filterReporter"
+          [filterStatus]="filterStatus"
+          [isBacklog]=false
+        ></jiki-item-project-resume>
+        </div>
+      </div>
     </div>
   </div>
 </div>
