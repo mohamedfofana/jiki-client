@@ -4,7 +4,7 @@
     <mat-form-field class="filter-width">
       <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
     </mat-form-field>
-    <button mat-mini-fab class="float-end" (click)="addEditProject(emptyProject)">
+    <button mat-mini-fab class="float-end" *ngIf="isLoggedInAsAdmin" (click)="addEditProject(emptyProject)">
       <mat-icon>add</mat-icon>
     </button>
   </div>

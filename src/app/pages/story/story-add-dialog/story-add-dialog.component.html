@@ -8,7 +8,7 @@
                 <mat-label>Sprint</mat-label>
                 <mat-select [formControl]="sprintFormControl">
                   <mat-option *ngFor="let sprint of currentSprints" [value]="sprint.id">
-                    {{sprint.title}}
+                    Sprint {{sprint.id}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -56,6 +56,16 @@
       <tr>
         <td>
             <mat-form-field appearance="fill">
+                <mat-label>Scope</mat-label>
+                <mat-select [formControl]="scopeFormControl">
+                    <mat-option *ngFor="let scope of scopes" [value]="scope.code">
+                        {{scope.value}}
+                    </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </td>
+        <td>
+            <mat-form-field appearance="fill">
                 <mat-label>Priority</mat-label>
                 <mat-select [formControl]="priorityFormControl">
                   <mat-option *ngFor="let priority of priorities" [value]="priority.code">
@@ -64,16 +74,8 @@
                 </mat-select>
               </mat-form-field>
         </td>
-        <!-- <td>
-            <mat-form-field appearance="fill">
-                <mat-label>Categories</mat-label>
-                <mat-select [formControl]="categoryFormControl">
-                    <mat-option *ngFor="let c of category$ | async" [value]="c.title">
-                        {{c.title}}
-                    </mat-option>
-                </mat-select>
-              </mat-form-field>
-        </td> -->
+      </tr> 
+      <tr>
         <td>
             <mat-form-field appearance="fill">
                 <mat-label>Version</mat-label>

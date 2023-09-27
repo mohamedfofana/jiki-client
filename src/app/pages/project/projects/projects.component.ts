@@ -13,6 +13,8 @@ import { IDialogFormData } from 'src/app/shared/model/dialogForm-data.model';
 import { IProject } from 'src/app/shared/model/project.model';
 import { ProjectAddEditDialogComponent } from '../project-add-edit-dialog/project-add-edit-dialog.component';
 import { ProjectStatusConstant } from 'src/app/shared/constants/project-status.constant';
+import { StorageService } from 'src/app/core/services/local/storage.service';
+import { AuthService } from 'src/app/core/services/database/auth.service';
 
 @Component({
   selector: 'app-projects',
@@ -23,22 +25,30 @@ export class ProjectsComponent extends AbstractOnDestroy implements OnInit, Afte
   projects: IProject[] = [];
   emptyProject: IProject;
   currentProject: IProject;
-  displayedColumns: string[] = ['id', 'shortname', 'name', 'status', 'actions'];
+  displayedColumns: string[] = ['id', 'shortname', 'name', 'status'];
   dataSource = new MatTableDataSource<IProject>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   formError: boolean;
   formErrorMessage: string;
   statuses = ProjectStatusConstant;
+  isLoggedInAsAdmin: boolean = false;
 
   constructor(public dialog: MatDialog,
     public dialogConfirm: MatDialog,
     private _projectService: ProjectService,
+    private _authService: AuthService,
     private _growler: GrowlerService) {
     super();
   }
 
   ngOnInit() {
+    this.isLoggedInAsAdmin = this._authService.isUserAdmin();
+
+    if (this.isLoggedInAsAdmin) {
+      this.displayedColumns.push('actions')
+    }
+
     let subscriptionProjects = this._projectService.findAll()
       .subscribe((projects: IProject[]) => {
         if (projects) {

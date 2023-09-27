@@ -14,6 +14,7 @@ import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { UserAddEditDialogComponent } from '../user-add-edit-dialog/user-add-edit-dialog.component';
 import { UserRoleConstant } from 'src/app/shared/constants/user-role.constant';
 import { UserStatusConstant } from 'src/app/shared/constants/user-status.constant';
+import { UserJobTitleConstant } from 'src/app/shared/constants/user-jobTitle.constant';
 
 @Component({
   selector: 'jiki-users',
@@ -24,7 +25,7 @@ export class UsersComponent extends AbstractOnDestroy implements OnInit, AfterVi
   users: IUser[] = [];
   emptyUser: IUser;
   currentUser: IUser;
-  displayedColumns: string[] = ['id', 'username', 'firstname', 'lastname', 'role', 'status', 'actions'];
+  displayedColumns: string[] = ['id', 'firstname', 'lastname', 'role', 'jobTitle', 'status', 'actions'];
   dataSource = new MatTableDataSource<IUser>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -32,6 +33,7 @@ export class UsersComponent extends AbstractOnDestroy implements OnInit, AfterVi
   formErrorMessage: string;
   roles = UserRoleConstant;
   statuses = UserStatusConstant;
+  jobTitles = UserJobTitleConstant;
 
   constructor(public dialog: MatDialog,
     public dialogConfirm: MatDialog,
@@ -87,17 +89,13 @@ export class UsersComponent extends AbstractOnDestroy implements OnInit, AfterVi
               t.firstname = newUser.firstname;
               t.lastname = newUser.lastname;
               t.role = newUser.role;
+              t.jobTitle = newUser.jobTitle;
               t.status = newUser.status;
             }
           });
           this.dataSource.data = data;
         }
       }
-      // if ( result && result.new){
-      //   let data = this.dataSource.data;
-      //   data.push(result.entity);
-      //   this.dataSource.data = data;
-      // }
     });
   }
 

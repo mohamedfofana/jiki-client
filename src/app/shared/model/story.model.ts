@@ -12,6 +12,7 @@ export interface IStory{
     workflow: string;
     type: string;
     status: string;
+    scope: string;
     priority: string;
     appliVersion: string;
     businessValue: number;

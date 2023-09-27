@@ -37,6 +37,11 @@
       <mat-cell *matCellDef="let user"> {{roles | constantType: user.role}} </mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="jobTitle">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Job </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{jobTitles | constantType: user.jobTitle}} </mat-cell>
+    </ng-container>
+
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
       <mat-cell *matCellDef="let user"> {{statuses | constantType: user.status}} </mat-cell>

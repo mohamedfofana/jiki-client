@@ -53,10 +53,6 @@ export class StorageService {
     return user;
   }
 
-  isUserSubroleAdmin(): boolean {
-    return  UserRoleEnum.ADMIN === this.getUser().subrole;
-  }
-
   getProject():IProject {
     const projectEncrypt = this.decrypt(this.findItem(StorageKeyEnum.PROJECT_KEY) || '{}');
     const project = <IProject> JSON.parse(projectEncrypt);

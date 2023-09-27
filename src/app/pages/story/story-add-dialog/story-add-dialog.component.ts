@@ -15,6 +15,7 @@ import { StorageService } from 'src/app/core/services/local/storage.service';
 import { StoryLinkConstant } from 'src/app/shared/constants/story-link.constant';
 import { StoryPointsConstant } from 'src/app/shared/constants/story-points.constant';
 import { StoryPriorityConstant } from 'src/app/shared/constants/story-priority.constant';
+import { StoryScopeConstant } from 'src/app/shared/constants/story-scope.constant';
 import { StoryStatusConstant } from 'src/app/shared/constants/story-status.constant';
 import { StoryTypeConstant } from 'src/app/shared/constants/story-type.constant';
 import { IResponseType } from 'src/app/shared/interfaces';
@@ -40,7 +41,7 @@ export class StoryAddDialogComponent extends AbstractOnDestroy implements OnInit
   statusFormControl: FormControl<string | null> =  new FormControl('', [Validators.required]);
   priorityFormControl: FormControl<string | null> =  new FormControl('', [Validators.required]);
   sprintFormControl: FormControl<number | null> = new FormControl();
-  categoryFormControl: FormControl<string | null> = new FormControl();
+  scopeFormControl: FormControl<string | null> = new FormControl('', [Validators.required]);
   versionFormControl: FormControl<string | null> =  new FormControl('');
   linkTypeFormControl: FormControl<string | null> = new FormControl();
   linksFormControl: FormControl<number[] | null> = new FormControl();
@@ -55,6 +56,7 @@ export class StoryAddDialogComponent extends AbstractOnDestroy implements OnInit
   linkTypes = StoryLinkConstant;
   storyPoints = StoryPointsConstant;
   priorities = StoryPriorityConstant;
+  scopes = StoryScopeConstant;
 
   selectedStory:IStory[]=[];
   selectStoriesFormControl = new FormControl<IStory[]>([]);
@@ -95,16 +97,18 @@ export class StoryAddDialogComponent extends AbstractOnDestroy implements OnInit
      businessValue : this.storyPointsFormControl,
      storyPoints : this.storyPointsFormControl,
      status : this.statusFormControl,
+     scope : this.scopeFormControl,
      priority : this.priorityFormControl,
-     sprint: this.sprintFormControl,
-     category : this.categoryFormControl,
      version : this.versionFormControl,
      linkType : this.linkTypeFormControl,
      links : this.linksFormControl,
+     sprint : this._formBuilder.group({
+      id: this.sprintFormControl}),      
     });
   }
 
   initDbControl() {
+    //TODO only not closed sprints
     const subscriptionSprint$ = this._sprintService.findByProjectId(this.currentProject.id)
       .pipe(
       map((sprints: ISprint[]) => { 
@@ -132,7 +136,6 @@ export class StoryAddDialogComponent extends AbstractOnDestroy implements OnInit
   onSubmitClick(): void {
     this.setFormError(false, '');
     this.updateNewStoryProperties();
-    
     const subscriptionUserAdd = this._storyService.create(this.newStory)
         .subscribe((response: IResponseType<IStory>) => {
               if(response.status === "OK"){
@@ -155,6 +158,7 @@ export class StoryAddDialogComponent extends AbstractOnDestroy implements OnInit
     this.newStory = this.storyForm.value;
     this.newStory.project = this.currentProject;
     this.newStory.reporter = this.currentUser;
+    this.newStory.description = '';
     if (!this.newStory.sprint) {
       this.newStory.backlog = this.currentProject.backlog;
     }

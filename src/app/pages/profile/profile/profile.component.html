@@ -1,0 +1,67 @@
+<div class="container-fluid px-4 pt-3">
+    <div class="row">
+        <div class="col-sm-3">
+            <ng-container *ngTemplateOutlet="profileLeftView"></ng-container>
+        </div>
+        <div class="col-sm-9 shadow-lg">
+            <ng-container *ngTemplateOutlet="profileRightView"></ng-container>
+        </div>
+    </div>
+</div>   
+<ng-template #profileLeftView >
+    <div class="card text-center pt-3 border-0" style="background-color: transparent;">     
+        <div class="border-primary">
+            <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" class="rounded-circle" alt="Cinque Terre" width="100" height="100"> 
+        </div>   
+        <div class="card-body">
+          <h5 class="card-title fw-bold col-black">{{currentUser | selectUserView}}</h5>
+          <p class="card-text">{{currentUser.jobTitle}}</p>          
+        </div>
+        <div class="text-start">
+            <h5 class="pt-0 mb-0">Contacts</h5>
+            <mat-list class="pt-0 mb-0">
+                <mat-list-item role="listitem" class="pt-0 pb-0"><mat-icon class="pt-2">mail</mat-icon> <span> {{currentUser.email}}</span></mat-list-item>
+            </mat-list>
+        </div>
+    </div>
+</ng-template> 
+
+<ng-template #profileRightView >
+    <div class="card p-3 border-0 ">
+            <div class="text-start">
+                <h5 class="pt-0 mb-0">My project</h5>
+                <mat-list class="pt-0 mb-0">
+                    <mat-list-item role="listitem" class="pt-0 pb-0">
+                        <mat-icon class="pt-2">foundation</mat-icon> 
+                        <a [routerLink]="['/board']"><span> {{project.name}}</span></a>                        
+                    </mat-list-item>
+                </mat-list>
+                <h5 class="pt-0 mb-0">My team</h5>
+                <mat-list class="pt-0 mb-0">
+                    <mat-list-item role="listitem" class="pt-0 mb-0"><mat-icon class="pt-2">groups</mat-icon> <span> {{currentUser.team.name}}</span></mat-list-item>
+                    <ng-container *ngTemplateOutlet="profileTeamView"></ng-container>
+                </mat-list>
+                <h5 class="pt-0 mb-0">My stories</h5>
+                <mat-list class="pt-2 mb-0">
+                    <ng-container *ngTemplateOutlet="profileStoriesView"></ng-container>
+                </mat-list>
+            </div>    
+
+    </div>   
+</ng-template> 
+
+<ng-template #profileTeamView >
+    <div class="row flex mbr-justify-content-center">
+        <div class="col-lg-3 mbr-col-md-10"  *ngFor="let user of users$ | async" >
+            <jiki-item-user [user]="user"></jiki-item-user>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #profileStoriesView >
+    <div class="row flex mbr-justify-content-center">
+        <div class="col-lg-3 mbr-col-md-10"  *ngFor="let story of stories$ | async" >
+            <jiki-item-story [story]="story"></jiki-item-story>
+        </div>
+    </div>
+</ng-template>

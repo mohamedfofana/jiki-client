@@ -12,6 +12,10 @@ body {
     color: rgba(0,0,0,.54)!important;
     fill: rgba(0,0,0,.54)!important;
 }
+
+.col-black {
+  color: #000;
+}
 .page-title{
   color: #000!important;
   font-weight: 400;

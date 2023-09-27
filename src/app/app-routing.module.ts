@@ -7,6 +7,11 @@ const routes: Routes = [
     path: '', redirectTo: 'board', pathMatch: 'full'
   },
   {
+    path: 'me',
+    canActivate: [AuthenticatedGuard],
+    loadChildren: () => import('./pages/profile/profile.module').then (m => m.ProfileModule)
+  },
+  {
     path: 'board',
     canActivate: [AuthenticatedGuard],
     loadChildren: () => import('./pages/board/board.module').then (m => m.BoardModule)
@@ -40,6 +45,11 @@ const routes: Routes = [
     path: 'stories',
     canActivate: [AuthenticatedGuard],
     loadChildren: () => import('./pages/story/story.module').then (m => m.StoryModule)
+  },
+  {
+    path: 'tickets',
+    canActivate: [AuthenticatedGuard],
+    loadChildren: () => import('./pages/ticket/ticket.module').then (m => m.TicketModule)
   },
   {
     path: 'error',

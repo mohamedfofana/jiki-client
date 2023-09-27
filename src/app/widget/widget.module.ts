@@ -4,8 +4,8 @@ import { WidgetStatics } from './widget-statics';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EditableInputComponent } from './editable-input/editable-input.component';
 import { SharedModule } from '../shared/shared.module';
+import { ItemStoryComponent } from './item-story/item-story.component';
 
 @NgModule({
   imports: [CommonModule, 
@@ -15,6 +15,6 @@ import { SharedModule } from '../shared/shared.module';
             SharedModule,
             MyMaterialModule],
   exports: [ WidgetStatics.components],
-  declarations: [ WidgetStatics.components]
+  declarations: [ WidgetStatics.components, ItemStoryComponent]
 })
 export class WidgetModule { }

@@ -49,8 +49,8 @@
 
 
   "cdk.story.type.BUG.icon" : "bug_report",
-  "cdk.story.type.STORY.icon" : "description",
+  "cdk.story.type.USER_STORY.icon" : "description",
 
-  "cdk.story.type.BUG.icon_color" : "crimson",
-  "cdk.story.type.STORY.icon.color" : "limegreen"
+  "cdk.story.type.BUG.icon.color" : "red",
+  "cdk.story.type.USER_STORY.icon.color" : "limegreen"
 }

@@ -36,6 +36,13 @@ export class StoryService {
     }
 
     /*
+     * Return stories on project backlogs
+     */
+    findByReporter(reporterId:number): Observable<IStory[]> {
+      return this.http.get<IStory[]>(this._appConfigService.apiConfig().apiEndpoint + this.storyUrl + '/reporter/'+reporterId);
+    }
+
+    /*
      * Find stories by id
     */
      findById(storyId:number): Observable<IStory> {

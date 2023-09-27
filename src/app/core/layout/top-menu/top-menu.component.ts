@@ -1,12 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-declare let $: any;
 import { AuthService } from '../../services/database/auth.service';
 import { GrowlerService, GrowlerMessageType } from '../../growler/growler.service';
-import { Subscription } from 'rxjs';
-import { findEnumValueByKey } from '../../helpers/enum.helpers';
 import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
 import { StorageService } from '../../services/local/storage.service';
 import { IProject } from 'src/app/shared/model/project.model';
@@ -18,8 +14,8 @@ import { SprintStatusEnum } from 'src/app/shared/enum/sprint-status.enum';
 import { DialogService } from '../../services/dialog/dialog.service';
 import { AbstractOnDestroy } from '../../services/abstract.ondestroy';
 import { StoryAddDialogComponent } from 'src/app/pages/story/story-add-dialog/story-add-dialog.component';
-import { StoryService } from '../../services/database/story.service';
-import { IAuthResponse, IResponseType } from 'src/app/shared/interfaces';
+
+declare let $: any;
 
 @Component({
   selector: 'jiki-top-menu',
@@ -40,8 +36,7 @@ export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
   
   constructor(private formBuilder: FormBuilder, 
               private router: Router,
-              private authservice: AuthService,
-              private _storyService: StoryService,
+              private _authservice: AuthService,
               private _sprintService: SprintService,
               private _dialogService: DialogService,
               private _storageService: StorageService,  
@@ -50,7 +45,7 @@ export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
   }
 
   ngOnInit() {
-    this.canCreateSprint = this._storageService.isUserSubroleAdmin();
+    this.canCreateSprint = this._authservice.isUserManager();
     $('.navbar-nav-top a').on('click', () => {
       $('.navbar-nav-top').find('li.active').removeClass('active');
       $(this).parent('li').addClass('active');
@@ -60,10 +55,10 @@ export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
       searchText: ['', Validators.required]
     });
     
-    const sub = this.authservice.isAuthenticatedSub().subscribe(state => {
+    const sub = this._authservice.isAuthenticatedSub().subscribe(state => {
                             this.setLoginLogoutText(state);
                             this.isLoggedIn = state;
-                            this.isLoggedInAsAdmin = this.authservice.isUserAdmin();
+                            this.isLoggedInAsAdmin = this._authservice.isUserAdmin();
                             if(state && this._storageService.isUserInStorage() && !this.isLoggedInAsAdmin){
                               this.project =  this._storageService.getProject();
                             }
@@ -74,9 +69,9 @@ export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
 
   initAuth(): void{
     if (this._storageService.isUserInStorage()){
-      this.authservice.userAuthChanged(true);
+      this._authservice.userAuthChanged(true);
     }else{
-      this.authservice.userAuthChanged(false);
+      this._authservice.userAuthChanged(false);
     }
   }
 
@@ -101,7 +96,7 @@ export class TopMenuComponent extends AbstractOnDestroy implements OnInit {
 
   logout() {
     this.growler.growl('Logged Out', GrowlerMessageType.Info);
-    this.authservice.logout();
+    this._authservice.logout();
     this.router.navigate(['/login']);
     this.setLoginLogoutText(false);
   }

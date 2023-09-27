@@ -18,20 +18,43 @@
           <table class="table table-borderless">
             <tbody>
               <tr>
-                <td class="fw-bold">Type :</td>
-                <td>                             
-                  {{newStory.type}}     
-                  <mat-icon [ngStyle]="{'color': newStory.iconTypeColor}">{{newStory.iconType}}</mat-icon>                  
+                <td class="fw-bold" width="25%">Type :</td>
+                <td width="75%">       
+                  <div style="display: flex; align-items: center;">
+                    <div>{{newStory.type}}</div>
+                   <mat-icon matPrefix [ngStyle]="{'color': newStory.iconTypeColor}">{{newStory.iconType}}</mat-icon>
+                  </div>  
                 </td>
-              </tr>              
+              </tr>    
               <tr>
-                <td  class="fw-bold">Sprint :</td>
-                <td colspan="3">{{newStory.sprint?.title}}</td>
-              </tr>             
+                <td ></td>
+                <td width="75%">                                                         
+                </td>
+              </tr>           
+              <tr>
+                <td  class="fw-bold" width="30%">Sprint :</td>
+                <td width="70%">{{newStory.sprint?.title}}</td>
+              </tr>  
+              <tr>
+                <td colspan="2">                   
+                  <mat-form-field >      
+                    <mat-label>Scope</mat-label>              
+                    <mat-select  
+                      name="scope" 
+                      [(ngModel)]="newStory.scope" 
+                      (selectionChange)="onSelectionChange($event)"
+                      >
+                      <mat-option *ngFor="let scope of storyScopes" [value]="scope.code">
+                        {{scope.value}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+              </tr>                           
             </tbody>
           </table>
-          </div>
-          <div class="col-12 col-md-5">
+        </div>
+        <div class="col-12 col-md-3">
             <table class="table table-borderless">
               <tbody >
                 <tr>
@@ -69,7 +92,7 @@
               </tbody>
             </table>
           </div>
-          <div class="col-12 col-md-4 ps-0">
+          <div class="col-12 col-md-3 ps-0">
             <table class="table table-borderless">
               <tbody >
                 <tr>                
@@ -104,6 +127,28 @@
                     </mat-form-field>
                   </td>
                 </tr>
+              </tbody>
+            </table>
+            </div>
+          <div class="col-12 col-md-3 ps-0">
+            <table class="table table-borderless">
+              <tbody >
+                <tr>
+                  <td colspan="2">                   
+                    <mat-form-field >      
+                      <mat-label>Scope</mat-label>              
+                      <mat-select  
+                        name="scope" 
+                        [(ngModel)]="newStory.scope" 
+                        (selectionChange)="onSelectionChange($event)"
+                        >
+                        <mat-option *ngFor="let scope of storyScopes" [value]="scope.code">
+                          {{scope.value}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                </tr>               
               </tbody>
             </table>
             </div>
