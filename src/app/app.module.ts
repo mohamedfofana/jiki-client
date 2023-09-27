@@ -28,8 +28,8 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found/pag
   bootstrap: [AppComponent],
   providers: [
     {
-      provide: ErrorHandler, // Replace the call for ErrorHandler 
-      useClass: CustomErrorHandler // by My CustomHandler
+      provide: ErrorHandler,
+      useClass: CustomErrorHandler
     },
     {
       provide: HTTP_INTERCEPTORS,

@@ -1,0 +1,12 @@
+<a [routerLink]="['/stories/viewEdit/',story.id]">
+<div class="card p-1 m-1 shadow-lg border-0">
+    <div class="card-body">
+        <h5 class="card-title col-black">
+          <mat-icon class="float-end" [ngStyle]="{'color': story.iconTypeColor}">{{story.iconType}}</mat-icon>
+          {{story.shortTitle}}
+        </h5>
+        <p class="card-text mb-2 mr-2 text-truncate">{{story.title}}</p>
+        <mat-icon class="float-end"  [ngStyle]="{'color': story.iconStatusColor}">{{story.iconStatus}}</mat-icon>
+    </div>
+</div>
+</a>

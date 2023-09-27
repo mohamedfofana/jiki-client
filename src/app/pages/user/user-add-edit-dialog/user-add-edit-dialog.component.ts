@@ -13,6 +13,8 @@ import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { UserStatusConstant } from 'src/app/shared/constants/user-status.constant';
 import { UserRoleConstant } from 'src/app/shared/constants/user-role.constant';
 import { findConstantValueByCode } from 'src/app/core/helpers/enum.helpers';
+import { UserJobTitleConstant } from 'src/app/shared/constants/user-jobTitle.constant';
+import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
 
 @Component({
   selector: 'jiki-user-add-edit-dialog',
@@ -30,6 +32,7 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
   roleFormControl: FormControl<string|null>;
   statusFormControl: FormControl<string|null>;
   teamFormControl: FormControl<number|null>;
+  jobTitleFormControl: FormControl<string|null>;
   errors = errorMessages;
   formError:boolean;
   formErrorMessage:string;
@@ -37,6 +40,7 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
   newUser: IUser;
   statuses = UserStatusConstant;
   roles = UserRoleConstant;
+  jobTitles = UserJobTitleConstant;
   teams: ITeam[];
   differentPassword:boolean = false;
 
@@ -57,25 +61,10 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
 
   initForm(){
     if (this.dialogFormData.entity){
-        this.emailFormControl = new FormControl(this.dialogFormData.entity.email, [Validators.required, Validators.email]);
-        this.usernameFormControl = new FormControl(this.dialogFormData.entity.username, [Validators.required]);
-        this.firstnameFormControl = new FormControl(this.dialogFormData.entity.firstname, [Validators.required]);
-        this.lastnameFormControl = new FormControl(this.dialogFormData.entity.lastname, [Validators.required]);
-        this.passwordFormControl = new FormControl('',);
-        this.passwordConfirmFormControl = new FormControl('',);
-        this.roleFormControl = new FormControl(this.dialogFormData.entity.role, [Validators.required]);
-        this.statusFormControl = new FormControl(findConstantValueByCode(this.statuses, this.dialogFormData.entity.status), [Validators.required]);
-        this.teamFormControl = new FormControl(this.dialogFormData.entity.team? this.dialogFormData.entity.team.id:null, [Validators.required]);
+      const user =  this.dialogFormData.entity;
+      this.initUpdateForm(user);
     }else{
-        this.emailFormControl = new FormControl('', [Validators.required, Validators.email]);
-        this.usernameFormControl = new FormControl('', [Validators.required]);
-        this.firstnameFormControl = new FormControl('', [Validators.required]);
-        this.lastnameFormControl = new FormControl('', [Validators.required]);
-        this.passwordFormControl = new FormControl('', [Validators.required, Validators.pattern(regExps['password'])]);
-        this.passwordConfirmFormControl = new FormControl('', [Validators.required]);
-        this.roleFormControl = new FormControl('', [Validators.required]);
-        this.statusFormControl = new FormControl('');
-        this.teamFormControl = new FormControl(null, [Validators.required]);
+        this.initCreateForm();
      }
      this.userForm = this._formBuilder.group({
       email : this.emailFormControl,
@@ -86,10 +75,38 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
       passwordConfirm: this.passwordConfirmFormControl,
       role : this.roleFormControl,
       status : this.statusFormControl,
+      jobTitle : this.jobTitleFormControl,
       team : this._formBuilder.group({
           id: this.teamFormControl}),
     });
   }
+
+  private initCreateForm() {
+    this.emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+    this.usernameFormControl = new FormControl('', [Validators.required]);
+    this.firstnameFormControl = new FormControl('', [Validators.required]);
+    this.lastnameFormControl = new FormControl('', [Validators.required]);
+    this.passwordFormControl = new FormControl('', [Validators.required, Validators.pattern(regExps['password'])]);
+    this.passwordConfirmFormControl = new FormControl('', [Validators.required]);
+    this.roleFormControl = new FormControl('', [Validators.required]);
+    this.statusFormControl = new FormControl('');
+    this.jobTitleFormControl = new FormControl('', [Validators.required]);
+    this.teamFormControl = new FormControl(null, [Validators.required]);
+  }
+
+  private initUpdateForm(user: IUser) {
+    this.emailFormControl = new FormControl(user.email, [Validators.required, Validators.email]);
+    this.usernameFormControl = new FormControl(user.username, [Validators.required]);
+    this.firstnameFormControl = new FormControl(user.firstname, [Validators.required]);
+    this.lastnameFormControl = new FormControl(user.lastname, [Validators.required]);
+    this.passwordFormControl = new FormControl('');
+    this.passwordConfirmFormControl = new FormControl('');
+    this.roleFormControl = new FormControl(user.role, [Validators.required]);
+    this.statusFormControl = new FormControl(user.status, [Validators.required]);
+    this.jobTitleFormControl = new FormControl(user.jobTitle, [Validators.required]);
+    this.teamFormControl = new FormControl(user.team ? user.team.id : null, [Validators.required]);
+  }
+
   initTeams(){
     let subscriptionTeams = this._teamService.findAll()
     .subscribe((teams: ITeam[]) => {
@@ -102,7 +119,7 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
 
   ngAfterContentChecked(): void {
     this._changeDedectionRef.detectChanges();
-}
+  }
 
   onSubmitClick(): void {
     this.differentPassword = false;
@@ -170,6 +187,7 @@ export class UserAddEditDialogComponent extends AbstractOnDestroy implements OnI
       dialogFormData.entity.email = newT.email;
       dialogFormData.entity.username = newT.username;
       dialogFormData.entity.role = newT.role;
+      dialogFormData.entity.jobTitle = newT.jobTitle;
       dialogFormData.entity.status = newT.status;
       dialogFormData.entity.creationDate =  newT.creationDate;
       dialogFormData.entity.updateDate = newT.updateDate;

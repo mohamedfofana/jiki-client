@@ -66,18 +66,44 @@
       </mat-form-field>
     </td>
   </tr>
-<tr>
+  <tr>
     <td>
       <mat-form-field appearance="fill">
         <mat-label>Role</mat-label>
-        <mat-select [formControl]="roleFormControl">
+        <mat-select 
+          [formControl]="roleFormControl">
           <mat-option *ngFor="let role of roles" [value]="role.code">
             {{role.value}}
           </mat-option>
         </mat-select>
       </mat-form-field>
-    </td>
-    <td class="float-end" *ngIf="dialogFormData.entity">
+    </td>   
+  </tr>
+<tr>
+  <td>
+    <mat-form-field appearance="fill">
+      <mat-label>Title</mat-label>
+      <mat-select [formControl]="jobTitleFormControl">
+        <mat-option *ngFor="let jobTitle of jobTitles" [value]="jobTitle.code">
+          {{jobTitle.value}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </td>
+    <td class="float-end" formGroupName="team">
+      <mat-form-field appearance="fill">
+        <mat-label>Team</mat-label>
+        <mat-select [formControl]="teamFormControl">
+          <mat-option *ngFor="let team of teams" [value]="team.id">
+            {{team.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+  </td>
+  </tr>
+  <tr>
+   
+    <td *ngIf="dialogFormData.entity">
       <mat-form-field appearance="fill">
         <mat-label>Status</mat-label>
         <mat-select [formControl]="statusFormControl">
@@ -87,29 +113,7 @@
         </mat-select>
       </mat-form-field>
     </td>
-</tr>
-<tr>
-  <td formGroupName="team">
-    <mat-form-field appearance="fill">
-      <mat-label>Team</mat-label>
-      <mat-select [formControl]="teamFormControl">
-        <mat-option *ngFor="let team of teams" [value]="team.id">
-          {{team.name}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-</td>
-<!-- <td class="float-end" formGroupName="project">
-<mat-form-field appearance="fill">
-  <mat-label>Project</mat-label>
-  <mat-select [formControl]="projectFormControl">
-    <mat-option *ngFor="let project of projects" [value]="project.id">
-      {{project.name}}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
-</td> -->
-</tr>
+  </tr>
 <tr *ngIf="formError">
   <td>
     <span class="mat-error">{{formErrorMessage}}</span>

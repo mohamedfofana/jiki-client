@@ -10,9 +10,12 @@
     /* background-color: #2f3b59; */
     /* color: white; */
 }
+.navbar-brand {
+  margin-right: 8rem;
+}
 .navbar-top{
   background-color: #2f3b59;
-  /* color: white; */
+  z-index: 1500;
 }
 .navbar-top a {
     color: white;

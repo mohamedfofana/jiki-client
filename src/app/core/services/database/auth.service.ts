@@ -10,6 +10,7 @@ import { AppConfigService } from '../../config/appconfig-service';
 import { JwtTokenService } from './jwt-token.service';
 import { findEnumValueByKey } from '../../helpers/enum.helpers';
 import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
+import { UserJobtitleEnum } from 'src/app/shared/enum/user-jobTitle.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -73,5 +74,12 @@ export class AuthService {
         }
       }
       return false;
+    }
+
+    
+    isUserManager(): boolean {
+      return  (UserJobtitleEnum.MANAGER === this._storageService.getUser().jobTitle || 
+              UserJobtitleEnum.TEAM_LEADER === this._storageService.getUser().jobTitle || 
+              UserJobtitleEnum.SCRUM_MASTER === this._storageService.getUser().jobTitle);
     }
 }

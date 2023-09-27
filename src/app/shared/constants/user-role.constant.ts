@@ -9,9 +9,5 @@ export const UserRoleConstant: ConstantType[] = [
     {
         code: UserRoleEnum.USER,
         value: 'User'
-    },
-    {
-        code: UserRoleEnum.QA,
-        value: 'QA'
     }
 ];

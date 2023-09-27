@@ -15,7 +15,7 @@ import { SprintStatusEnum } from 'src/app/shared/enum/sprint-status.enum';
 import { SprintStatusConstant } from 'src/app/shared/constants/sprint-status.constant';
 import { SprintCloseDialogComponent } from 'src/app/pages/sprint/sprint-close-dialog/sprint-close-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
-import { StorageService } from 'src/app/core/services/local/storage.service';
+import { AuthService } from 'src/app/core/services/database/auth.service';
 
 @Component({
   selector: 'jiki-item-project-resume',
@@ -48,7 +48,7 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
 
   constructor(  private _storyService: StoryService,
                 private _dialogService: DialogService,
-                private _storageService: StorageService,
+                private _authService: AuthService,
                 private _notifierService: NotifierService) {
     super();
   }
@@ -59,8 +59,8 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
     );    
     
     if (!this.isBacklog && this.sprint) {
-      this.notStarted = (this.sprint.status === SprintStatusEnum.CREATED)  && this.movable && this._storageService.isUserSubroleAdmin(); 
-      this.closable = (this.sprint.status === SprintStatusEnum.IN_PROGRESS) && this._storageService.isUserSubroleAdmin(); 
+      this.notStarted = (this.sprint.status === SprintStatusEnum.CREATED)  && this.movable && this._authService.isUserManager(); 
+      this.closable = (this.sprint.status === SprintStatusEnum.IN_PROGRESS) && this._authService.isUserManager(); 
       this.sprintTitle += ' ' + this.sprint.id; 
     }
   }
@@ -210,15 +210,7 @@ export class ItemProjectResumeComponent extends AbstractOnDestroy implements OnI
  }
 
   startSprint(): void {
-    const subs =  this.stories$.subscribe((stories: IStory[]) => {
-      if(!stories || stories.length == 0) {
-        this._dialogService.showPopupError('You cannot start a sprint without story.')
-      }else {
-        this._dialogService.showPopupComponent(this.sprint, SprintStartDialogComponent);
-      }
-    });
-    
-    this.subscriptions.push(subs)
+      this._dialogService.showPopupComponent(this.sprint, SprintStartDialogComponent);
   }
 
  closeSprint(): void {

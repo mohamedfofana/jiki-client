@@ -10,6 +10,7 @@ import { VersionService } from 'src/app/core/services/database/version.service';
 import { StorageService } from 'src/app/core/services/local/storage.service';
 import { StoryLinkConstant } from 'src/app/shared/constants/story-link.constant';
 import { StoryPriorityConstant } from 'src/app/shared/constants/story-priority.constant';
+import { StoryScopeConstant } from 'src/app/shared/constants/story-scope.constant';
 import { StoryStatusConstant } from 'src/app/shared/constants/story-status.constant';
 import { StoryTypeConstant } from 'src/app/shared/constants/story-type.constant';
 import { IStory } from 'src/app/shared/model/story.model';
@@ -23,6 +24,7 @@ enum Fields  {
   appliVersion = "appliVersion",
   status = "status",
   title = "title",
+  scope = "scope",
   storyPoints = "storyPoints",
   priority = "priority",
   assigneeId = "assigneeId",
@@ -42,6 +44,7 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
   priorities = StoryPriorityConstant;
   linkTypes = StoryLinkConstant;
   storyTypes = StoryTypeConstant;
+  storyScopes = StoryScopeConstant;
   story: IStory;
   emptyUser:IUser;
   users$: Observable<IUser[]>;
@@ -97,6 +100,7 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
     this.fieldMap.set(Fields.appliVersion, "appli_version");
     this.fieldMap.set(Fields.status, "status");
     this.fieldMap.set(Fields.title, "title");
+    this.fieldMap.set(Fields.scope, "scope");
     this.fieldMap.set(Fields.storyPoints, "story_points");
     this.fieldMap.set(Fields.priority, "priority");
     this.fieldMap.set(Fields.assigneeId, "assigned_user_id");
@@ -107,9 +111,10 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
     this.story = s;
     this.newStory =Object.assign({}, s);
     this.editor = new Editor();
-    this.newStory.iconType = this._appConfigService.getStoryTypeIcon(this.newStory.type);
-    this.newStory.iconTypeColor = this._appConfigService.getStoryTypeIconColor(this.newStory.type);
-    const storyType = this.storyTypes.find(t => t.code===this.newStory.type);
+    console.log(this.story.type)
+    this.newStory.iconType = this._appConfigService.getStoryTypeIcon(this.story.type);
+    this.newStory.iconTypeColor = this._appConfigService.getStoryTypeIconColor(this.story.type);
+    const storyType = this.storyTypes.find(t => t.code===this.story.type);
     this.newStory.type = storyType? storyType.value:'';
   }
 
@@ -133,18 +138,20 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
     this.newStory.assignedUser = this.story.reporter;
     this.story.assignedUser = this.story.reporter;
     
-    this.updateField('assigned_user_id', this.newStory.assignedUser.id);    
+    this.updateField(Fields.assigneeId, this.newStory.assignedUser.id);    
 
   }
 
   public resetAssignee(event: any){
     this.filteredAssignees$ = this.users$;
+    this.updateField(Fields.assigneeId, 0);
     this.newStory.assignedUser = this.emptyUser;
+    this.story.assignedUser = this.emptyUser;
   }
 
   onAssigneeSelectionChange(){
     this.filteredAssignees$ = this.users$;
-    if(this.newStory.assignedUser.id !== this.story.assignedUser.id){
+    if(!this.story.assignedUser || this.newStory.assignedUser.id !== this.story.assignedUser.id){
       this.updateField(Fields.assigneeId, this.newStory.assignedUser.id);
       this.story.assignedUser = this.newStory.assignedUser;
     }
@@ -178,6 +185,11 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
     if(field === Fields.priority){
       if(this.newStory.priority !== this.story.priority){
         this.updateField(field, this.newStory.priority);
+      }
+    }
+    if(field === Fields.scope){
+      if(this.newStory.scope !== this.story.scope){
+        this.updateField(field, this.newStory.scope);
       }
     }
   }
