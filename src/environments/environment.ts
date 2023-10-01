@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  SECRET_KEY: process.env['SECRET_KEY'] || '',
+  API_ENDPOINT: process.env['API_ENDPOINT'] || '',
+  AUTH_URL: process.env['AUTH_URL'] || '',
+  API_HEADER_CONTENT_TYPE: process.env['API_HEADER_CONTENT_TYPE'] || '',
+  API_HEADER_ACCESS_CONTROL: process.env['API_HEADER_ACCESS_CONTROL'] || ''
 };
 
 /*

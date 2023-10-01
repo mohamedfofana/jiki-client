@@ -75,47 +75,48 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
    const id:string = this._route.snapshot.paramMap.get("id") ?? '';
    this.idStory = parseInt(id);
    if(!Number.isNaN(this.idStory)){
-  
-    this._storyService.findById(this.idStory)
-          .pipe(
-            map((story: IStory) =>{           
-                this.initStories(story);
-              }
-              ),
-              mergeMap(() => 
-              this.filteredAssignees$ = this.users$ = this._userService.findByTeam(this._storageService.getUser().team.id)
-              ),
-            mergeMap(() =>
-                this.versions$ = this._versionService.findByProject(this.story.project.id)
-            )
-          ).subscribe(
-
+     
+     this._storyService.findById(this.idStory)
+     .pipe(
+       map((story: IStory) =>{           
+         this.initStories(story);
+        }
+        ),
+        mergeMap(() => 
+        this.filteredAssignees$ = this.users$ = this._userService.findByTeam(this._storageService.getUser().team.id)
+        ),
+        mergeMap(() =>
+        this.versions$ = this._versionService.findByProject(this.story.project.id)
+        )
+        ).subscribe(
+          
           );
           
-   }
-   this.initFieldMap();
+        }
+        this.initFieldMap();
   }
-
+      
   private initFieldMap() {
-    this.fieldMap.set(Fields.appliVersion, "appli_version");
-    this.fieldMap.set(Fields.status, "status");
-    this.fieldMap.set(Fields.title, "title");
-    this.fieldMap.set(Fields.scope, "scope");
-    this.fieldMap.set(Fields.storyPoints, "story_points");
-    this.fieldMap.set(Fields.priority, "priority");
-    this.fieldMap.set(Fields.assigneeId, "assigned_user_id");
-    this.fieldMap.set(Fields.description, "description");
+        this.fieldMap.set(Fields.appliVersion, "appli_version");
+        this.fieldMap.set(Fields.status, "status");
+        this.fieldMap.set(Fields.title, "title");
+        this.fieldMap.set(Fields.scope, "scope");
+        this.fieldMap.set(Fields.storyPoints, "story_points");
+        this.fieldMap.set(Fields.priority, "priority");
+        this.fieldMap.set(Fields.assigneeId, "assigned_user_id");
+        this.fieldMap.set(Fields.description, "description");
   }
-
+      
   initStories(s: IStory){
-    this.story = s;
-    this.newStory =Object.assign({}, s);
-    this.editor = new Editor();
-    console.log(this.story.type)
-    this.newStory.iconType = this._appConfigService.getStoryTypeIcon(this.story.type);
-    this.newStory.iconTypeColor = this._appConfigService.getStoryTypeIconColor(this.story.type);
-    const storyType = this.storyTypes.find(t => t.code===this.story.type);
-    this.newStory.type = storyType? storyType.value:'';
+        this.story = s;
+        this.newStory =Object.assign({}, s);
+        this.editor = new Editor();
+        this.newStory.iconType = this._appConfigService.getStoryTypeIcon(this.story.type);
+        this.newStory.iconTypeColor = this._appConfigService.getStoryTypeIconColor(this.story.type);
+        const storyType = this.storyTypes.find(t => t.code===this.story.type);
+        this.newStory.type = storyType? storyType.value:'';
+        this.newStory.longtitle = this._storageService.getProject().shortname+"-"+this.story.id;
+        this.newStory.description = this.newStory.description? this.newStory.description:'';
   }
 
   public filterAssignee(value: string ) {
@@ -214,7 +215,11 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
     let updatedField: any = this.fieldMap.get(field);
     fieldValueMap.set(updatedField, value);
     let sub = this._storyService.patch(this.newStory.id, fieldValueMap)
-                                .subscribe(() => {});
+                                .subscribe(() => {
+                                   // TODO update 
+                                  // this.newStory.endDate = 
+                                  // this.newStory.updateDate = 
+                                });
    this.subscriptions.push(sub);
 
   }

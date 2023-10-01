@@ -60,7 +60,7 @@ export class SprintCloseDialogComponent extends AbstractOnDestroy implements OnI
 
   private initSprintsAvailable() {
     this.sprint = this.dialogFormData.entity ? this.dialogFormData.entity : this.emptySprint;
-    let subscriptions = this._sprintService.findByStatusInProject(this.sprint.id, SprintStatusEnum.CREATED)
+    let subscriptions = this._sprintService.findByStatusInProject(this._storageService.getProject().id, SprintStatusEnum.CREATED)
       .pipe(
         map((sprints: ISprint[]) => {
           if (sprints && sprints.length > 0) {

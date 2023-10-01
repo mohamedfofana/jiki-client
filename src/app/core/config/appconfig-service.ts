@@ -1,9 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { AppProperties } from './app-properties.module';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
-import { DatePipe } from '@angular/common';
 
 export class AppConfig {
   apiEndpoint: string;
@@ -17,15 +15,9 @@ export class AppConfig {
 })
 export class AppConfigService {
 
-  constructor(private _http: HttpClient,
-              private _datePipe: DatePipe) {}
-    static readonly DEV_CONFIG = 'devConfig';
-    static readonly PROD_CONFIG = 'prodConfig';
+  constructor(private _http: HttpClient) {}
+  
     private config:any|null;
-   
-    public settings() {
-        return this.config;
-    }
 
     public getProperty(key: string) {
       return this.config[key];
@@ -63,30 +55,13 @@ export class AppConfigService {
       return this.getProperty("cdk.sprint.type." + type +".icon.color");
     }
 
-    private devConfig (): AppConfig{
-      const config = this.config[AppConfigService.DEV_CONFIG];
-      return config;
-    } 
-
-    private prodConfig (): AppConfig{     
-      const config = this.config[AppConfigService.PROD_CONFIG];
-      return config;
-    } 
-
-    public apiConfig(): AppConfig{ 
-      if(environment.production){ 
-        return this.prodConfig();
-      } 
-      return this.devConfig();
-    }
-
     async load(): Promise<any> {
       return new Promise<void>((resolve, reject) => {
-        this._http.get(AppProperties.config_file).toPromise().then((response) => {
+        this._http.get(AppProperties.properties_file).toPromise().then((response) => {
            this.config = response;
            resolve();
         }).catch((response: any) => {
-           reject('Could not load file ' + AppProperties.config_file + ': ${JSON.stringify(response)}');
+           reject('Could not load file ' + AppProperties.properties_file + ': ${JSON.stringify(response)}');
         });
       });
     }

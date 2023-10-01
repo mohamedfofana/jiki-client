@@ -4,6 +4,7 @@ import { AppConfigService } from '../../config/appconfig-service';
 import { ICategory } from 'src/app/shared/model/category.model';
 import { Observable, map } from 'rxjs';
 import { IResponseType } from 'src/app/shared/interfaces';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +12,14 @@ import { IResponseType } from 'src/app/shared/interfaces';
 export class CategoryService {
 
   private categoryUrl:string = "/category"
-  constructor(private http: HttpClient,
-    private _appConfigService: AppConfigService) { }
+  constructor(private http: HttpClient) { }
 
   findByProject(projectId: number): Observable<ICategory[]> {
-    return this.http.get<ICategory[]>(this._appConfigService.apiConfig().apiEndpoint + this.categoryUrl + '/project/'+projectId);
+    return this.http.get<ICategory[]>(environment.API_ENDPOINT + this.categoryUrl + '/project/'+projectId);
   }
 
   create(category: ICategory): Observable<IResponseType<ICategory>> {
-    return this.http.post<IResponseType<ICategory>>(this._appConfigService.apiConfig().apiEndpoint + this.categoryUrl + '/create', category)
+    return this.http.post<IResponseType<ICategory>>(environment.API_ENDPOINT + this.categoryUrl + '/create', category)
     .pipe(
       map(response => {
           return response;

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AppConfigService } from 'src/app/core/config/appconfig-service';
+import { StorageService } from 'src/app/core/services/local/storage.service';
 import { IStory } from 'src/app/shared/model/story.model';
 
 @Component({
@@ -10,10 +11,11 @@ import { IStory } from 'src/app/shared/model/story.model';
 export class ItemStoryComponent implements OnInit {
   @Input() story: IStory;
 
-  constructor(private _appConfigService: AppConfigService){
+  constructor(private _appConfigService: AppConfigService,
+              private _storageService: StorageService){
   }
   ngOnInit(): void {
-    this.story.longtitle = this.story.project.name+"-"+this.story.id;
+    this.story.longtitle = this._storageService.getProject().shortname+"-"+this.story.id;
     this.story.iconType = this.getTypeConfigKey();
     this.story.iconStatus = this.getStatusConfigKey();
     this.story.iconTypeColor = this.getTypeColorConfigKey();
