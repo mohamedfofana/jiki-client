@@ -1,3 +1,4 @@
+import { StorageService } from 'src/app/core/services/local/storage.service';
 import { AppConfigService } from '../../core/config/appconfig-service';
 import { IStory } from '../../shared/model/story.model';
 import { Component, Input, OnInit } from '@angular/core';
@@ -9,10 +10,12 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ItemStoryPreviewComponent implements OnInit{
   @Input() story: IStory;
-  constructor(private _appConfigService: AppConfigService){
+  constructor(private _appConfigService: AppConfigService,
+              private _storageService: StorageService
+              ){
   }
   ngOnInit(): void {
-    this.story.longtitle = this.story.project.name+"-"+this.story.id;
+    this.story.longtitle = this._storageService.getProject().shortname+"-"+this.story.id;
     this.story.iconType = this.getTypeConfigKey();
     this.story.iconStatus = this.getStatusConfigKey();
     this.story.iconTypeColor = this.getTypeColorConfigKey();
