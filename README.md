@@ -52,3 +52,11 @@ Manage users, projects and teams throught CRUD operations
     * Filter story by Reporter, Assignee or Status
 * Administration (User, Team, Project)
 * CRUD Operations
+# Demo
+* Admin
+  
+https://github.com/mohamedfofana/jiki-client/assets/681357/e1835462-ad8d-4ff8-a8e0-2bef1b969fa3
+
+* User
+  
+https://github.com/mohamedfofana/jiki-client/assets/681357/125130cc-8a06-415e-ac62-cd46b183767b
