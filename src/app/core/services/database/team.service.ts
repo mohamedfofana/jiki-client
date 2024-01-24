@@ -21,23 +21,23 @@ export class TeamService {
     ) { }
 
     findAll(): Observable<ITeam[]> {
-        return this.http.get<ITeam[]>(environment.API_ENDPOINT + this.teamUrl + '/all');
+        return this.http.get<ITeam[]>('http://localhost:8181/api' + this.teamUrl + '/all');
     }
 
     findById(id: number): Observable<ITeam> {
-      return this.http.get<ITeam>(environment.API_ENDPOINT + this.teamUrl + '/'+ id);
+      return this.http.get<ITeam>('http://localhost:8181/api' + this.teamUrl + '/'+ id);
     }
     
     findAllAvailableForProject(projectId: number | undefined): Observable<ITeam[]> {
       if(!projectId) {
         projectId = 0;
       }      
-      return this.http.get<ITeam[]>(environment.API_ENDPOINT + this.teamUrl + '/allAvailableForProject/'+ projectId);
+      return this.http.get<ITeam[]>('http://localhost:8181/api' + this.teamUrl + '/allAvailableForProject/'+ projectId);
     }
 
     create(team: ITeam): Observable<IResponseType<ITeam>> {
       team.creationDate = this._dateService.currentTimestamp();
-      return this.http.post<IResponseType<ITeam>>(environment.API_ENDPOINT + this.teamUrl + '/create', team)
+      return this.http.post<IResponseType<ITeam>>('http://localhost:8181/api' + this.teamUrl + '/create', team)
       .pipe(
         map(response => {
             return response;
@@ -47,10 +47,10 @@ export class TeamService {
 
     update(team: ITeam): Observable<IResponseType<ITeam>> {
       team.updateDate = this._dateService.currentTimestamp();
-      return this.http.put<IResponseType<ITeam>>(environment.API_ENDPOINT + this.teamUrl + '/update', team);
+      return this.http.put<IResponseType<ITeam>>('http://localhost:8181/api' + this.teamUrl + '/update', team);
     }
 
     delete(id: number): Observable<IResponseType<ITeam>> {
-      return this.http.delete<IResponseType<ITeam>>(environment.API_ENDPOINT + this.teamUrl + '/delete/' + id);
+      return this.http.delete<IResponseType<ITeam>>('http://localhost:8181/api' + this.teamUrl + '/delete/' + id);
     }
 }

@@ -15,11 +15,11 @@ export class CategoryService {
   constructor(private http: HttpClient) { }
 
   findByProject(projectId: number): Observable<ICategory[]> {
-    return this.http.get<ICategory[]>(environment.API_ENDPOINT + this.categoryUrl + '/project/'+projectId);
+    return this.http.get<ICategory[]>('http://localhost:8181/api' + this.categoryUrl + '/project/'+projectId);
   }
 
   create(category: ICategory): Observable<IResponseType<ICategory>> {
-    return this.http.post<IResponseType<ICategory>>(environment.API_ENDPOINT + this.categoryUrl + '/create', category)
+    return this.http.post<IResponseType<ICategory>>('http://localhost:8181/api' + this.categoryUrl + '/create', category)
     .pipe(
       map(response => {
           return response;

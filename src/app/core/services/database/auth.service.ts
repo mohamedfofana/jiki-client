@@ -49,7 +49,7 @@ export class AuthService {
     }
 
     login(userLogin: IUserLogin): Observable<IAuthResponse> {
-        return this._http.post<IAuthResponse>(environment.AUTH_URL, userLogin);
+        return this._http.post<IAuthResponse>('http://localhost:8181/login', userLogin);
     }
 
     logout(){

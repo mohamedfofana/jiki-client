@@ -14,11 +14,11 @@ export class VersionService {
   constructor(private http: HttpClient) { }
 
   findByProject(projectId: number): Observable<IVersion[]> {
-    return this.http.get<IVersion[]>(environment.API_ENDPOINT + this.versionUrl + '/project/'+projectId);
+    return this.http.get<IVersion[]>('http://localhost:8181/api' + this.versionUrl + '/project/'+projectId);
   }
 
   create(version: IVersion): Observable<IResponseType<IVersion>> {
-    return this.http.post<IResponseType<IVersion>>(environment.API_ENDPOINT + this.versionUrl + '/create', version)
+    return this.http.post<IResponseType<IVersion>>('http://localhost:8181/api' + this.versionUrl + '/create', version)
     .pipe(
       map(response => {
           return response;
