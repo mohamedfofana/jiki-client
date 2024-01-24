@@ -2,7 +2,7 @@
 # JIRA like project JIKI with Angular
 This is an ongoing JIRA like project. It implements several key features of Angular.
 The project main goal is the learn the concepts. 
-The version used is Angular 13.X. It will be upgraded to add the new features.     
+The version used is Angular 16.X. It will be upgraded to add the new features.     
  
 
 ## Angular Concepts Covered
