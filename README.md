@@ -8,6 +8,7 @@ The version used is Angular 16.X. It will be upgraded to add the new features.
 ## Angular Concepts Covered
 * TypeScript version that relies on classes and modules
 * Defining routes including child routes and lazy loaded routes
+* Using Jasmine and Karma for unit testing
 * Using Custom Components including custom input and output properties
 * Using Custom Directives
 * Using Custom Pipes
