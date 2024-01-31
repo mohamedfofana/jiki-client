@@ -17,7 +17,7 @@ The version used is Angular 16.X. It will be upgraded to add the new features.
 * Using HttpInterceptor
 * Using StorageService
 * Working with Utility and Service classes
-* Using Angular databinding Syntax [], () and [()]
+* Using Angular databinding 
 * Using template-driven and reactive forms functionality for capturing and validating data
 
 ## Authentification
