@@ -20,8 +20,6 @@ The version used is Angular 16.X. It will be upgraded to add the new features.
 * Using Angular databinding Syntax [], () and [()]
 * Using template-driven and reactive forms functionality for capturing and validating data
 
-## APP Configuration
-Use of APP_INITIALZER to load once configuration from file
 ## Authentification
 JWT Authentification
 
@@ -32,8 +30,10 @@ Manage access to the Spring Boot REST API
 
 ## Local services
 Use of local storage to handle JWT token and user info
+
 ## Admin
 Manage users, projects and teams throught CRUD operations
+
 ## Features
 * Authentification
 * Create Sprint
