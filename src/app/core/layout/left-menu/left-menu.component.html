@@ -1,4 +1,4 @@
-  <nav id="sidebar" class="float-left">
+  <nav *ngIf="isLoggedIn && !isAdmin" id="sidebar" class="float-left">
       <div class="sidebar-header p-3">
           <div id="sidebarCollapse" (click)="openClose()" class="btn btn-dark" >
             <mat-icon>{{openCloseIcon}}</mat-icon>

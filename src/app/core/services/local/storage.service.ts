@@ -47,17 +47,11 @@ export class StorageService {
   }
 
   getUser(): IUser {
-    const userEncrypt = this.decrypt(this.findItem(StorageKeyEnum.USER_KEY) || '{}');
-    const user = <IUser> JSON.parse(userEncrypt);
-
-    return user;
+    return this.getEncryptValue<IUser>(StorageKeyEnum.USER_KEY);
   }
 
   getProject():IProject {
-    const projectEncrypt = this.decrypt(this.findItem(StorageKeyEnum.PROJECT_KEY) || '{}');
-    const project = <IProject> JSON.parse(projectEncrypt);
-
-    return project;
+    return this.getEncryptValue<IProject>(StorageKeyEnum.PROJECT_KEY);
   }
 
   getTeam():ITeam {
@@ -66,6 +60,7 @@ export class StorageService {
   }
   
   setProject(project: IProject) {
+    console.log(project)
     this.storeItem(StorageKeyEnum.PROJECT_KEY, this.encrypt(JSON.stringify(project)));
   }
 
@@ -86,4 +81,13 @@ export class StorageService {
       localStorage.removeItem(value);
     });
   }
+
+  getEncryptValue<T>(key: string): T {
+    const item = this.findItem(key);
+    const encryptValue = this.decrypt(item && item.length  > 0? item:'{}');
+    const obj = <T> JSON.parse(encryptValue.length> 0? encryptValue:'{}');
+
+    return obj;
+  } 
+
 }

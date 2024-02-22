@@ -2,14 +2,12 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Observable, map, mergeMap } from 'rxjs';
+import { Observable, concatMap, map } from 'rxjs';
 import { GrowlerMessageType, GrowlerService } from 'src/app/core/growler/growler.service';
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
 import { CategoryService } from 'src/app/core/services/database/category.service';
-import { ProjectService } from 'src/app/core/services/database/project.service';
 import { SprintService } from 'src/app/core/services/database/sprint.service';
 import { StoryService } from 'src/app/core/services/database/story.service';
-import { UserService } from 'src/app/core/services/database/user.service';
 import { VersionService } from 'src/app/core/services/database/version.service';
 import { StorageService } from 'src/app/core/services/local/storage.service';
 import { StoryLinkConstant } from 'src/app/shared/constants/story-link.constant';
@@ -116,12 +114,12 @@ export class StoryAddDialogComponent extends AbstractOnDestroy implements OnInit
             this.currentSprints = sprints;
           }
         }
-      ), mergeMap(() =>
+      ), concatMap(() =>
         this.versions$ = this._versionService.findByProject(this.currentProject.id)
-      ),mergeMap(() =>
+      ),concatMap(() =>
         this.category$ = this._categoryService.findByProject(this.currentProject.id)
       ),     
-      mergeMap(()=> 
+      concatMap(()=> 
         this._storyService.findByProject(this.currentProject.id)
       )
     ).subscribe((stories: IStory[]) => {

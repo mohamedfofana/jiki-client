@@ -11,7 +11,7 @@ import { StorageService } from 'src/app/core/services/local/storage.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { IProject } from 'src/app/shared/model/project.model';
-import { map, mergeMap } from 'rxjs';
+import { concatMap, map } from 'rxjs';
 import { AuthService } from 'src/app/core/services/database/auth.service';
 
 @Component({
@@ -70,7 +70,7 @@ export class SprintsComponent extends AbstractOnDestroy implements OnInit {
                                     });
                                   }
                                 }),
-                                mergeMap(() => 
+                                concatMap(() => 
                                   this._userService.findByTeam(this._storageService.getUser().team.id)
                                 )
                               ).subscribe((users: IUser[]) => {

@@ -1,5 +1,5 @@
 import { SprintService } from './../../../core/services/database/sprint.service';
-import { Observable, filter, map, mergeMap, of } from 'rxjs';
+import { Observable, concatMap, filter, map, of } from 'rxjs';
 import { IProject } from '../../../shared/model/project.model';
 import { ProjectService } from './../../../core/services/database/project.service';
 import { ISprint } from '../../../shared/model/sprint.model';
@@ -67,7 +67,7 @@ export class BacklogsComponent extends AbstractOnDestroy implements OnInit {
                                     }
                                   }
                                 ),                               
-                                mergeMap(()=> 
+                                concatMap(()=> 
                                   this._userService.findByTeam(this._storageService.getUser().team.id)
                                 )
                               ).subscribe((users: IUser[]) => {

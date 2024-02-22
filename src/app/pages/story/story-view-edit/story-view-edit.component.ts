@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Editor } from 'ngx-editor';
-import { Observable, mergeMap, map, Subscription } from 'rxjs';
+import { Observable, map, Subscription, concatMap } from 'rxjs';
 import { AppConfigService } from 'src/app/core/config/appconfig-service';
 import { StoryService } from 'src/app/core/services/database/story.service';
 import { UserService } from 'src/app/core/services/database/user.service';
@@ -82,10 +82,10 @@ export class StoryViewEditComponent implements OnInit, OnDestroy {
          this.initStories(story);
         }
         ),
-        mergeMap(() => 
+        concatMap(() => 
         this.filteredAssignees$ = this.users$ = this._userService.findByTeam(this._storageService.getUser().team.id)
         ),
-        mergeMap(() =>
+        concatMap(() =>
         this.versions$ = this._versionService.findByProject(this.story.project.id)
         )
         ).subscribe(

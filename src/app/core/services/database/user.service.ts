@@ -16,16 +16,16 @@ export class UserService {
       private _dateService: DateService) { }
 
     findAll(): Observable<IUser[]> {
-        return this.http.get<IUser[]>('http://localhost:8181/api' + this.userUrl + '/all');
+        return this.http.get<IUser[]>(environment.API_ENDPOINT+ this.userUrl + '/all');
     }
 
     findByTeam(teamId: number): Observable<IUser[]> {
-      return this.http.get<IUser[]>('http://localhost:8181/api' + this.userUrl + '/team/'+teamId);
+      return this.http.get<IUser[]>(environment.API_ENDPOINT+ this.userUrl + '/team/'+teamId);
     }
 
     register(user: IUser): Observable<IResponseType<IUser>> {
       user.creationDate = this._dateService.currentTimestamp();
-      return this.http.post<IResponseType<IUser>>('http://localhost:8181/api' + this.userUrl + '/register', user)
+      return this.http.post<IResponseType<IUser>>(environment.API_ENDPOINT+ this.userUrl + '/register', user)
       .pipe(
         map(response => {
             return response;
@@ -35,11 +35,11 @@ export class UserService {
 
     update(user: IUser): Observable<IResponseType<IUser>> {
       user.updateDate = this._dateService.currentTimestamp();
-      return this.http.put<IResponseType<IUser>>('http://localhost:8181/api' + this.userUrl + '/update', user);
+      return this.http.put<IResponseType<IUser>>(environment.API_ENDPOINT+ this.userUrl + '/update', user);
     }
 
     delete(id: number): Observable<IResponseType<IUser>> {
-      return this.http.delete<IResponseType<IUser>>('http://localhost:8181/api' + this.userUrl + '/delete/' + id);
+      return this.http.delete<IResponseType<IUser>>(environment.API_ENDPOINT+ this.userUrl + '/delete/' + id);
     }
 
 }

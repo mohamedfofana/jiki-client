@@ -20,16 +20,16 @@ export class ProjectService {
     ) { }
 
     findAll(): Observable<IProject[]> {
-        return this.http.get<IProject[]>('http://localhost:8181/api' + this.projectUrl + '/all');
+        return this.http.get<IProject[]>(environment.API_ENDPOINT+ this.projectUrl + '/all');
     }
 
     findByTeam(teamId: number): Observable<IProject> {
-      return this.http.get<IProject>('http://localhost:8181/api' + this.projectUrl + '/team/' + teamId);
+      return this.http.get<IProject>(environment.API_ENDPOINT+ this.projectUrl + '/team/' + teamId);
    }
 
     create(project: IProject): Observable<IResponseType<IProject>> {
       project.creationDate = this._dateService.currentTimestamp();
-      return this.http.post<IResponseType<IProject>>('http://localhost:8181/api' + this.projectUrl + '/create', project)
+      return this.http.post<IResponseType<IProject>>(environment.API_ENDPOINT+ this.projectUrl + '/create', project)
       .pipe(
         map(response => {
             return response;
@@ -38,11 +38,11 @@ export class ProjectService {
 
     update(project: IProject): Observable<IResponseType<IProject>> {
       project.updateDate = this._dateService.currentTimestamp();
-      return this.http.put<IResponseType<IProject>>('http://localhost:8181/api' + this.projectUrl + '/update', project);
+      return this.http.put<IResponseType<IProject>>(environment.API_ENDPOINT+ this.projectUrl + '/update', project);
     }
 
     delete(id: number): Observable<IResponseType<IProject>> {
-      return this.http.delete<IResponseType<IProject>>('http://localhost:8181/api' + this.projectUrl + '/delete/' + id);
+      return this.http.delete<IResponseType<IProject>>(environment.API_ENDPOINT+ this.projectUrl + '/delete/' + id);
     }
 
 }

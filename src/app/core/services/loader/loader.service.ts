@@ -28,7 +28,7 @@ export class LoaderService {
 
   requestEndend(){
     this.count--;
-    if(this.count === 0){
+    if(this.count <= 0){
       this.isLoading$.next(false);
     }    
   }

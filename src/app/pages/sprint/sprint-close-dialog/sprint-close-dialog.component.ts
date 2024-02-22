@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { map, mergeMap } from 'rxjs';
+import { concatMap, map } from 'rxjs';
 import { GrowlerMessageType, GrowlerService } from 'src/app/core/growler/growler.service';
 import { AbstractOnDestroy } from 'src/app/core/services/abstract.ondestroy';
 import { SprintService } from 'src/app/core/services/database/sprint.service';
@@ -67,7 +67,7 @@ export class SprintCloseDialogComponent extends AbstractOnDestroy implements OnI
             this.sprints = sprints;
           }
         }),
-        mergeMap(() =>
+        concatMap(() =>
           this._storyService.findBySprint(this.sprint.id)
         ),
         map((stories: IStory[]) => { 
@@ -108,7 +108,7 @@ export class SprintCloseDialogComponent extends AbstractOnDestroy implements OnI
               this.setFormError(true, "Unable to create sprint");
             }
           }),
-          mergeMap(() => {
+          concatMap(() => {
             if (this.sprintFormControl.value === this.CODE_BACKLOG){ 
               return this._storyService.moveToBacklog(this._storageService.getProject().backlog.id, this.remainingStories);
             }else {

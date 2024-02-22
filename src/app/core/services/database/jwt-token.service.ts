@@ -13,7 +13,6 @@ export class JwtTokenService {
 
   constructor( private _storageService: StorageService){}
 
- // TODO vérifier si le token est conserver si on l'initialise dans le service
   initToken(token: string){
     this.token = token;
     this.decode(token);

@@ -14,7 +14,7 @@ export class BacklogService {
     constructor(private http: HttpClient) { }
 
     getBacklogs(): Observable<IBacklog[]> {
-        return this.http.get<IBacklog[]>('http://localhost:8181/api' + this.backlogUrl + '/all');
+        return this.http.get<IBacklog[]>(environment.API_ENDPOINT+ this.backlogUrl + '/all');
     }
 
 }

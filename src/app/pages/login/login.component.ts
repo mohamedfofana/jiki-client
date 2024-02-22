@@ -10,8 +10,9 @@ import { AbstractOnDestroy } from '../../core/services/abstract.ondestroy';
 import { StorageService } from 'src/app/core/services/local/storage.service';
 import { ProjectService } from 'src/app/core/services/database/project.service';
 import { JwtTokenService } from 'src/app/core/services/database/jwt-token.service';
-import { map, mergeMap } from 'rxjs';
+import { concatMap, filter, map } from 'rxjs';
 import { IProject } from 'src/app/shared/model/project.model';
+import { UserRoleEnum } from 'src/app/shared/enum/user-role-enum';
 
 @Component({
     selector: 'user-login',
@@ -64,19 +65,24 @@ export class LoginComponent extends AbstractOnDestroy implements OnInit {
                       this._growler.growl('Logged in', GrowlerMessageType.Info);
                       if (this._authService.redirectUrl) {
                           this.url = this._authService.redirectUrl;
-                      }if (this._storageService.getUser().role === 'ADMIN') {
+                      }if (this._storageService.getUser().role === UserRoleEnum.ADMIN) {
+                          this._authService.userAuthChanged(this.status);
                           this.url = '/users'
-                      }
-                      else {
-                        this.url = '/board'
-                      }                                                                
+                          this._router.navigate([this.url]);
+                        }
+                        else {
+                          this.url = '/board'
+                          return true;
+                        }                                                                
                   } else {
-                      this.setError('Email or password incorrect.');
-  
+                        this.setError('Email or password incorrect.');                        
                   }
-                }),
-                mergeMap(() => 
-                  this._projectService.findByTeam(this._storageService.getUser().team.id)
+                  return false;
+                }),                
+                filter(isNotAdmin => isNotAdmin),
+                concatMap(() => {
+                  return this._projectService.findByTeam(this._storageService.getUser().team.id)
+                }
                 ),
                 map((project: IProject) => {
                   if(project){

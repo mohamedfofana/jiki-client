@@ -25,7 +25,6 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   handler(request: HttpRequest<any>, next: HttpHandler){
-    //console.log('request = '+ request.url);
       return next.handle(request)
         .pipe(
           tap({ 

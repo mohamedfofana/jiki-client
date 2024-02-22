@@ -11,7 +11,7 @@ import { StoryService } from './../../../core/services/database/story.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractOnDestroy } from '../../../core/services/abstract.ondestroy';
 import { IProject } from 'src/app/shared/model/project.model';
-import { filter, map, mergeMap } from 'rxjs';
+import { concatMap, filter, map } from 'rxjs';
 import { AuthService } from 'src/app/core/services/database/auth.service';
 
 @Component({
@@ -66,7 +66,7 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
                     this.boardTitle += ' Sprint - ' + sprint.id;
                     return sprint;
                   }),
-                  mergeMap(sprint => {                    
+                  concatMap(sprint => {                    
                     return this._storyService.findBySprint(sprint.id);
                   }),
                   filter(stories => {
@@ -83,7 +83,7 @@ export class BoardsComponent extends AbstractOnDestroy implements OnInit {
                     }
                     }
                   ),
-                  mergeMap(() => 
+                  concatMap(() => 
                     this._userService.findByTeam(this._storageService.getUser().team.id)
                   )
                 ).subscribe((users: IUser[]) => {

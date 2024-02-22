@@ -19,7 +19,7 @@ export class StoryService {
       story.creationDate = this._dateService.currentTimestamp();
       story.updateDate = this._dateService.currentTimestamp();
       
-      return this.http.post<IResponseType<IStory>>('http://localhost:8181/api' + this.storyUrl + '/create', story)
+      return this.http.post<IResponseType<IStory>>(environment.API_ENDPOINT+ this.storyUrl + '/create', story)
       .pipe(
         map(response => {
             return response;
@@ -30,34 +30,34 @@ export class StoryService {
      * Return stories on project backlogs
      */
     findOnBacklogsByProjectId(projectId:number): Observable<IStory[]> {
-      return this.http.get<IStory[]>('http://localhost:8181/api' + this.storyUrl + '/backlogs/project/'+projectId);
+      return this.http.get<IStory[]>(environment.API_ENDPOINT+ this.storyUrl + '/backlogs/project/'+projectId);
     }
 
     /*
      * Return stories on project backlogs
      */
     findByReporter(reporterId:number): Observable<IStory[]> {
-      return this.http.get<IStory[]>('http://localhost:8181/api' + this.storyUrl + '/reporter/'+reporterId);
+      return this.http.get<IStory[]>(environment.API_ENDPOINT+ this.storyUrl + '/reporter/'+reporterId);
     }
 
     /*
      * Find stories by id
     */
      findById(storyId:number): Observable<IStory> {
-      return this.http.get<IStory>('http://localhost:8181/api' + this.storyUrl + '/'+storyId);
+      return this.http.get<IStory>(environment.API_ENDPOINT+ this.storyUrl + '/'+storyId);
     }
     /*
      * Find stories by sprint
     */
     findBySprint(sprintId:number): Observable<IStory[]> {
-      return this.http.get<IStory[]>('http://localhost:8181/api' + this.storyUrl + '/sprint/'+sprintId);
+      return this.http.get<IStory[]>(environment.API_ENDPOINT+ this.storyUrl + '/sprint/'+sprintId);
     }
 
     /*
      * Find stories by project
     */
     findByProject(projectId: number): Observable<IStory[]> {
-      return this.http.get<IStory[]>('http://localhost:8181/api' + this.storyUrl + '/project/'+projectId);
+      return this.http.get<IStory[]>(environment.API_ENDPOINT+ this.storyUrl + '/project/'+projectId);
     }
     
 
@@ -65,29 +65,29 @@ export class StoryService {
      * Update story status
      */
     updateStatus(story:IStory):Observable<IStory>{
-      return this.http.put<IStory>('http://localhost:8181/api' + this.storyUrl + '/updateStatus', story);
+      return this.http.put<IStory>(environment.API_ENDPOINT+ this.storyUrl + '/updateStatus', story);
     }
 
     moveToBacklog(backlogId: number, stories:IStory[]): Observable<IResponseType<boolean>> {
-      return this.http.put<IResponseType<boolean>>('http://localhost:8181/api' + this.storyUrl + '/moveToBacklog/' + backlogId, stories);
+      return this.http.put<IResponseType<boolean>>(environment.API_ENDPOINT+ this.storyUrl + '/moveToBacklog/' + backlogId, stories);
     }
 
     moveToSprint(sprintId: number, stories:IStory[]): Observable<IResponseType<boolean>> {
-      return this.http.put<IResponseType<boolean>>('http://localhost:8181/api' + this.storyUrl + '/moveToSprint/' + sprintId, stories);
+      return this.http.put<IResponseType<boolean>>(environment.API_ENDPOINT+ this.storyUrl + '/moveToSprint/' + sprintId, stories);
     }
 
     /*
      * Update story backlog or sprint
      */
     updateSprintAndBacklog(story:IStory):Observable<IStory>{
-      return this.http.put<IStory>('http://localhost:8181/api' + this.storyUrl + '/update/sprintAndBacklog', story);
+      return this.http.put<IStory>(environment.API_ENDPOINT+ this.storyUrl + '/update/sprintAndBacklog', story);
     }
 
     /*
      * Path story
      */
     patch(id: number, fieldValueMap: Map<string, Object>){
-      return this.http.patch('http://localhost:8181/api' + this.storyUrl + '/' + id, Object.fromEntries(fieldValueMap));
+      return this.http.patch(environment.API_ENDPOINT+ this.storyUrl + '/' + id, Object.fromEntries(fieldValueMap));
     }
 
 }
